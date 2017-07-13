@@ -1,0 +1,25 @@
+{
+  "name": "Huebo",
+  "version": "0.1.0",
+  "private": true,
+  "devDependencies": {
+    "react-scripts": "0.9.5"
+  },
+  "dependencies": {
+    "copy-to-clipboard": "^3.0.5",
+    "jsxstyle": "^1.0.2",
+    "prop-types": "^15.5.10",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-motion": "^0.4.7",
+    "react-router-dom": "^4.1.1",
+    "serve": "^5.2.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "now-start": "serve -s build/",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
