@@ -1,26 +1,32 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Block } from 'jsxstyle'
 import BaseHue from './BaseHue'
+import { HUE_STEP, MIN_HUE, MAX_HUE } from '../constants'
 
 class HueSelector extends React.Component {
+  static propTypes = {
+    onChange: PropTypes.func.isRequired,
+    hue: PropTypes.number,
+  }
+
+  handleChange = ({ target: { value } }) => this.props.onChange(parseInt(value, 10))
+
   render() {
-    const { hue, onBlur, onChange } = this.props
+    const { hue } = this.props
 
     return (
-      <Block>
+      <div>
         <BaseHue hue={hue} />
         <input
-          type='range'
-          min={0}
-          max={360}
-          step={5}
-          style={{ width: '100%' }}
-          onChange={onChange}
-          onBlur={onBlur}
+          type="range"
+          className="hue-slider"
+          min={MIN_HUE}
+          max={MAX_HUE}
+          step={HUE_STEP}
+          onChange={this.handleChange}
           value={hue}
         />
-      </Block>
+      </div>
     )
   }
 }

@@ -1,15 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Block } from 'jsxstyle'
 
-const Label = ({ children }) => (
-  <Block
-    component='h2'
-    color='#ABABAB'
-    fontSize={16}
-    fontWeight='bold'
-    children={children}
-  />
-)
+const Label = ({ children, ...props }) => <h2 {...props}>{children}</h2>
+
+Label.propTypes = {
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.node]).isRequired,
+}
 
 export default Label
