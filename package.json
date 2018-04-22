@@ -1,25 +1,39 @@
 {
-  "name": "Huebo",
+  "name": "huebo",
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "react-scripts": "0.9.5"
+    "prettier": "^1.12.1",
+    "react-scripts": "1.1.4",
+    "react-testing-library": "^2.1.1"
   },
   "dependencies": {
-    "copy-to-clipboard": "^3.0.5",
-    "jsxstyle": "^1.0.2",
-    "prop-types": "^15.5.10",
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
-    "react-motion": "^0.4.7",
-    "react-router-dom": "^4.1.1",
-    "serve": "^5.2.0"
+    "copy-to-clipboard": "^3.0.8",
+    "prop-types": "^15.6.1",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-motion": "^0.5.2",
+    "react-router-dom": "^4.2.2"
   },
   "scripts": {
     "start": "react-scripts start",
-    "now-start": "serve -s build/",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
+    "test:watch": "react-scripts test --env=jsdom --watch",
     "eject": "react-scripts eject"
+  },
+  "prettier": {
+    "printWidth": 80,
+    "useTabs": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "bracketSpacing": true,
+    "arrowParens": "avoid",
+    "semi": false,
+    "trailingComma": "all",
+    "jsxBracketSameLine": false
+  },
+  "eslintConfig": {
+    "extends": "react-app"
   }
 }

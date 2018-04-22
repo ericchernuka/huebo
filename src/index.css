@@ -1,21 +1,150 @@
 body {
-  font-family: -apple-system,
-                BlinkMacSystemFont,
-                "Segoe UI",
-                Roboto,
-                Oxygen-Sans,
-                Ubuntu,
-                Cantarell,
-                "Helvetica Neue",
-                sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
   line-height: 1.3;
   margin: 0;
   padding: 0;
 }
-h1, h2, h3, h4, h5, h6 { margin: 0; font: inherit; }
 
-p { margin: 0 }
+body,
+html,
+#root {
+  height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font: inherit;
+}
+
+p {
+  margin: 0;
+}
+
 a {
   color: inherit;
   text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+  background-color: transparent;
+}
+
+h2 {
+  display: block;
+  color: #ababab;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/**
+* Only display content to screen readers
+* See: http://a11yproject.com/posts/how-to-hide-content
+**/
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+.app-container {
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  transition: background-color 500ms ease-in-out;
+  min-width: 768px;
+}
+
+.huebo {
+  display: block;
+  height: 400px;
+  box-shadow: rgba(0, 0, 0, 0.05) 0px 4px 20px 0px;
+  margin-top: 2vh;
+}
+
+.huebo .huebo-layout {
+  display: flex;
+}
+
+.hue-swatches {
+  display: flex;
+  flex-direction: row;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  width: 400px;
+}
+
+.hue-swatches > .hue-swatch:first-child {
+  border-top-left-radius: 16px;
+}
+
+.hue-swatches > .hue-swatch:nth-child(57) {
+  border-bottom-left-radius: 16px;
+}
+
+.hue-swatch {
+  height: 50px;
+  width: 50px;
+  border-style: none;
+}
+
+.hue-swatch:focus,
+.hue-swatch:active {
+  z-index: 1;
+}
+
+.hue-manager {
+  display: flex;
+  flex: 1 1 0%;
+  flex-direction: column;
+  justify-content: space-between;
+  max-width: 400px;
+  min-width: 250px;
+  background-color: rgb(255, 255, 255);
+  border-bottom-right-radius: 16px;
+  border-top-right-radius: 16px;
+  padding: 32px;
+}
+
+.hue-slider {
+  width: 100%;
+}
+
+.base-hue-wrapper {
+  display: flex;
+  background-color: #fff;
+  border: 3px solid #dfdfdf;
+  border-radius: 8px;
+  padding: 6px 13px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.color-format-block {
+  margin-top: 16px;
+}
+
+.color-profile {
+  display: block;
+  font-size: 32px;
+  font-weight: bold;
+  border-style: none;
+  line-height: normal;
+  padding: 0px;
+  color: #5e5e5e;
+}
+
+.color-profile.color-profile-muted {
+  color: #9e9e9e;
 }

@@ -1,56 +1,67 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Block } from 'jsxstyle'
-import { hsb2Hex, hsb2Rgb } from '../utils/color'
+import { hsb2Hex, hsb2Rgb } from '../utils/color_utils'
 import ColorFormat from './ColorFormat'
+import ColorProfileButton from './ColorProfileButton'
 
-class ColorOutputs extends React.Component {
-  render() {
-    const {
-      copiedColorFormat,
-      hue,
-      saturation,
-      brightness,
-      onCopy,
-    } = this.props
+const ColorOutputs = ({
+  copiedColorFormat,
+  hue,
+  saturation,
+  brightness,
+  hex: hexValue,
+  onCopy,
+}) => {
+  let hsbValue = null
+  let rgbValue = null
 
-    let hsbValue = null
-    let rgbValue = null
-    let hexValue = null
+  const hasSelection = hue !== null && hue !== undefined
 
-    const hasSelection = hue !== null && hue !== undefined
+  if (hasSelection) {
+    const { r, g, b } = hsb2Rgb(hue, saturation, brightness)
+    rgbValue = `${r},${g},${b}`
+    hsbValue = `${hue},${saturation},${brightness}`
+  }
 
-    if (hasSelection) {
-      const { r, g, b } = hsb2Rgb(hue, saturation, brightness)
-      rgbValue = `${r},${g},${b}`
-      hsbValue = `${hue},${saturation},${brightness}`
-      hexValue = hsb2Hex(hue, saturation, brightness).toUpperCase()
-    }
-
-    return (
-      <Block>
-        <ColorFormat
-          label='HSB'
+  return (
+    <div>
+      <ColorFormat
+        label="HSB"
+        copied={copiedColorFormat && copiedColorFormat === hsbValue}
+        data-testid="color-format-hsb"
+      >
+        <ColorProfileButton
           value={hsbValue}
           placeholder="Select a color"
-          onClick={onCopy(hsbValue)}
-          copied={copiedColorFormat && copiedColorFormat === hsbValue}
+          onClick={onCopy}
         />
-        <ColorFormat
-          label='RGB'
-          value={rgbValue}
-          onClick={onCopy(rgbValue)}
-          copied={copiedColorFormat && copiedColorFormat === rgbValue}
-        />
-        <ColorFormat
-          label='Hex'
-          value={hexValue}
-          onClick={onCopy(hexValue)}
-          copied={copiedColorFormat && copiedColorFormat === hexValue}
-        />
-      </Block>
-    )
-  }
+      </ColorFormat>
+
+      <ColorFormat
+        label="RGB"
+        copied={copiedColorFormat && copiedColorFormat === rgbValue}
+        data-testid="color-format-rgb"
+      >
+        <ColorProfileButton value={rgbValue} onClick={onCopy} />
+      </ColorFormat>
+
+      <ColorFormat
+        label="Hex"
+        copied={copiedColorFormat && copiedColorFormat === hexValue}
+        data-testid="color-format-hex"
+      >
+        <ColorProfileButton value={hexValue} onClick={onCopy} />
+      </ColorFormat>
+    </div>
+  )
+}
+
+ColorOutputs.propTypes = {
+  copiedColorFormat: PropTypes.string,
+  hue: PropTypes.number,
+  saturation: PropTypes.number,
+  brightness: PropTypes.number,
+  onCopy: PropTypes.func.isRequired,
 }
 
 export default ColorOutputs
