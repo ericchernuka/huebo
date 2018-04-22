@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`when copied renders with "copied to clipboard" text 1`] = `
+<div>
+  <div
+    class="color-format-block"
+  >
+    <h2>
+      RGB copied to clipboard
+    </h2>
+    255, 255, 255
+  </div>
+</div>
+`;
+
+exports[`when not copied renders without "copied to clipboard" text 1`] = `
+<div>
+  <div
+    class="color-format-block"
+  >
+    <h2>
+      RGB
+    </h2>
+    255, 255, 255
+  </div>
+</div>
+`;

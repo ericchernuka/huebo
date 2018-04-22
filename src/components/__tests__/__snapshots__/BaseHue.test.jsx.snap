@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders hue degree 1`] = `
+<div>
+  <div
+    class="base-hue-wrapper"
+  >
+    <h2>
+      Base Hue
+    </h2>
+    <div
+      class="color-profile"
+      data-testid="base-hue"
+    >
+      60°
+    </div>
+  </div>
+</div>
+`;

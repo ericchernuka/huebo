@@ -6,10 +6,12 @@ import { HUE_STEP, MIN_HUE, MAX_HUE } from '../constants'
 class HueSelector extends React.Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
-    hue: PropTypes.number,
+    hue: PropTypes.number.isRequired,
   }
 
-  handleChange = ({ target: { value } }) => this.props.onChange(parseInt(value, 10))
+  handleChange = ({ target: { value } }) => {
+    this.props.onChange(parseInt(value, 10))
+  }
 
   render() {
     const { hue } = this.props
@@ -17,14 +19,21 @@ class HueSelector extends React.Component {
     return (
       <div>
         <BaseHue hue={hue} />
+        <label htmlFor="hue-slider" className="sr-only">
+          Hue
+        </label>
         <input
           type="range"
+          id="hue-slider"
           className="hue-slider"
+          onChange={this.handleChange}
+          value={hue}
+          aria-valuenow={hue}
           min={MIN_HUE}
           max={MAX_HUE}
           step={HUE_STEP}
-          onChange={this.handleChange}
-          value={hue}
+          aria-valuemin={MIN_HUE}
+          aria-valuemax={MAX_HUE}
         />
       </div>
     )

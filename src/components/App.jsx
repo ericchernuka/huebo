@@ -1,8 +1,8 @@
 import React from 'react'
+import copy from 'copy-to-clipboard'
 import { hsb2Hex } from '../utils/color_utils'
-import { buildHueIncrements } from '../utils'
 import ColorOutputs from './ColorOutputs'
-import HsbSwatch from './HsbSwatch'
+import SwatchGrid from './SwatchGrid'
 import HueSelector from './HueSelector'
 
 class App extends React.Component {
@@ -13,6 +13,7 @@ class App extends React.Component {
   }
 
   handleCopy = format => {
+    copy(format)
     this.setState(
       {
         copiedColorFormat: format,
@@ -27,7 +28,8 @@ class App extends React.Component {
     )
   }
 
-  handleHueChange = hue => this.setState({ hue, selectedSwatch: null, copiedColorFormat: null })
+  handleHueChange = hue =>
+    this.setState({ hue, selectedSwatch: null, copiedColorFormat: null })
 
   handleSwatchSelection = swatch => {
     this.setState({
@@ -40,19 +42,17 @@ class App extends React.Component {
     const { copiedColorFormat, hue, selectedSwatch } = this.state
 
     return (
-      <div className="app-container" style={{ backgroundColor: hsb2Hex(hue, 12, 88) }}>
+      <div
+        className="app-container"
+        style={{ backgroundColor: hsb2Hex(hue, 12, 88) }}
+      >
         <div className="huebo">
           <div className="huebo-layout">
-            <div className="hue-swatches">
-              {buildHueIncrements(hue).map(swatch => (
-                <HsbSwatch
-                  key={swatch.hex}
-                  swatch={swatch}
-                  onClick={this.handleSwatchSelection}
-                  selected={selectedSwatch && selectedSwatch.hex === swatch.hex}
-                />
-              ))}
-            </div>
+            <SwatchGrid
+              hue={hue}
+              selectedSwatch={selectedSwatch}
+              onSelect={this.handleSwatchSelection}
+            />
             <div className="hue-manager">
               <HueSelector hue={hue} onChange={this.handleHueChange} />
               <ColorOutputs

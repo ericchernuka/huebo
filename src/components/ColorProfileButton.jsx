@@ -1,12 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import copy from 'copy-to-clipboard'
-import { callAll } from '../utils'
 
-const ColorProfileButton = ({ onClick, placeholder, value }) => (
+const ColorProfileButton = ({ onClick, placeholder, value, ...props }) => (
   <button
+    {...props}
+    onClick={() => onClick(value)}
     type="button"
-    onClick={() => callAll(onClick, copy)(value)}
     disabled={!value}
     className={`color-profile ${!value ? 'color-profile-muted' : ''}`}
   >
