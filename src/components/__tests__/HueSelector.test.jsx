@@ -8,11 +8,11 @@ import {
 import HueSelector from '../HueSelector'
 
 const defaultHue = 60
-const onChangeHandler = jest.fn()
 
 afterEach(cleanup)
 
 test('displays the range value', () => {
+  const onChangeHandler = jest.fn()
   const { container, getByLabelText } = render(
     <HueSelector onChange={onChangeHandler} hue={defaultHue} />,
   )
@@ -23,13 +23,13 @@ test('displays the range value', () => {
 })
 
 test.skip('moving the range updates the value', () => {
+  const onChangeHandler = jest.fn()
   const { getByLabelText } = renderIntoDocument(
     <HueSelector onChange={onChangeHandler} hue={defaultHue} />,
   )
 
   const rangeInputNode = getByLabelText('Hue')
-  const keyboardEvent = new KeyboardEvent('keypress', { keyCode: 39 }) // right arrow
-  fireEvent(rangeInputNode, keyboardEvent)
+  fireEvent.keyDown(rangeInputNode, { keyCode: 39, which: 39 })
 
   expect(onChangeHandler).toHaveBeenCalledTimes(1)
   expect(onChangeHandler).toHaveBeenCalledWith(65)

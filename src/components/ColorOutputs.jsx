@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { hsb2Hex, hsb2Rgb } from '../utils/color_utils'
+import { hsb2Rgb } from '../utils/color_utils'
 import ColorFormat from './ColorFormat'
 import ColorProfileButton from './ColorProfileButton'
 

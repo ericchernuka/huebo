@@ -4,7 +4,7 @@ import { Motion, spring } from 'react-motion'
 
 const springConfig = { stiffness: 300, damping: 24 }
 
-const HsbSwatch = ({ onClick, selected, swatch: { hex } }) => (
+const HsbSwatch = ({ onClick, selected, swatch: { hex, ...hsb } }) => (
   <Motion
     style={{
       scale: spring(selected ? 1.1 : 1, springConfig),
@@ -16,6 +16,8 @@ const HsbSwatch = ({ onClick, selected, swatch: { hex } }) => (
         type="button"
         className="hue-swatch"
         onClick={onClick}
+        aria-label={`${hsb.hue},${hsb.saturation},${hsb.brightness}`}
+        aria-pressed={String(selected)}
         style={{
           boxShadow: selected
             ? `inset 0 0 0 3px #FFF, 0 4px ${shadow}px 0 rgba(0,0,0,0.25)`

@@ -16,7 +16,7 @@ export default class SwatchGrid extends React.Component {
             key={swatch.hex}
             swatch={swatch}
             onClick={this.handleSelection(swatch)}
-            selected={selectedSwatch && selectedSwatch.hex === swatch.hex}
+            selected={!!selectedSwatch && selectedSwatch.hex === swatch.hex}
           />
         ))}
       </div>

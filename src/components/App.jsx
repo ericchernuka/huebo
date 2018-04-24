@@ -32,10 +32,13 @@ class App extends React.Component {
     this.setState({ hue, selectedSwatch: null, copiedColorFormat: null })
 
   handleSwatchSelection = swatch => {
-    this.setState({
+    this.setState(({ selectedSwatch }) => ({
       copiedColorFormat: null,
-      selectedSwatch: swatch,
-    })
+      selectedSwatch:
+        selectedSwatch !== null && selectedSwatch.hex === swatch.hex
+          ? null
+          : swatch,
+    }))
   }
 
   render() {
