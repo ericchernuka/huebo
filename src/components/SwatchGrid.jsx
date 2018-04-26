@@ -4,10 +4,19 @@ import { buildHueIncrements } from '../utils'
 import HsbSwatch from './HsbSwatch'
 
 export default class SwatchGrid extends React.Component {
+  static propTypes = {
+    hue: PropTypes.number.isRequired,
+    selectedHex: PropTypes.number,
+  }
+
+  static defaultProps = {
+    selectedHex: null,
+  }
+
   handleSelection = swatch => () => this.props.onSelect(swatch)
 
   render() {
-    const { hue, selectedSwatch } = this.props
+    const { hue, selectedHex } = this.props
 
     return (
       <div className="hue-swatches">
@@ -16,7 +25,7 @@ export default class SwatchGrid extends React.Component {
             key={swatch.hex}
             swatch={swatch}
             onClick={this.handleSelection(swatch)}
-            selected={!!selectedSwatch && selectedSwatch.hex === swatch.hex}
+            selected={selectedHex === swatch.hex}
           />
         ))}
       </div>

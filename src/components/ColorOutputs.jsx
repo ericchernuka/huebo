@@ -15,7 +15,7 @@ const ColorOutputs = ({
   let hsbValue = null
   let rgbValue = null
 
-  const hasSelection = hue !== null && hue !== undefined
+  const hasSelection = !!hexValue
 
   if (hasSelection) {
     const { r, g, b } = hsb2Rgb(hue, saturation, brightness)
