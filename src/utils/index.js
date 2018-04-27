@@ -16,7 +16,7 @@ export const buildHueIncrements = (hue = 60) => {
         hue,
         saturation,
         brightness,
-        hex: hsb2Hex(hue, saturation, brightness).toUpperCase(),
+        hex: hsb2Hex(hue, saturation, brightness),
       })
     })
 

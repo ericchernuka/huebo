@@ -43,33 +43,35 @@ export default class Huebo extends React.Component {
     )
   }
 
+  handleRangeFocus = value => {
+    this.props.history.replace(`/${value}`)
+  }
+
   handleHueChange = hue => {
-    this.syncUrlWithHueSelection(hue)
-    this.setState({ hue, copiedColorFormat: null })
+    clearTimeout(this.clearFocus)
+    this.setState(
+      { hue, copiedColorFormat: null },
+      this.syncUrlWithHueSelection,
+    )
   }
 
-  syncUrlWithHueSelection = debounce(hue => {
-    this.props.history.replace(`/${hue}`)
-  }, 300)
+  syncUrlWithHueSelection = debounce(
+    () => this.props.history.replace(`/${this.state.hue}`),
+    200,
+  )
 
-  handleSwatchSelection = swatch => {
-    const { selectedSwatch } = this.state
-    const location =
-      selectedSwatch && swatch.hex === selectedSwatch.hex
-        ? `/${swatch.hue}`
-        : `/${swatch.hue}/${swatch.saturation}/${swatch.brightness}`
-    this.props.history.replace(location)
-  }
+  parsedUrlParams = params =>
+    Object.keys(params).reduce((acc, key) => {
+      acc[key] = parseInt(params[key], 10) || null
+      return acc
+    }, {})
 
   render() {
     const { match } = this.props
-    const { copiedColorFormat, hue, selectedSwatch } = this.state
-    const selectedSaturation = parseInt(match.params.saturation, 10) || null
-    const selectedBrightness = parseInt(match.params.brightness, 10) || null
-    const selectedHex =
-      selectedSaturation && selectedBrightness
-        ? hsb2Hex(hue, selectedSaturation, selectedBrightness).toUpperCase()
-        : null
+    const { copiedColorFormat, hue } = this.state
+    const { saturation, brightness } = this.parsedUrlParams(match.params)
+    const hex =
+      saturation && brightness ? hsb2Hex(hue, saturation, brightness) : null
 
     return (
       <div
@@ -78,18 +80,18 @@ export default class Huebo extends React.Component {
       >
         <div className="huebo">
           <div className="huebo-layout">
-            <SwatchGrid
-              hue={hue}
-              selectedHex={selectedHex}
-              onSelect={this.handleSwatchSelection}
-            />
+            <SwatchGrid hue={hue} selectedHex={hex} />
             <div className="hue-manager">
-              <HueSelector hue={hue} onChange={this.handleHueChange} />
+              <HueSelector
+                hue={hue}
+                onChange={this.handleHueChange}
+                onFocus={this.handleRangeFocus}
+              />
               <ColorOutputs
                 hue={hue}
-                hex={selectedHex}
-                saturation={selectedSaturation}
-                brightness={selectedBrightness}
+                hex={hex}
+                saturation={saturation}
+                brightness={brightness}
                 copiedColorFormat={copiedColorFormat}
                 onCopy={this.handleCopy}
               />
