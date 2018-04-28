@@ -1,6 +1,6 @@
 import React from 'react'
-import debounce from 'lodash-es/debounce'
 import copy from 'copy-to-clipboard'
+import { debounce } from '../utils'
 import { hsb2Hex } from '../utils/color_utils'
 import ColorOutputs from './ColorOutputs'
 import DocumentTitle from './DocumentTitle'
@@ -34,14 +34,15 @@ export default class Huebo extends React.Component {
       {
         copiedColorFormat: format,
       },
-      () => {
-        clearTimeout(this.timeout)
-
-        this.timeout = setTimeout(() => {
-          this.setState({ copiedColorFormat: null })
-        }, 2000)
-      },
+      this.handleCopyClear,
     )
+  }
+
+  handleCopyClear = () => {
+    clearTimeout(this.timeout)
+    this.timeout = setTimeout(() => {
+      this.setState({ copiedColorFormat: null })
+    }, 2000)
   }
 
   handleHueChange = hue => {
