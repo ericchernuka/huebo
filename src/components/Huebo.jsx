@@ -43,10 +43,6 @@ export default class Huebo extends React.Component {
     )
   }
 
-  handleRangeFocus = value => {
-    this.props.history.replace(`/${value}`)
-  }
-
   handleHueChange = hue => {
     clearTimeout(this.clearFocus)
     this.setState(
@@ -55,10 +51,13 @@ export default class Huebo extends React.Component {
     )
   }
 
-  syncUrlWithHueSelection = debounce(
-    () => this.props.history.replace(`/${this.state.hue}`),
-    200,
-  )
+  syncUrlWithHueSelection = debounce(() => {
+    const { match } = this.props
+    const { saturation, brightness } = this.parsedUrlParams(match.params)
+    this.props.history.replace(
+      `/${this.state.hue}${brightness ? `/${saturation}/${brightness}` : ''}`,
+    )
+  }, 200)
 
   parsedUrlParams = params =>
     Object.keys(params).reduce((acc, key) => {
@@ -80,13 +79,8 @@ export default class Huebo extends React.Component {
       >
         <div className="huebo">
           <div className="huebo-layout">
-            <SwatchGrid hue={hue} selectedHex={hex} />
             <div className="hue-manager">
-              <HueSelector
-                hue={hue}
-                onChange={this.handleHueChange}
-                onFocus={this.handleRangeFocus}
-              />
+              <HueSelector hue={hue} onChange={this.handleHueChange} />
               <ColorOutputs
                 hue={hue}
                 hex={hex}
@@ -96,6 +90,7 @@ export default class Huebo extends React.Component {
                 onCopy={this.handleCopy}
               />
             </div>
+            <SwatchGrid hue={hue} selectedHex={hex} />
           </div>
         </div>
       </div>

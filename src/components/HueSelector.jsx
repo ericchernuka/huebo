@@ -6,16 +6,11 @@ import { HUE_STEP, MIN_HUE, MAX_HUE } from '../constants'
 class HueSelector extends React.Component {
   static propTypes = {
     onChange: PropTypes.func.isRequired,
-    onFocus: PropTypes.func.isRequired,
     hue: PropTypes.number.isRequired,
   }
 
   handleChange = ({ target: { value } }) => {
     this.props.onChange(parseInt(value, 10))
-  }
-
-  handleFocus = ({ target: { value } }) => {
-    this.props.onFocus(parseInt(value, 10))
   }
 
   render() {
@@ -31,8 +26,8 @@ class HueSelector extends React.Component {
           type="range"
           id="hue-slider"
           className="hue-slider"
+          tabIndex={1}
           onChange={this.handleChange}
-          onFocus={this.handleFocus}
           value={hue}
           aria-valuenow={hue}
           min={MIN_HUE}

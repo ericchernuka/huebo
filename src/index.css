@@ -75,6 +75,7 @@ h2 {
 
 .huebo .huebo-layout {
   display: flex;
+  flex-direction: row-reverse;
 }
 
 .hue-swatches {
