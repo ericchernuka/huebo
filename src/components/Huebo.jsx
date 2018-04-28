@@ -3,6 +3,7 @@ import debounce from 'lodash-es/debounce'
 import copy from 'copy-to-clipboard'
 import { hsb2Hex } from '../utils/color_utils'
 import ColorOutputs from './ColorOutputs'
+import DocumentTitle from './DocumentTitle'
 import SwatchGrid from './SwatchGrid'
 import HueSelector from './HueSelector'
 
@@ -54,7 +55,7 @@ export default class Huebo extends React.Component {
   syncUrlWithHueSelection = debounce(() => {
     const { match } = this.props
     const { saturation, brightness } = this.parsedUrlParams(match.params)
-    this.props.history.replace(
+    this.props.history.push(
       `/${this.state.hue}${brightness ? `/${saturation}/${brightness}` : ''}`,
     )
   }, 400)
@@ -72,28 +73,34 @@ export default class Huebo extends React.Component {
     const hex =
       saturation && brightness ? hsb2Hex(hue, saturation, brightness) : null
 
+    const documentTitle = brightness
+      ? `HSB(${hue},${saturation},${brightness})`
+      : `Hue: ${hue}`
+
     return (
-      <div
-        className="app-container"
-        style={{ backgroundColor: hsb2Hex(hue, 12, 88) }}
-      >
-        <div className="huebo">
-          <div className="huebo-layout">
-            <div className="hue-manager">
-              <HueSelector hue={hue} onChange={this.handleHueChange} />
-              <ColorOutputs
-                hue={hue}
-                hex={hex}
-                saturation={saturation}
-                brightness={brightness}
-                copiedColorFormat={copiedColorFormat}
-                onCopy={this.handleCopy}
-              />
+      <DocumentTitle title={documentTitle}>
+        <div
+          className="app-container"
+          style={{ backgroundColor: hsb2Hex(hue, 12, 88) }}
+        >
+          <div className="huebo">
+            <div className="huebo-layout">
+              <div className="hue-manager">
+                <HueSelector hue={hue} onChange={this.handleHueChange} />
+                <ColorOutputs
+                  hue={hue}
+                  hex={hex}
+                  saturation={saturation}
+                  brightness={brightness}
+                  copiedColorFormat={copiedColorFormat}
+                  onCopy={this.handleCopy}
+                />
+              </div>
+              <SwatchGrid hue={hue} selectedHex={hex} />
             </div>
-            <SwatchGrid hue={hue} selectedHex={hex} />
           </div>
         </div>
-      </div>
+      </DocumentTitle>
     )
   }
 }
