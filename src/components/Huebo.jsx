@@ -57,7 +57,7 @@ export default class Huebo extends React.Component {
     this.props.history.replace(
       `/${this.state.hue}${brightness ? `/${saturation}/${brightness}` : ''}`,
     )
-  }, 200)
+  }, 400)
 
   parsedUrlParams = params =>
     Object.keys(params).reduce((acc, key) => {
