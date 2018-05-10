@@ -32,7 +32,9 @@ const HsbSwatch = ({ hex, matchRoute, to, title, ...props }) => {
                 backgroundColor: hex,
                 zIndex: match ? 1 : undefined,
               }}
-            />
+            >
+              <span className="sr-only">{title}</span>
+            </Link>
           )}
         </Motion>
       )}
