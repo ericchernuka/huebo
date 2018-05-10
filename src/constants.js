@@ -1,3 +1,5 @@
+export const DEFAULT_HUE = 60
+
 export const INCREMENTS = [12, 25, 38, 50, 62, 75, 88, 100]
 
 /**

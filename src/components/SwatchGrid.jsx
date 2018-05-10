@@ -3,34 +3,25 @@ import PropTypes from 'prop-types'
 import { buildHueIncrements } from '../utils'
 import HsbSwatch from './HsbSwatch'
 
-export default class SwatchGrid extends React.Component {
-  handleSelection = swatch => () => this.props.onSelect(swatch)
-
-  render() {
-    const { hue, selectedSwatch } = this.props
-
-    return (
-      <div className="hue-swatches">
-        {buildHueIncrements(hue).map(swatch => (
-          <HsbSwatch
-            key={swatch.hex}
-            swatch={swatch}
-            onClick={this.handleSelection(swatch)}
-            selected={!!selectedSwatch && selectedSwatch.hex === swatch.hex}
-          />
-        ))}
-      </div>
-    )
-  }
+const SwatchGrid = ({ hue }) => {
+  const matchRoute = `/${hue}`
+  return (
+    <div className="hue-swatches">
+      {buildHueIncrements(hue).map(({ saturation, brightness, hex }) => (
+        <HsbSwatch
+          key={hex}
+          hex={hex}
+          matchRoute={matchRoute}
+          to={`/${hue}/${saturation}/${brightness}`}
+          title={`${hue},${saturation},${brightness}`}
+        />
+      ))}
+    </div>
+  )
 }
 
 SwatchGrid.propTypes = {
   hue: PropTypes.number.isRequired,
-  selectedSwatch: PropTypes.shape({
-    hue: PropTypes.number.isRequired,
-    saturation: PropTypes.number.isRequired,
-    brightness: PropTypes.number.isRequired,
-    hex: PropTypes.string.isRequired,
-  }),
-  onSelect: PropTypes.func.isRequired,
 }
+
+export default SwatchGrid

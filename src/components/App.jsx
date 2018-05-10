@@ -1,74 +1,29 @@
 import React from 'react'
-import copy from 'copy-to-clipboard'
-import { hsb2Hex } from '../utils/color_utils'
-import ColorOutputs from './ColorOutputs'
-import SwatchGrid from './SwatchGrid'
-import HueSelector from './HueSelector'
+import { Redirect, Switch, Route } from 'react-router-dom'
+import Huebo from './Huebo'
+import { DEFAULT_HUE, INCREMENTS } from '../constants'
 
-class App extends React.Component {
-  state = {
-    hue: 60,
-    selectedSwatch: null,
-    copiedColorFormat: null,
-  }
+const incrementOptions = INCREMENTS.join('|')
+const hueRange = '[0-2]?[0-9]?[0-9]|3[0-4][0-9]|35[0-5]'
+// TODO: Make the saturation/brightness contingent on each other to avoid having
+// to check the route properties
+const huePath = `/:hue(${hueRange})/:saturation(${incrementOptions})?/:brightness(${incrementOptions})?`
 
-  handleCopy = format => {
-    copy(format)
-    this.setState(
-      {
-        copiedColorFormat: format,
-      },
-      () => {
-        clearTimeout(this.timeout)
-
-        this.timeout = setTimeout(() => {
-          this.setState({ copiedColorFormat: null })
-        }, 2000)
-      },
-    )
-  }
-
-  handleHueChange = hue =>
-    this.setState({ hue, selectedSwatch: null, copiedColorFormat: null })
-
-  handleSwatchSelection = swatch => {
-    this.setState(({ selectedSwatch }) => ({
-      copiedColorFormat: null,
-      selectedSwatch:
-        selectedSwatch !== null && selectedSwatch.hex === swatch.hex
-          ? null
-          : swatch,
-    }))
-  }
-
-  render() {
-    const { copiedColorFormat, hue, selectedSwatch } = this.state
-
-    return (
-      <div
-        className="app-container"
-        style={{ backgroundColor: hsb2Hex(hue, 12, 88) }}
-      >
-        <div className="huebo">
-          <div className="huebo-layout">
-            <SwatchGrid
-              hue={hue}
-              selectedSwatch={selectedSwatch}
-              onSelect={this.handleSwatchSelection}
-            />
-            <div className="hue-manager">
-              <HueSelector hue={hue} onChange={this.handleHueChange} />
-              <ColorOutputs
-                {...selectedSwatch}
-                copiedColorFormat={copiedColorFormat}
-                onCopy={this.handleCopy}
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-}
+const App = () => (
+  <Switch>
+    <Route
+      path={huePath}
+      exact
+      render={routeProps => {
+        const { saturation, brightness } = routeProps.match.params
+        if (saturation && !brightness) {
+          return <Redirect to={`/${DEFAULT_HUE}`} />
+        }
+        return <Huebo {...routeProps} />
+      }}
+    />
+    <Redirect to={`/${DEFAULT_HUE}`} />
+  </Switch>
+)
 
 export default App

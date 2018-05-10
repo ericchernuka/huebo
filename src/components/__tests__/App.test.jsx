@@ -1,46 +1,55 @@
 import React from 'react'
-import copyMock from 'copy-to-clipboard'
-import {
-  renderIntoDocument,
-  fireEvent,
-  cleanup,
-  wait,
-} from 'react-testing-library'
+import { cleanup } from 'react-testing-library'
+import { renderWithRouter } from '../../../test/client-test-utils'
 import App from '../App'
+import { INCREMENTS } from '../../constants'
 
 afterEach(cleanup)
 
 test('defaults to 60 when first loaded', () => {
-  const { getByLabelText } = renderIntoDocument(<App />)
+  const { getByLabelText } = renderWithRouter(<App />)
   const rangeNode = getByLabelText('Hue')
   expect(rangeNode.value).toEqual(String(60))
 })
 
-test('selecting a swatch and pressing a format copies it to the clipboard', async () => {
-  const { container, getByTestId, getByLabelText } = renderIntoDocument(<App />)
-  const rangeNode = getByLabelText('Hue')
+describe('when HSB selected', () => {
+  test('renders any hue between 0-355', () => {
+    const hues = [0, 99, 199, 200, 299, 349, 355]
 
-  // Changes base hue to 120
-  rangeNode.value = 120
-  fireEvent.change(rangeNode)
-  expect(rangeNode.value).toEqual(String(120))
+    hues.forEach(hue => {
+      const { history } = renderWithRouter(<App />, { route: `/${hue}` })
+      expect(history.location.pathname).toEqual(`/${hue}`)
+    })
+  })
 
-  const firstSwatch = container.querySelectorAll('button')[0]
-  fireEvent.click(firstSwatch)
+  test('redirects to the default if number is not between 0-355', () => {
+    const hues = [-1, 356]
 
-  const hsbFormatNode = getByTestId('color-format-hsb')
+    hues.forEach(hue => {
+      const { history } = renderWithRouter(<App />, { route: `/${hue}` })
+      expect(history.location.pathname).toEqual(`/60`)
+    })
+  })
 
-  expect(hsbFormatNode.textContent).toMatch('120,12,12')
-  fireEvent.click(hsbFormatNode.querySelector('button'))
+  test('saturation has to have accompanying brightness', () => {
+    const { history } = renderWithRouter(<App />, { route: `/60/12` })
+    expect(history.location.pathname).toEqual(`/60`)
+  })
 
-  expect(copyMock).toHaveBeenCalledTimes(1)
-  expect(copyMock).toHaveBeenLastCalledWith('120,12,12')
+  test(`saturation route param can only be ${INCREMENTS}`, () => {
+    INCREMENTS.forEach(increment => {
+      let utils = renderWithRouter(<App />, {
+        route: `/60/${increment}/${increment}`,
+      })
+      expect(utils.history.location.pathname).toEqual(
+        `/60/${increment}/${increment}`,
+      )
 
-  expect(hsbFormatNode.textContent).toMatch('copied to clipboard')
-  await wait(
-    () => expect(hsbFormatNode.textContent).not.toMatch('copied to clipboard'),
-    {
-      timeout: 3000,
-    },
-  )
+      const invalidIncrement = increment + 1
+      utils = renderWithRouter(<App />, {
+        route: `/60/${invalidIncrement}/${invalidIncrement}`,
+      })
+      expect(utils.history.location.pathname).toEqual(`/60`)
+    })
+  })
 })

@@ -26,6 +26,7 @@ class HueSelector extends React.Component {
           type="range"
           id="hue-slider"
           className="hue-slider"
+          tabIndex={1}
           onChange={this.handleChange}
           value={hue}
           aria-valuenow={hue}

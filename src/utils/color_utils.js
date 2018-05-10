@@ -73,5 +73,11 @@ export function hsb2Rgb(h, s, b) {
 export function hsb2Hex(h, s, b) {
   const { r: red, g: green, b: blue } = hsb2Rgb(...arguments)
 
-  return '#' + ((1 << 24) + (red << 16) + (green << 8) + blue).toString(16).slice(1, 7)
+  return (
+    '#' +
+    ((1 << 24) + (red << 16) + (green << 8) + blue)
+      .toString(16)
+      .slice(1, 7)
+      .toUpperCase()
+  )
 }
