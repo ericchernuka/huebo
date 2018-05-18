@@ -1,41 +1,21 @@
-import React from 'react'
 import copy from 'copy-to-clipboard'
+import React from 'react'
 import { debounce } from '../utils'
 import { hsb2Hex } from '../utils/color_utils'
 import ColorOutputs from './ColorOutputs'
 import DocumentTitle from './DocumentTitle'
-import SwatchGrid from './SwatchGrid'
 import HueSelector from './HueSelector'
+import SwatchGrid from './SwatchGrid'
 
 export default class Huebo extends React.Component {
   state = {
-    hue: 60,
+    hue: parseInt(this.props.match.params.hue, 10),
     copiedColorFormat: null,
-  }
-
-  /**
-   * In order to keep the hue changes fluid and fast we need to keep the hue value
-   * in state, but we also want to keep the URL in sync so if hue changes on the url, set it back
-   * in state to keep the in lock-step.
-   */
-  static getDerivedStateFromProps(nextProps, prevState) {
-    const nextHue = parseInt(nextProps.match.params.hue, 10)
-
-    if (nextHue !== prevState.hue) {
-      return { hue: nextHue }
-    }
-
-    return null
   }
 
   handleCopy = format => {
     copy(format)
-    this.setState(
-      {
-        copiedColorFormat: format,
-      },
-      this.handleCopyClear,
-    )
+    this.setState({ copiedColorFormat: format }, this.handleCopyClear)
   }
 
   handleCopyClear = () => {
@@ -45,21 +25,15 @@ export default class Huebo extends React.Component {
     }, 2000)
   }
 
-  handleHueChange = hue => {
-    clearTimeout(this.clearFocus)
-    this.setState(
-      { hue, copiedColorFormat: null },
-      this.syncUrlWithHueSelection,
-    )
-  }
+  handleHueChange = hue => this.setState({ hue, copiedColorFormat: null })
 
-  syncUrlWithHueSelection = debounce(() => {
+  syncUrlWithHueSelection = debounce(hue => {
     const { match } = this.props
     const { saturation, brightness } = this.parsedUrlParams(match.params)
     this.props.history.push(
-      `/${this.state.hue}${brightness ? `/${saturation}/${brightness}` : ''}`,
+      `/${hue}${brightness ? `/${saturation}/${brightness}` : ''}`,
     )
-  }, 400)
+  }, 600)
 
   parsedUrlParams = params =>
     Object.keys(params).reduce((acc, key) => {
@@ -87,7 +61,11 @@ export default class Huebo extends React.Component {
           <div className="huebo">
             <div className="huebo-layout">
               <div className="hue-manager">
-                <HueSelector hue={hue} onChange={this.handleHueChange} />
+                <HueSelector
+                  hue={hue}
+                  onChange={this.handleHueChange}
+                  onAfterChange={this.syncUrlWithHueSelection}
+                />
                 <ColorOutputs
                   hue={hue}
                   hex={hex}

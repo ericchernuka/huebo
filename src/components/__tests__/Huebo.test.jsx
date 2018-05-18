@@ -1,7 +1,7 @@
-import React from 'react'
 import copyMock from 'copy-to-clipboard'
+import React from 'react'
 import { Route } from 'react-router-dom'
-import { renderIntoDocument, fireEvent, wait } from 'react-testing-library'
+import { fireEvent, wait } from 'react-testing-library'
 import { renderWithRouter } from '../../../test/client-test-utils'
 import Huebo from '../Huebo'
 
@@ -23,6 +23,7 @@ test('selecting a swatch and pressing a format copies it to the clipboard', asyn
 
   // Changes base hue to 120
   rangeNode.value = 120
+  fireEvent.keyUp(rangeNode, { keyCode: 39 })
   fireEvent.change(rangeNode)
   expect(rangeNode.value).toEqual(String(120))
   await wait(() => expect(history.location.pathname).toEqual('/120'))
@@ -48,6 +49,7 @@ test('selecting a swatch and pressing a format copies it to the clipboard', asyn
 
   // Changing the hue to 255 keeps the saturation and brightness
   rangeNode.value = 255
+  fireEvent.mouseUp(rangeNode, { button: 2 })
   fireEvent.change(rangeNode)
   expect(rangeNode.value).toEqual(String(255))
   await wait(() => expect(history.location.pathname).toEqual('/255/12/12'))

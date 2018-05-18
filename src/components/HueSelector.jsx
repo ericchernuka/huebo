@@ -1,7 +1,7 @@
-import React from 'react'
 import PropTypes from 'prop-types'
+import React from 'react'
+import { HUE_STEP, MAX_HUE, MIN_HUE } from '../constants'
 import BaseHue from './BaseHue'
-import { HUE_STEP, MIN_HUE, MAX_HUE } from '../constants'
 
 class HueSelector extends React.Component {
   static propTypes = {
@@ -12,6 +12,17 @@ class HueSelector extends React.Component {
   handleChange = ({ target: { value } }) => {
     this.props.onChange(parseInt(value, 10))
   }
+
+  handleKeyUp = e => {
+    // Only trigger if any of the arrow keys
+    if (e.keyCode < 37 && e.keyCode < 40) return
+
+    e.persist()
+    this.handleAfterChange(e)
+  }
+
+  handleAfterChange = ({ target: { value } }) =>
+    this.props.onAfterChange(parseInt(value, 10))
 
   render() {
     const { hue } = this.props
@@ -28,6 +39,9 @@ class HueSelector extends React.Component {
           className="hue-slider"
           tabIndex={1}
           onChange={this.handleChange}
+          onKeyUp={this.handleKeyUp}
+          onMouseUp={this.handleAfterChange}
+          onTouchEnd={this.handleAfterChange}
           value={hue}
           aria-valuenow={hue}
           min={MIN_HUE}
