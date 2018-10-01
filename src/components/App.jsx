@@ -1,7 +1,7 @@
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import { DEFAULT_HUE, INCREMENTS } from '../constants'
-import GATracker from './GATracker'
+import GoogleAnalytics from './GoogleAnalytics'
 import Huebo from './Huebo'
 
 const incrementOptions = INCREMENTS.join('|')
@@ -12,7 +12,7 @@ const huePath = `/:hue(${hueRange})/:saturation(${incrementOptions})?/:brightnes
 
 const App = () => (
   <React.Fragment>
-    <GATracker />
+    <GoogleAnalytics />
     <Switch>
       <Route
         path={huePath}

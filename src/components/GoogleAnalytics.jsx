@@ -1,8 +1,10 @@
 import React from 'react'
+import ReactGA from 'react-ga'
 import { withRouter } from 'react-router-dom'
 
 class GATracker extends React.Component {
   componentDidMount() {
+    ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
     this.trackPage()
   }
 
@@ -16,11 +18,8 @@ class GATracker extends React.Component {
   }
 
   trackPage = () => {
-    if (typeof window.ga === 'function') {
-      const { location } = this.props
-      window.ga('set', 'page', location.pathname + location.search)
-      window.ga('send', 'pageview')
-    }
+    const { location } = this.props
+    ReactGA.pageview(`${location.pathname}${location.search}`)
   }
 
   render() {
