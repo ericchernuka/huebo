@@ -1,7 +1,7 @@
-import React from 'react'
 import PropTypes from 'prop-types'
+import React from 'react'
 import { Motion, spring } from 'react-motion'
-import { Route, Link } from 'react-router-dom'
+import { Link, Route } from 'react-router-dom'
 
 const springConfig = { stiffness: 300, damping: 24 }
 
@@ -20,8 +20,9 @@ const HsbSwatch = ({ hex, matchRoute, to, title, ...props }) => {
           {({ scale, shadow, y }) => (
             <Link
               {...props}
+              role="button"
               className="hue-swatch"
-              aria-pressed={String(Boolean(match))}
+              aria-pressed={Boolean(match)}
               to={match ? matchRoute : to}
               style={{
                 boxShadow: match

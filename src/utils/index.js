@@ -1,4 +1,4 @@
-import { INCREMENTS, MIN_HUE, MAX_HUE } from '../constants'
+import { INCREMENTS, MAX_HUE, MIN_HUE } from '../constants'
 import { hsb2Hex } from './color_utils'
 
 /**
@@ -22,20 +22,4 @@ export const buildHueIncrements = (hue = 60) => {
 
     return acc
   }, [])
-}
-
-/**
- * Debounce a method for a defined amount of milliseconds
- * @param {Function} fn Callback that needs to be debounced
- * @param {Number} timeMs Amount of milliseconds to wait before calling
- */
-export const debounce = (fn, timeMs) => {
-  let timeout
-
-  return function() {
-    const functionCall = () => fn.apply(this, arguments)
-
-    clearTimeout(timeout)
-    timeout = setTimeout(functionCall, timeMs)
-  }
 }

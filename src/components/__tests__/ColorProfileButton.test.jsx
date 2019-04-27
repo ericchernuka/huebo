@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, renderIntoDocument, cleanup } from 'react-testing-library'
+import { cleanup, render } from 'react-testing-library'
 import ColorProfileButton from '../ColorProfileButton'
 
 afterEach(cleanup)
@@ -9,7 +9,9 @@ describe('when a value is present', () => {
   const onClickHandler = jest.fn()
 
   test('it renders the value', () => {
-    const { getByText } = render(<ColorProfileButton value={value} onClick={onClickHandler} />)
+    const { getByText } = render(
+      <ColorProfileButton value={value} onClick={onClickHandler} />,
+    )
 
     const buttonNode = getByText(value)
     expect(buttonNode).toBeTruthy()
@@ -17,7 +19,7 @@ describe('when a value is present', () => {
   })
 
   test('clicking returns the value', () => {
-    const { getByText } = renderIntoDocument(
+    const { getByText } = render(
       <ColorProfileButton value={value} onClick={onClickHandler} />,
     )
 

@@ -1,10 +1,5 @@
 import React from 'react'
-import {
-  fireEvent,
-  render,
-  renderIntoDocument,
-  cleanup,
-} from 'react-testing-library'
+import { cleanup, fireEvent, render } from 'react-testing-library'
 import HueSelector from '../HueSelector'
 
 const defaultHue = 60
@@ -24,7 +19,7 @@ test('displays the range value', () => {
 
 test.skip('moving the range updates the value', () => {
   const onChangeHandler = jest.fn()
-  const { getByLabelText } = renderIntoDocument(
+  const { getByLabelText } = render(
     <HueSelector onChange={onChangeHandler} hue={defaultHue} />,
   )
 

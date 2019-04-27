@@ -1,6 +1,5 @@
 import copy from 'copy-to-clipboard'
 import React from 'react'
-import { debounce } from '../utils'
 import { hsb2Hex } from '../utils/color_utils'
 import ColorOutputs from './ColorOutputs'
 import DocumentTitle from './DocumentTitle'
@@ -9,7 +8,8 @@ import SwatchGrid from './SwatchGrid'
 
 export default class Huebo extends React.Component {
   state = {
-    hue: parseInt(this.props.match.params.hue, 10),
+    hue: Number(this.props.match.params.hue),
+    isDragging: false,
     copiedColorFormat: null,
   }
 
@@ -25,26 +25,38 @@ export default class Huebo extends React.Component {
     }, 2000)
   }
 
-  handleHueChange = hue => this.setState({ hue, copiedColorFormat: null })
+  handleHueChange = (hue, { isDragging }) =>
+    this.setState({ hue, copiedColorFormat: null, isDragging })
 
-  syncUrlWithHueSelection = debounce(hue => {
+  syncUrlWithHueSelection = hue => {
     const { match } = this.props
     const { saturation, brightness } = this.parsedUrlParams(match.params)
     this.props.history.push(
       `/${hue}${brightness ? `/${saturation}/${brightness}` : ''}`,
     )
-  }, 600)
+  }
+
+  componentDidUpdate(_, prevState) {
+    if (prevState.isDragging && !this.state.isDragging) {
+      this.syncUrlWithHueSelection(this.state.hue)
+    }
+  }
 
   parsedUrlParams = params =>
     Object.keys(params).reduce((acc, key) => {
-      acc[key] = parseInt(params[key], 10) || null
+      acc[key] = params[key] ? parseInt(params[key], 10) : null
       return acc
     }, {})
 
   render() {
     const { match } = this.props
-    const { copiedColorFormat, hue } = this.state
-    const { saturation, brightness } = this.parsedUrlParams(match.params)
+    const { copiedColorFormat, hue: stateHue, isDragging } = this.state
+    const { hue: urlHue, saturation, brightness } = this.parsedUrlParams(
+      match.params,
+    )
+
+    const hue = isDragging ? stateHue : urlHue
+
     const hex =
       saturation && brightness ? hsb2Hex(hue, saturation, brightness) : null
 
@@ -61,11 +73,7 @@ export default class Huebo extends React.Component {
           <div className="huebo">
             <div className="huebo-layout">
               <div className="hue-manager">
-                <HueSelector
-                  hue={hue}
-                  onChange={this.handleHueChange}
-                  onAfterChange={this.syncUrlWithHueSelection}
-                />
+                <HueSelector hue={hue} onChange={this.handleHueChange} />
                 <ColorOutputs
                   hue={hue}
                   hex={hex}
