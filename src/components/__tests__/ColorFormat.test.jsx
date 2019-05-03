@@ -1,6 +1,8 @@
 import React from 'react'
-import { render } from 'react-testing-library'
+import { cleanup, render } from 'react-testing-library'
 import ColorFormat from '../ColorFormat'
+
+afterEach(cleanup)
 
 describe('when not copied', () => {
   test('renders without "copied to clipboard" text', () => {

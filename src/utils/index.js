@@ -23,3 +23,15 @@ export const buildHueIncrements = (hue = 60) => {
     return acc
   }, [])
 }
+
+/**
+ * Extracts values if present from the url params
+ * @param {String} params.hue Hue from url
+ * @param {String} params.saturation Saturation from url
+ * @param {String} params.brightness Saturation from url
+ */
+export const extractHSBValuesFromParams = params =>
+  Object.keys(params).reduce((acc, key) => {
+    acc[key] = params[key] ? parseInt(params[key], 10) : null
+    return acc
+  }, {})

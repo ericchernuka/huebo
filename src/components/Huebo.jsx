@@ -1,14 +1,15 @@
 import copy from 'copy-to-clipboard'
 import React from 'react'
+import { extractHSBValuesFromParams } from '../utils'
 import { hsb2Hex } from '../utils/color_utils'
 import ColorOutputs from './ColorOutputs'
 import DocumentTitle from './DocumentTitle'
 import HueSelector from './HueSelector'
 import SwatchGrid from './SwatchGrid'
 
-export default class Huebo extends React.Component {
+class Huebo extends React.Component {
   state = {
-    hue: Number(this.props.match.params.hue),
+    draggingHue: Number(this.props.match.params.hue),
     isDragging: false,
     copiedColorFormat: null,
   }
@@ -25,12 +26,16 @@ export default class Huebo extends React.Component {
     }, 2000)
   }
 
-  handleHueChange = (hue, { isDragging }) =>
-    this.setState({ hue, copiedColorFormat: null, isDragging })
+  handleHueChange = hue =>
+    this.setState({ draggingHue: hue, copiedColorFormat: null })
+
+  handleDrag = ({ isDragging = false }) => {
+    this.setState({ isDragging })
+  }
 
   syncUrlWithHueSelection = hue => {
     const { match } = this.props
-    const { saturation, brightness } = this.parsedUrlParams(match.params)
+    const { saturation, brightness } = extractHSBValuesFromParams(match.params)
     this.props.history.push(
       `/${hue}${brightness ? `/${saturation}/${brightness}` : ''}`,
     )
@@ -38,31 +43,24 @@ export default class Huebo extends React.Component {
 
   componentDidUpdate(_, prevState) {
     if (prevState.isDragging && !this.state.isDragging) {
-      this.syncUrlWithHueSelection(this.state.hue)
+      this.syncUrlWithHueSelection(this.state.draggingHue)
     }
   }
 
-  parsedUrlParams = params =>
-    Object.keys(params).reduce((acc, key) => {
-      acc[key] = params[key] ? parseInt(params[key], 10) : null
-      return acc
-    }, {})
-
   render() {
-    const { match } = this.props
-    const { copiedColorFormat, hue: stateHue, isDragging } = this.state
-    const { hue: urlHue, saturation, brightness } = this.parsedUrlParams(
-      match.params,
+    const { copiedColorFormat, draggingHue, isDragging } = this.state
+    const { hue: urlHue, saturation, brightness } = extractHSBValuesFromParams(
+      this.props.match.params,
     )
 
-    const hue = isDragging ? stateHue : urlHue
+    const documentTitle = brightness
+      ? `HSB(${urlHue},${saturation},${brightness})`
+      : `Hue: ${urlHue}`
+
+    const hue = isDragging ? draggingHue : urlHue
 
     const hex =
       saturation && brightness ? hsb2Hex(hue, saturation, brightness) : null
-
-    const documentTitle = brightness
-      ? `HSB(${hue},${saturation},${brightness})`
-      : `Hue: ${hue}`
 
     return (
       <DocumentTitle title={documentTitle}>
@@ -73,7 +71,11 @@ export default class Huebo extends React.Component {
           <div className="huebo">
             <div className="huebo-layout">
               <div className="hue-manager">
-                <HueSelector hue={hue} onChange={this.handleHueChange} />
+                <HueSelector
+                  hue={hue}
+                  onChange={this.handleHueChange}
+                  onDrag={this.handleDrag}
+                />
                 <ColorOutputs
                   hue={hue}
                   hex={hex}
@@ -91,3 +93,5 @@ export default class Huebo extends React.Component {
     )
   }
 }
+
+export default Huebo
