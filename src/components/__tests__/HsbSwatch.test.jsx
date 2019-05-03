@@ -1,6 +1,9 @@
 import React from 'react'
-import HsbSwatch from '../HsbSwatch'
+import { cleanup } from 'react-testing-library'
 import { renderWithRouter } from '../../../test/client-test-utils'
+import HsbSwatch from '../HsbSwatch'
+
+afterEach(cleanup)
 
 test('without saturation or brightness the link is to a full HSB', () => {
   const { getByText } = renderWithRouter(

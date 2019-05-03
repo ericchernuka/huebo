@@ -1,5 +1,5 @@
-import React from 'react'
 import PropTypes from 'prop-types'
+import React from 'react'
 import { hsb2Rgb } from '../utils/color_utils'
 import ColorFormat from './ColorFormat'
 import ColorProfileButton from './ColorProfileButton'
@@ -12,15 +12,12 @@ const ColorOutputs = ({
   hex: hexValue,
   onCopy,
 }) => {
-  let hsbValue = null
+  const hsbValue = brightness ? `${hue},${saturation},${brightness}` : null
   let rgbValue = null
 
-  const hasSelection = !!hexValue
-
-  if (hasSelection) {
+  if (brightness) {
     const { r, g, b } = hsb2Rgb(hue, saturation, brightness)
     rgbValue = `${r},${g},${b}`
-    hsbValue = `${hue},${saturation},${brightness}`
   }
 
   return (
@@ -58,10 +55,16 @@ const ColorOutputs = ({
 
 ColorOutputs.propTypes = {
   copiedColorFormat: PropTypes.string,
-  hue: PropTypes.number,
+  hue: PropTypes.number.isRequired,
   saturation: PropTypes.number,
   brightness: PropTypes.number,
   onCopy: PropTypes.func.isRequired,
+}
+
+ColorOutputs.defaultProps = {
+  copiedColorFormat: null,
+  saturation: null,
+  brightness: null,
 }
 
 export default ColorOutputs

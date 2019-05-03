@@ -1,10 +1,15 @@
 import React from 'react'
 import { cleanup } from 'react-testing-library'
 import { renderWithRouter } from '../../../test/client-test-utils'
-import App from '../App'
 import { INCREMENTS } from '../../constants'
+import App from '../App'
 
 afterEach(cleanup)
+
+jest.mock('react-ga', () => ({
+  initialize: jest.fn(),
+  pageview: jest.fn(),
+}))
 
 test('defaults to 60 when first loaded', () => {
   const { getByLabelText } = renderWithRouter(<App />)

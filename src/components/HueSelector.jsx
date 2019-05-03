@@ -9,20 +9,10 @@ class HueSelector extends React.Component {
     hue: PropTypes.number.isRequired,
   }
 
-  handleChange = ({ target: { value } }) => {
-    this.props.onChange(parseInt(value, 10))
-  }
+  handleChange = event => this.props.onChange(parseInt(event.target.value, 10))
 
-  handleKeyUp = e => {
-    // Only trigger if any of the arrow keys
-    if (e.keyCode < 37 && e.keyCode < 40) return
-
-    e.persist()
-    this.handleAfterChange(e)
-  }
-
-  handleAfterChange = ({ target: { value } }) =>
-    this.props.onAfterChange(parseInt(value, 10))
+  handleDragStart = () => this.props.onDrag({ isDragging: true })
+  handleDragEnd = () => this.props.onDrag({ isDragging: false })
 
   render() {
     const { hue } = this.props
@@ -38,10 +28,13 @@ class HueSelector extends React.Component {
           id="hue-slider"
           className="hue-slider"
           tabIndex={1}
-          onChange={this.handleChange}
-          onKeyUp={this.handleKeyUp}
-          onMouseUp={this.handleAfterChange}
-          onTouchEnd={this.handleAfterChange}
+          onChange={e => this.handleChange(e)}
+          onKeyDown={this.handleDragStart}
+          onMouseDown={this.handleDragStart}
+          onTouchStart={this.handleDragStart}
+          onKeyUp={this.handleDragEnd}
+          onMouseUp={this.handleDragEnd}
+          onTouchEnd={this.handleDragEnd}
           value={hue}
           aria-valuenow={hue}
           min={MIN_HUE}

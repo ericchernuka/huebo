@@ -1,8 +1,10 @@
 import React from 'react'
-import { render } from 'react-testing-library'
+import { cleanup, render } from 'react-testing-library'
 import ColorOutputs from '../ColorOutputs'
 
 const mockedOnCopy = jest.fn()
+
+afterEach(cleanup)
 
 describe('when hue selected', () => {
   test('renders HSB, RGB, and Hex values', () => {
@@ -50,7 +52,9 @@ describe('when hue selected', () => {
 
 describe('when hue not selected', () => {
   test('renders placeholders', () => {
-    const { getByTestId } = render(<ColorOutputs onCopy={mockedOnCopy} />)
+    const { getByTestId } = render(
+      <ColorOutputs hue={60} onCopy={mockedOnCopy} />,
+    )
 
     expect(getByTestId('color-format-hsb').textContent).toMatch(
       'Select a color',
