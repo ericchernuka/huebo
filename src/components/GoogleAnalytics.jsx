@@ -2,7 +2,7 @@ import React from 'react'
 import ReactGA from 'react-ga'
 import { withRouter } from 'react-router-dom'
 
-class GATracker extends React.Component {
+class GoogleAnalytics extends React.Component {
   componentDidMount() {
     ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
     this.trackPage()
@@ -27,4 +27,4 @@ class GATracker extends React.Component {
   }
 }
 
-export default withRouter(GATracker)
+export default withRouter(GoogleAnalytics)

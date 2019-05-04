@@ -32,6 +32,7 @@ export const buildHueIncrements = (hue = 60) => {
  */
 export const extractHSBValuesFromParams = params =>
   Object.keys(params).reduce((acc, key) => {
-    acc[key] = params[key] ? parseInt(params[key], 10) : null
+    const parsedNum = Number(params[key])
+    acc[key] = parsedNum >= 0 ? parsedNum : null
     return acc
   }, {})
