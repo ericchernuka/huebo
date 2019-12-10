@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@reach/slider": "^0.6.2",
+    "clsx": "^1.0.4",
     "copy-to-clipboard": "^3.2.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
@@ -12,19 +14,25 @@
     "typescript": "^3.7.3"
   },
   "devDependencies": {
+    "@fullhuman/postcss-purgecss": "^1.3.0",
     "@testing-library/react": "^9.3.2",
+    "@testing-library/react-hooks": "^3.2.1",
     "@types/jest": "^24.0.23",
     "@types/node": "^12.12.14",
-    "@types/react-dom": "^16.9.4",
-    "@types/react-router-dom": "^5.1.3",
     "@types/react": "^16.9.15",
+    "@types/react-dom": "^16.9.4",
+    "@types/react-motion": "^0.0.29",
+    "@types/react-router-dom": "^5.1.3",
+    "postcss-cli": "^6.1.3",
     "prettier": "^1.19.1",
     "prop-types": "^15.7.2",
-    "react-scripts": "^3.3.0"
+    "react-scripts": "^3.3.0",
+    "tailwindcss": "^1.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "npm run css:build && react-scripts start",
+    "build": "npm run css:build && react-scripts build",
+    "css:build": "postcss .tailwind/tailwind.src.css -o src/tailwind.css",
     "test": "react-scripts test --env=jsdom",
     "test:watch": "react-scripts test --env=jsdom --watch",
     "eject": "react-scripts eject"
