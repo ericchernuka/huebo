@@ -2,10 +2,10 @@ import { INCREMENTS, MAX_HUE, MIN_HUE } from '../constants';
 import { hsb2Hex } from './color_utils';
 
 export interface HSBColor {
-  hue: number;
-  saturation: number;
   brightness: number;
   hex: string;
+  hue: number;
+  saturation: number;
 }
 
 /**
@@ -20,10 +20,10 @@ export const buildHueIncrements = (hue = 60): HSBColor[] => {
   return INCREMENTS.brightness.reduce((acc: HSBColor[], brightness) => {
     INCREMENTS.saturation.forEach((saturation) => {
       acc.push({
-        hue,
-        saturation,
         brightness,
         hex: hsb2Hex(hue, saturation, brightness),
+        hue,
+        saturation,
       });
     });
 
@@ -43,7 +43,7 @@ export const extractHSBValuesFromParams = (
   Object.keys(params).reduce(
     (acc, key) => {
       const value = params[key];
-      const parsedNum = value !== undefined ? Number(value) : NaN;
+      const parsedNum = value !== undefined ? Number(value) : Number.NaN;
       acc[key] = parsedNum >= 0 ? parsedNum : null;
       return acc;
     },

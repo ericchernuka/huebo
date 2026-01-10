@@ -2,14 +2,14 @@ import { Motion, spring } from 'react-motion';
 
 interface Props {
   hex: string;
-  selected: boolean;
   onClick: () => void;
+  selected: boolean;
   title: string;
 }
 
-const springConfig = { stiffness: 300, damping: 24 };
+const springConfig = { damping: 24, stiffness: 300 };
 
-export default function HsbSwatch({ hex, selected, onClick, title }: Props) {
+export default function HsbSwatch({ hex, onClick, selected, title }: Props) {
   return (
     <Motion
       style={{
@@ -19,17 +19,17 @@ export default function HsbSwatch({ hex, selected, onClick, title }: Props) {
     >
       {({ scale, shadow }) => (
         <button
-          role="button"
-          className="hue-swatch"
           aria-pressed={selected}
+          className="hue-swatch"
           onClick={onClick}
+          role="button"
           style={{
+            backgroundColor: hex,
             boxShadow: selected
               ? `inset 0 0 0 3px #FFF, 0 4px ${shadow}px 0 rgba(0,0,0,0.25)`
               : undefined,
             transform: `translate3d(0, 0, 0) scale(${scale})`,
             WebkitTransform: `translate3d(0, 0, 0) scale(${scale})`,
-            backgroundColor: hex,
             zIndex: selected ? 1 : undefined,
           }}
         >

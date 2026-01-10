@@ -4,8 +4,8 @@ import Label from './Label';
 interface Props {
   children: ReactNode;
   copied: boolean;
-  label: string;
   'data-testid'?: string;
+  label: string;
 }
 
 export default function ColorFormat({

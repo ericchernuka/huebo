@@ -2,40 +2,40 @@ import { HUE_STEP, MAX_HUE, MIN_HUE } from '../constants';
 import BaseHue from './BaseHue';
 
 interface Props {
+  hue: number;
   onChange: (hue: number) => void;
   onChangeEnd: () => void;
-  hue: number;
 }
 
-export default function HueSelector({ onChange, onChangeEnd, hue }: Props) {
+export default function HueSelector({ hue, onChange, onChangeEnd }: Props) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
-    onChange(parseInt(event.target.value, 10));
+    onChange(Number.parseInt(event.target.value, 10));
 
   return (
     <div>
       <BaseHue hue={hue} />
-      <label htmlFor="hue-slider" className="sr-only">
+      <label className="sr-only" htmlFor="hue-slider">
         Hue
       </label>
       <input
-        type="range"
-        id="hue-slider"
+        aria-valuemax={MAX_HUE}
+        aria-valuemin={MIN_HUE}
+        aria-valuenow={hue}
         className="hue-slider"
-        tabIndex={1}
+        id="hue-slider"
+        max={MAX_HUE}
+        min={MIN_HUE}
         onChange={handleChange}
         onKeyDown={() => {}}
-        onMouseDown={() => {}}
-        onTouchStart={() => {}}
         onKeyUp={onChangeEnd}
+        onMouseDown={() => {}}
         onMouseUp={onChangeEnd}
         onTouchEnd={onChangeEnd}
-        value={hue}
-        aria-valuenow={hue}
-        min={MIN_HUE}
-        max={MAX_HUE}
+        onTouchStart={() => {}}
         step={HUE_STEP}
-        aria-valuemin={MIN_HUE}
-        aria-valuemax={MAX_HUE}
+        tabIndex={1}
+        type="range"
+        value={hue}
       />
     </div>
   );

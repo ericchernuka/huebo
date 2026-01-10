@@ -1,9 +1,12 @@
 import tailwindcss from '@tailwindcss/vite';
 import react from '@vitejs/plugin-react';
 import reactCompiler from 'babel-plugin-react-compiler';
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
+  build: {
+    outDir: 'build',
+  },
   plugins: [
     tailwindcss(),
     react({
@@ -13,15 +16,12 @@ export default defineConfig({
     }),
   ],
   server: {
-    port: 3000,
     open: true,
-  },
-  build: {
-    outDir: 'build',
+    port: 3000,
   },
   test: {
     environment: 'jsdom',
-    setupFiles: './src/setupTests.ts',
     include: ['src/**/*.test.{ts,tsx}'],
+    setupFiles: './src/setupTests.ts',
   },
 });

@@ -8,10 +8,10 @@ import DocumentTitle from './DocumentTitle';
 import HueSelector from './HueSelector';
 import SwatchGrid from './SwatchGrid';
 
-interface Params {
+interface Params extends Record<string, string | undefined> {
+  brightness?: string;
   hue: string;
   saturation?: string;
-  brightness?: string;
 }
 
 export default function Huebo() {
@@ -25,11 +25,12 @@ export default function Huebo() {
     null,
   );
 
-  const { saturation, brightness } = extractHSBValuesFromParams(params);
+  const { brightness, saturation } = extractHSBValuesFromParams(params);
 
   // Sync draggingHue with URL hue when not dragging
   useEffect(() => {
     if (!isDragging) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setDraggingHue(hue);
     }
   }, [hue, isDragging]);
@@ -96,18 +97,18 @@ export default function Huebo() {
                 onChangeEnd={handleHueChangeEnd}
               />
               <ColorOutputs
-                hue={displayHue}
-                hex={hex}
-                saturation={saturation}
                 brightness={brightness}
                 copiedColorFormat={copiedColorFormat}
+                hex={hex}
+                hue={displayHue}
                 onCopy={handleCopyColor}
+                saturation={saturation}
               />
             </div>
             <SwatchGrid
               hue={displayHue}
-              selectedHex={hex}
               onSwatchClick={handleSwatchClick}
+              selectedHex={hex}
             />
           </div>
         </div>

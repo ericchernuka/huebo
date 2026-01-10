@@ -8,8 +8,8 @@
     "isolatedModules": true,
     "jsx": "react-jsx",
     "lib": ["dom", "dom.iterable", "esnext"],
-    "module": "nodenext",
-    "moduleResolution": "nodenext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
     "noEmit": true,
     "noImplicitOverride": true,
     "noUnusedLocals": true,
@@ -17,7 +17,7 @@
     "skipLibCheck": true,
     "strict": true,
     "target": "es2017",
-    "types": ["vite/client"]
+    "types": ["vite/client", "vitest/globals"]
   },
   "exclude": ["node_modules"],
   "include": ["**/*.ts", "**/*.tsx"],

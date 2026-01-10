@@ -3,6 +3,6 @@ import nkzw from '@nkzw/eslint-config';
 export default [
   ...nkzw,
   {
-    ignores: ['dist/', 'vite.config.ts.timestamp-*'],
+    ignores: ['dist/', 'build/', 'vite.config.ts.timestamp-*'],
   },
 ];

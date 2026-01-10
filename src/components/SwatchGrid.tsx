@@ -3,19 +3,19 @@ import HsbSwatch from './HsbSwatch';
 
 interface Props {
   hue: number;
-  selectedHex: string | null;
   onSwatchClick: (saturation: number, brightness: number) => void;
+  selectedHex: string | null;
 }
 
-export default function SwatchGrid({ hue, selectedHex, onSwatchClick }: Props) {
+export default function SwatchGrid({ hue, onSwatchClick, selectedHex }: Props) {
   return (
     <div className="hue-swatches">
-      {buildHueIncrements(hue).map(({ saturation, brightness, hex }) => (
+      {buildHueIncrements(hue).map(({ brightness, hex, saturation }) => (
         <HsbSwatch
-          key={hex}
           hex={hex}
-          selected={hex === selectedHex}
+          key={hex}
           onClick={() => onSwatchClick(saturation, brightness)}
+          selected={hex === selectedHex}
           title={`${hue},${saturation},${brightness}`}
         />
       ))}

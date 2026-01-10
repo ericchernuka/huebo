@@ -3,21 +3,21 @@ import ColorFormat from './ColorFormat';
 import ColorProfileButton from './ColorProfileButton';
 
 interface Props {
-  copiedColorFormat: string | null;
-  hue: number;
-  saturation: number | null;
   brightness: number | null;
+  copiedColorFormat: string | null;
   hex: string | null;
+  hue: number;
   onCopy: (value: string) => void;
+  saturation: number | null;
 }
 
 export default function ColorOutputs({
-  copiedColorFormat,
-  hue,
-  saturation,
   brightness,
+  copiedColorFormat,
   hex: hexValue,
+  hue,
   onCopy,
+  saturation,
 }: Props) {
   const hsbValue =
     brightness !== null && saturation !== null
@@ -26,38 +26,38 @@ export default function ColorOutputs({
   let rgbValue = null;
 
   if (brightness !== null && saturation !== null) {
-    const { r, g, b } = hsb2Rgb(hue, saturation, brightness);
+    const { b, g, r } = hsb2Rgb(hue, saturation, brightness);
     rgbValue = `${r},${g},${b}`;
   }
 
   return (
     <div>
       <ColorFormat
-        label="HSB"
         copied={copiedColorFormat !== null && copiedColorFormat === hsbValue}
         data-testid="color-format-hsb"
+        label="HSB"
       >
         <ColorProfileButton
-          value={hsbValue}
-          placeholder="Select a color"
           onClick={onCopy}
+          placeholder="Select a color"
+          value={hsbValue}
         />
       </ColorFormat>
 
       <ColorFormat
-        label="RGB"
         copied={copiedColorFormat !== null && copiedColorFormat === rgbValue}
         data-testid="color-format-rgb"
+        label="RGB"
       >
-        <ColorProfileButton value={rgbValue} onClick={onCopy} />
+        <ColorProfileButton onClick={onCopy} value={rgbValue} />
       </ColorFormat>
 
       <ColorFormat
-        label="Hex"
         copied={copiedColorFormat !== null && copiedColorFormat === hexValue}
         data-testid="color-format-hex"
+        label="Hex"
       >
-        <ColorProfileButton value={hexValue} onClick={onCopy} />
+        <ColorProfileButton onClick={onCopy} value={hexValue} />
       </ColorFormat>
     </div>
   );

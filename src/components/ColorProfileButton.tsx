@@ -13,10 +13,10 @@ export default function ColorProfileButton({
   return (
     <button
       {...props}
+      className={`color-profile ${!value ? 'color-profile-muted' : ''}`}
+      disabled={!value}
       onClick={() => value && onClick(value)}
       type="button"
-      disabled={!value}
-      className={`color-profile ${!value ? 'color-profile-muted' : ''}`}
     >
       {value || placeholder}
     </button>
