@@ -1,8 +1,10 @@
 import { createRoot } from 'react-dom/client';
-import ReactGA from 'react-ga4';
+import ReactGA4 from 'react-ga4';
 import { BrowserRouter } from 'react-router';
 import App from './components/App';
 import './index.css';
+
+const ReactGA = ReactGA4.default;
 
 // Initialize Google Analytics before rendering
 const gaId = import.meta.env.VITE_GOOGLE_ANALYTICS_ID;
