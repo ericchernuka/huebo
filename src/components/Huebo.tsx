@@ -25,7 +25,8 @@ export default function Huebo() {
     null,
   );
 
-  const { brightness, saturation } = extractHSBValuesFromParams(params);
+  const { brightness = null, saturation = null } =
+    extractHSBValuesFromParams(params);
 
   // Sync draggingHue with URL hue when not dragging
   useEffect(() => {

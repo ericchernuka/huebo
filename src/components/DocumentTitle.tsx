@@ -3,5 +3,5 @@ interface DocumentTitleProps {
 }
 
 export default function DocumentTitle({ title }: DocumentTitleProps) {
-  return <title>{title} | Huebo</title>;
+  return <title>{`${title} | Huebo`}</title>;
 }

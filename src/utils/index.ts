@@ -17,8 +17,8 @@ export const buildHueIncrements = (hue = 60): HSBColor[] => {
     throw new Error('Hue value must be between 0 and 355');
   }
 
-  return INCREMENTS.brightness.reduce((acc: HSBColor[], brightness) => {
-    INCREMENTS.saturation.forEach((saturation) => {
+  return INCREMENTS.reduce((acc, brightness) => {
+    INCREMENTS.forEach((saturation) => {
       acc.push({
         brightness,
         hex: hsb2Hex(hue, saturation, brightness),
@@ -28,9 +28,8 @@ export const buildHueIncrements = (hue = 60): HSBColor[] => {
     });
 
     return acc;
-  }, []);
+  }, [] as HSBColor[]);
 };
-
 /**
  * Extracts values if present from the url params
  * @param params.hue Hue from url
