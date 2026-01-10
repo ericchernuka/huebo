@@ -1,6 +1,11 @@
+import {
+  createMemoryHistory,
+  createRouter,
+  RouterProvider,
+} from '@tanstack/react-router';
 import { render, type RenderOptions } from '@testing-library/react';
 import type { ReactElement } from 'react';
-import { MemoryRouter } from 'react-router';
+import { routeTree } from '../src/routes';
 
 interface Options extends Omit<RenderOptions, 'wrapper'> {
   route?: string;
@@ -10,8 +15,14 @@ export function renderWithRouter(
   ui: ReactElement,
   { route = '/', ...options }: Options = {},
 ) {
-  return render(
-    <MemoryRouter initialEntries={[route]}>{ui}</MemoryRouter>,
-    options,
-  );
+  const memoryHistory = createMemoryHistory({
+    initialEntries: [route],
+  });
+
+  const router = createRouter({
+    history: memoryHistory,
+    routeTree,
+  });
+
+  return render(<RouterProvider router={router} />, options);
 }

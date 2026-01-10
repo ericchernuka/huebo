@@ -30,21 +30,3 @@ export const buildHueIncrements = (hue = 60): HSBColor[] => {
     return acc;
   }, [] as HSBColor[]);
 };
-/**
- * Extracts values if present from the url params
- * @param params.hue Hue from url
- * @param params.saturation Saturation from url
- * @param params.brightness Brightness from url
- */
-export const extractHSBValuesFromParams = (
-  params: Record<string, string | undefined>,
-): Record<string, number | null> =>
-  Object.keys(params).reduce(
-    (acc, key) => {
-      const value = params[key];
-      const parsedNum = value !== undefined ? Number(value) : Number.NaN;
-      acc[key] = parsedNum >= 0 ? parsedNum : null;
-      return acc;
-    },
-    {} as Record<string, number | null>,
-  );

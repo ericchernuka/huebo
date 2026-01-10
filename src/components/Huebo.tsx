@@ -1,67 +1,72 @@
+import { useDebouncedState } from '@tanstack/react-pacer';
+import { useNavigate, useParams } from '@tanstack/react-router';
 import copy from 'copy-to-clipboard';
 import { useCallback, useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router';
-import { extractHSBValuesFromParams } from '../utils';
 import { hsb2Hex } from '../utils/color_utils';
 import ColorOutputs from './ColorOutputs';
 import DocumentTitle from './DocumentTitle';
 import HueSelector from './HueSelector';
 import SwatchGrid from './SwatchGrid';
 
-interface Params extends Record<string, string | undefined> {
-  brightness?: string;
-  hue: string;
-  saturation?: string;
-}
-
 export default function Huebo() {
-  const params = useParams<Params>();
+  const params = useParams({ strict: false });
   const navigate = useNavigate();
 
-  const hue = Number(params.hue);
-  const [draggingHue, setDraggingHue] = useState(hue);
-  const [isDragging, setIsDragging] = useState(false);
+  const hue = params.hue as number;
+  const saturation = (params.saturation as number | undefined) ?? null;
+  const brightness = (params.brightness as number | undefined) ?? null;
+
+  // Local state for instant UI feedback during slider drag
+  const [displayHue, setDisplayHue] = useState(hue);
   const [copiedColorFormat, setCopiedColorFormat] = useState<string | null>(
     null,
   );
 
-  const { brightness = null, saturation = null } =
-    extractHSBValuesFromParams(params);
+  // Debounced navigation - commits to URL after 150ms of inactivity
+  const [debouncedHue, setDebouncedHue] = useDebouncedState(hue, {
+    wait: 150,
+  });
 
-  // Sync draggingHue with URL hue when not dragging
+  // Sync displayHue when URL changes externally (back/forward navigation)
   useEffect(() => {
-    if (!isDragging) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setDraggingHue(hue);
-    }
-  }, [hue, isDragging]);
+    setDisplayHue(hue);
+  }, [hue]);
 
-  const handleHueChange = useCallback((newHue: number) => {
-    setDraggingHue(newHue);
-    setIsDragging(true);
-    setCopiedColorFormat(null);
-  }, []);
-
-  const handleHueChangeEnd = useCallback(() => {
-    setIsDragging(false);
-  }, []);
-
-  // Sync URL when dragging ends
+  // Commit debounced hue to URL
   useEffect(() => {
-    if (!isDragging && draggingHue !== hue) {
-      const urlPath =
-        brightness !== null && saturation !== null
-          ? `/${draggingHue}/${saturation}/${brightness}`
-          : `/${draggingHue}`;
-      navigate(urlPath);
+    if (debouncedHue !== hue) {
+      if (saturation !== null && brightness !== null) {
+        navigate({
+          params: {
+            brightness,
+            hue: debouncedHue,
+            saturation,
+          },
+          to: '/$hue/$saturation/$brightness',
+        });
+      } else {
+        navigate({ params: { hue: debouncedHue }, to: '/$hue' });
+      }
     }
-  }, [isDragging, draggingHue, hue, saturation, brightness, navigate]);
+  }, [debouncedHue, hue, saturation, brightness, navigate]);
+
+  const handleHueChange = useCallback(
+    (newHue: number) => {
+      setDisplayHue(newHue); // Instant UI update
+      setDebouncedHue(newHue); // Schedule URL update
+      setCopiedColorFormat(null);
+    },
+    [setDebouncedHue],
+  );
 
   const handleSwatchClick = useCallback(
     (sat: number, bri: number) => {
-      navigate(`/${hue}/${sat}/${bri}`);
+      navigate({
+        params: { brightness: bri, hue: displayHue, saturation: sat },
+        to: '/$hue/$saturation/$brightness',
+      });
     },
-    [hue, navigate],
+    [displayHue, navigate],
   );
 
   const handleCopyColor = useCallback((value: string) => {
@@ -69,8 +74,6 @@ export default function Huebo() {
     setCopiedColorFormat(value);
     setTimeout(() => setCopiedColorFormat(null), 2000);
   }, []);
-
-  const displayHue = isDragging ? draggingHue : hue;
 
   const documentTitle =
     brightness !== null && saturation !== null
@@ -92,11 +95,7 @@ export default function Huebo() {
         <div className="huebo">
           <div className="huebo-layout">
             <div className="hue-manager">
-              <HueSelector
-                hue={displayHue}
-                onChange={handleHueChange}
-                onChangeEnd={handleHueChangeEnd}
-              />
+              <HueSelector hue={displayHue} onChange={handleHueChange} />
               <ColorOutputs
                 brightness={brightness}
                 copiedColorFormat={copiedColorFormat}

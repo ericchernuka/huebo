@@ -1,16 +1,17 @@
+import { useRouterState } from '@tanstack/react-router';
 import { useEffect } from 'react';
 import ReactGA from 'react-ga4';
-import { useLocation } from 'react-router';
 
 export default function GoogleAnalytics() {
-  const location = useLocation();
+  const routerState = useRouterState();
+  const { pathname, searchStr } = routerState.location;
 
   useEffect(() => {
     ReactGA.send({
       hitType: 'pageview',
-      page: location.pathname + location.search,
+      page: pathname + searchStr,
     });
-  }, [location]);
+  }, [pathname, searchStr]);
 
   return null;
 }

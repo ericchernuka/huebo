@@ -1,5 +1,5 @@
-import { describe, expect, it, test } from 'vitest';
-import { buildHueIncrements, extractHSBValuesFromParams } from './index';
+import { describe, expect, test } from 'vitest';
+import { buildHueIncrements } from './index';
 
 describe('buildHueIncrements()', () => {
   test('defaults to a hue of 60', () => {
@@ -20,31 +20,5 @@ describe('buildHueIncrements()', () => {
   test('throws an error if the value is not within 0-355', () => {
     expect(() => buildHueIncrements(-1)).toThrowError(/between 0 and 355/);
     expect(() => buildHueIncrements(356)).toThrowError(/between 0 and 355/);
-  });
-});
-
-describe('extractHSBValuesFromParams()', () => {
-  it('converts all url params to numbers', () => {
-    const params = { brightness: '10', hue: '60', saturation: '10' };
-    expect(extractHSBValuesFromParams(params)).toEqual({
-      brightness: 10,
-      hue: 60,
-      saturation: 10,
-    });
-  });
-
-  it('returns null if a value cant be coerced to a number', () => {
-    const params = {
-      brightness: '10',
-      foo: 'bar',
-      hue: '60',
-      saturation: '10',
-    };
-    expect(extractHSBValuesFromParams(params)).toEqual({
-      brightness: 10,
-      foo: null,
-      hue: 60,
-      saturation: 10,
-    });
   });
 });

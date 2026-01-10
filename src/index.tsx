@@ -1,8 +1,8 @@
+import { RouterProvider } from '@tanstack/react-router';
 import { createRoot } from 'react-dom/client';
 import ReactGA from 'react-ga4';
-import { BrowserRouter } from 'react-router';
-import App from './components/App';
 import './index.css';
+import { router } from './router';
 
 // Initialize Google Analytics before rendering
 const gaId = import.meta.env.VITE_GOOGLE_ANALYTICS_ID;
@@ -11,7 +11,5 @@ if (gaId) {
 }
 
 createRoot(document.getElementById('root')!).render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
+  <RouterProvider router={router} />,
 );

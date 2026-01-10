@@ -4,10 +4,9 @@ import BaseHue from './BaseHue';
 interface Props {
   hue: number;
   onChange: (hue: number) => void;
-  onChangeEnd: () => void;
 }
 
-export default function HueSelector({ hue, onChange, onChangeEnd }: Props) {
+export default function HueSelector({ hue, onChange }: Props) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     onChange(Number.parseInt(event.target.value, 10));
 
@@ -26,12 +25,6 @@ export default function HueSelector({ hue, onChange, onChangeEnd }: Props) {
         max={MAX_HUE}
         min={MIN_HUE}
         onChange={handleChange}
-        onKeyDown={() => {}}
-        onKeyUp={onChangeEnd}
-        onMouseDown={() => {}}
-        onMouseUp={onChangeEnd}
-        onTouchEnd={onChangeEnd}
-        onTouchStart={() => {}}
         step={HUE_STEP}
         tabIndex={1}
         type="range"
