@@ -5,7 +5,7 @@ import {
 } from '@tanstack/react-router';
 import { render, type RenderOptions } from '@testing-library/react';
 import type { ReactElement } from 'react';
-import { routeTree } from '../src/routes';
+import { routeTree } from '../src/router/routeTree.gen';
 
 interface Options extends Omit<RenderOptions, 'wrapper'> {
   route?: string;
