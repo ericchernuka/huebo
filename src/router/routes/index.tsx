@@ -1,8 +1,8 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
-import { DEFAULT_HUE } from '../../constants';
+import { createFileRoute } from '@tanstack/react-router';
+import Huebo from '../../components/Huebo';
+import { searchParamsSchema } from '../../schemas/search-params';
 
 export const Route = createFileRoute('/')({
-  beforeLoad: () => {
-    throw redirect({ params: { hue: DEFAULT_HUE }, to: '/$hue' });
-  },
+  component: Huebo,
+  validateSearch: searchParamsSchema,
 });

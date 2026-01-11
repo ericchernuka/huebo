@@ -1,5 +1,5 @@
-import { useDebouncedState } from '@tanstack/react-pacer';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { useDebouncedCallback } from '@tanstack/react-pacer';
+import { useNavigate, useSearch } from '@tanstack/react-router';
 import copy from 'copy-to-clipboard';
 import { useCallback, useEffect, useState } from 'react';
 import { hsb2Hex } from '../utils/color_utils';
@@ -9,64 +9,62 @@ import HueSelector from './HueSelector';
 import SwatchGrid from './SwatchGrid';
 
 export default function Huebo() {
-  const params = useParams({ strict: false });
+  const { b: brightness, h: hue, s: saturation } = useSearch({ from: '/' });
   const navigate = useNavigate();
 
-  const hue = params.hue as number;
-  const saturation = (params.saturation as number | undefined) ?? null;
-  const brightness = (params.brightness as number | undefined) ?? null;
-
   // Local state for instant UI feedback during slider drag
-  const [displayHue, setDisplayHue] = useState(hue);
+  const [displayHue = 60, setDisplayHue] = useState(hue);
   const [copiedColorFormat, setCopiedColorFormat] = useState<string | null>(
     null,
   );
 
   // Debounced navigation - commits to URL after 150ms of inactivity
-  const [debouncedHue, setDebouncedHue] = useDebouncedState(hue, {
-    wait: 150,
-  });
+  const commitURL = useDebouncedCallback(
+    (hue: number) => {
+      const search: { b?: number; h: number; s?: number } = { h: hue };
+      if (saturation !== undefined) {
+        search.s = saturation;
+      }
+
+      if (brightness !== undefined) {
+        search.b = brightness;
+      }
+
+      navigate({ search, to: '/' });
+    },
+    {
+      wait: 150,
+    },
+  );
 
   // Sync displayHue when URL changes externally (back/forward navigation)
   useEffect(() => {
     setDisplayHue(hue);
   }, [hue]);
 
-  // Commit debounced hue to URL
-  useEffect(() => {
-    if (debouncedHue !== hue) {
-      if (saturation !== null && brightness !== null) {
-        navigate({
-          params: {
-            brightness,
-            hue: debouncedHue,
-            saturation,
-          },
-          to: '/$hue/$saturation/$brightness',
-        });
-      } else {
-        navigate({ params: { hue: debouncedHue }, to: '/$hue' });
-      }
-    }
-  }, [debouncedHue, hue, saturation, brightness, navigate]);
-
   const handleHueChange = useCallback(
     (newHue: number) => {
       setDisplayHue(newHue); // Instant UI update
-      setDebouncedHue(newHue); // Schedule URL update
+      commitURL(newHue); // Schedule URL update
       setCopiedColorFormat(null);
     },
-    [setDebouncedHue],
+    [commitURL],
   );
 
   const handleSwatchClick = useCallback(
     (sat: number, bri: number) => {
+      if (saturation === sat && brightness === bri) {
+        // Deselect: clear saturation and brightness
+        navigate({ search: { h: hue }, to: '/' });
+        return;
+      }
+
       navigate({
-        params: { brightness: bri, hue: displayHue, saturation: sat },
-        to: '/$hue/$saturation/$brightness',
+        search: { b: bri, h: hue, s: sat },
+        to: '/',
       });
     },
-    [displayHue, navigate],
+    [brightness, hue, navigate, saturation],
   );
 
   const handleCopyColor = useCallback((value: string) => {
@@ -76,12 +74,12 @@ export default function Huebo() {
   }, []);
 
   const documentTitle =
-    brightness !== null && saturation !== null
+    brightness !== undefined && saturation !== undefined
       ? `HSB(${displayHue},${saturation},${brightness})`
       : `Hue: ${displayHue}`;
 
   const hex =
-    saturation !== null && brightness !== null
+    saturation !== undefined && brightness !== undefined
       ? hsb2Hex(displayHue, saturation, brightness)
       : null;
 

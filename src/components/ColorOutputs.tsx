@@ -3,12 +3,12 @@ import ColorFormat from './ColorFormat';
 import ColorProfileButton from './ColorProfileButton';
 
 interface Props {
-  brightness: number | null;
+  brightness: number | undefined;
   copiedColorFormat: string | null;
   hex: string | null;
   hue: number;
   onCopy: (value: string) => void;
-  saturation: number | null;
+  saturation: number | undefined;
 }
 
 export default function ColorOutputs({
@@ -20,12 +20,12 @@ export default function ColorOutputs({
   saturation,
 }: Props) {
   const hsbValue =
-    brightness !== null && saturation !== null
+    brightness !== undefined && saturation !== undefined
       ? `${hue},${saturation},${brightness}`
       : null;
   let rgbValue = null;
 
-  if (brightness !== null && saturation !== null) {
+  if (brightness !== undefined && saturation !== undefined) {
     const { b, g, r } = hsb2Rgb(hue, saturation, brightness);
     rgbValue = `${r},${g},${b}`;
   }
