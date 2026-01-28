@@ -1,8 +1,8 @@
 import copy from 'copy-to-clipboard';
 import { useCallback, useState } from 'react';
 import { useColorFormats } from '../hooks/useColorFormats';
-import ColorFormat from './ColorFormat';
-import ColorProfileButton from './ColorProfileButton';
+import { ColorFormat } from './ColorFormat';
+import { ColorProfileButton } from './ColorProfileButton';
 
 const COPY_FEEDBACK_DURATION_MS = 2000;
 
@@ -12,7 +12,7 @@ interface Props {
   saturation: number | undefined;
 }
 
-export default function ColorOutputs({ brightness, hue, saturation }: Props) {
+export function ColorOutputs({ brightness, hue, saturation }: Props) {
   const [copiedColorFormat, setCopiedColorFormat] = useState<string | null>(
     null,
   );

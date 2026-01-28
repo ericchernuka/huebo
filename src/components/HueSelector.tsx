@@ -1,12 +1,12 @@
 import { HUE_STEP, MAX_HUE, MIN_HUE } from '../constants';
-import BaseHue from './BaseHue';
+import { BaseHue } from './BaseHue';
 
 interface Props {
   hue: number;
   onChange: (hue: number) => void;
 }
 
-export default function HueSelector({ hue, onChange }: Props) {
+export function HueSelector({ hue, onChange }: Props) {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) =>
     onChange(Number.parseInt(event.target.value, 10));
 

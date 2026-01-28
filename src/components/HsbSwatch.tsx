@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import { Motion, spring } from 'react-motion';
 
 interface Props {
@@ -9,7 +10,7 @@ interface Props {
 
 const springConfig = { damping: 24, stiffness: 300 };
 
-export default function HsbSwatch({ hex, onClick, selected, title }: Props) {
+function HsbSwatchComponent({ hex, onClick, selected, title }: Props) {
   return (
     <Motion
       style={{
@@ -39,3 +40,5 @@ export default function HsbSwatch({ hex, onClick, selected, title }: Props) {
     </Motion>
   );
 }
+
+export const HsbSwatch = memo(HsbSwatchComponent);

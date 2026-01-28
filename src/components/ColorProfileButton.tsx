@@ -4,7 +4,7 @@ interface Props {
   value: string | null;
 }
 
-export default function ColorProfileButton({
+export function ColorProfileButton({
   onClick,
   placeholder = '–',
   value,

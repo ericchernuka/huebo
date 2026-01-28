@@ -1,5 +1,5 @@
-import { buildHueIncrements } from '../utils';
-import HsbSwatch from './HsbSwatch';
+import { buildHueIncrements } from '../utils/hueIncrements';
+import { HsbSwatch } from './HsbSwatch';
 
 interface Props {
   hue: number;
@@ -7,7 +7,7 @@ interface Props {
   selectedHex: string | null;
 }
 
-export default function SwatchGrid({ hue, onSwatchClick, selectedHex }: Props) {
+export function SwatchGrid({ hue, onSwatchClick, selectedHex }: Props) {
   return (
     <div className="hue-swatches">
       {buildHueIncrements(hue).map(({ brightness, hex, saturation }) => (

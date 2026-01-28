@@ -2,12 +2,12 @@ import { useDebouncedCallback } from '@tanstack/react-pacer';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { useCallback, useEffect, useState } from 'react';
 import { hsb2Hex } from '../utils/color_utils';
-import ColorOutputs from './ColorOutputs';
-import DocumentTitle from './DocumentTitle';
-import HueSelector from './HueSelector';
-import SwatchGrid from './SwatchGrid';
+import { ColorOutputs } from './ColorOutputs';
+import { DocumentTitle } from './DocumentTitle';
+import { HueSelector } from './HueSelector';
+import { SwatchGrid } from './SwatchGrid';
 
-export default function Huebo() {
+export function Huebo() {
   const { b: brightness, h: hue, s: saturation } = useSearch({ from: '/' });
   const navigate = useNavigate();
 

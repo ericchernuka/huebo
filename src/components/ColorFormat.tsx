@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import Label from './Label';
+import { Label } from './Label';
 
 interface Props {
   children: ReactNode;
@@ -8,12 +8,7 @@ interface Props {
   label: string;
 }
 
-export default function ColorFormat({
-  children,
-  copied,
-  label,
-  ...props
-}: Props) {
+export function ColorFormat({ children, copied, label, ...props }: Props) {
   return (
     <div className="color-format-block" {...props}>
       <Label>{copied ? `${label} copied to clipboard` : label}</Label>

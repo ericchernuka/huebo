@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { buildHueIncrements } from './index';
+import { buildHueIncrements } from './hueIncrements';
 
 describe('buildHueIncrements()', () => {
   test('defaults to a hue of 60', () => {

@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
-import Label from './Label';
+import { Label } from './Label';
 
 describe('Label', () => {
   test('renders text into an h2', () => {

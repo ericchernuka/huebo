@@ -1,6 +1,6 @@
 import { render } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
-import BaseHue from './BaseHue';
+import { BaseHue } from './BaseHue';
 
 describe('BaseHue', () => {
   test('renders hue degree', () => {

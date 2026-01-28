@@ -4,6 +4,6 @@ interface Props {
   children: ReactNode;
 }
 
-export default function Label({ children, ...props }: Props) {
+export function Label({ children, ...props }: Props) {
   return <h2 {...props}>{children}</h2>;
 }

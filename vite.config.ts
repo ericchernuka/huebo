@@ -10,7 +10,7 @@ export default defineConfig({
   },
   plugins: [
     tanstackRouter({
-      autoCodeSplitting: false,
+      autoCodeSplitting: true,
       generatedRouteTree: './src/router/routeTree.gen.ts',
       quoteStyle: 'single',
       routesDirectory: './src/router/routes',
