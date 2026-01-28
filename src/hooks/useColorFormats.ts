@@ -2,9 +2,9 @@ import { hsb2Hex, hsb2Rgb } from '../utils/color_utils';
 
 export interface ColorFormat {
   label: string;
-  value: string | null;
-  testId: string;
   placeholder?: string;
+  testId: string;
+  value: string | null;
 }
 
 export function useColorFormats(
@@ -12,36 +12,29 @@ export function useColorFormats(
   saturation: number | undefined,
   brightness: number | undefined,
 ): ColorFormat[] {
-  const hsbValue =
-    brightness !== undefined && saturation !== undefined
-      ? `${hue},${saturation},${brightness}`
-      : null;
+  const hasFullColor = saturation !== undefined && brightness !== undefined;
 
-  let rgbValue = null;
-  let hexValue = null;
-
-  if (brightness !== undefined && saturation !== undefined) {
-    const { b, g, r } = hsb2Rgb(hue, saturation, brightness);
-    rgbValue = `${r},${g},${b}`;
-    hexValue = hsb2Hex(hue, saturation, brightness);
-  }
+  const hsbValue = hasFullColor ? `${hue},${saturation},${brightness}` : null;
+  const rgb = hasFullColor ? hsb2Rgb(hue, saturation, brightness) : null;
+  const rgbValue = rgb ? `${rgb.r},${rgb.g},${rgb.b}` : null;
+  const hexValue = hasFullColor ? hsb2Hex(hue, saturation, brightness) : null;
 
   return [
     {
       label: 'HSB',
-      value: hsbValue,
-      testId: 'color-format-hsb',
       placeholder: 'Select a color',
+      testId: 'color-format-hsb',
+      value: hsbValue,
     },
     {
       label: 'RGB',
-      value: rgbValue,
       testId: 'color-format-rgb',
+      value: rgbValue,
     },
     {
       label: 'Hex',
-      value: hexValue,
       testId: 'color-format-hex',
+      value: hexValue,
     },
   ];
 }

@@ -62,15 +62,11 @@ export default function Huebo() {
     [brightness, hue, navigate, saturation],
   );
 
-  const documentTitle =
-    brightness !== undefined && saturation !== undefined
-      ? `HSB(${displayHue},${saturation},${brightness})`
-      : `Hue: ${displayHue}`;
-
-  const hex =
-    saturation !== undefined && brightness !== undefined
-      ? hsb2Hex(displayHue, saturation, brightness)
-      : null;
+  const hasFullColor = saturation !== undefined && brightness !== undefined;
+  const hex = hasFullColor ? hsb2Hex(displayHue, saturation, brightness) : null;
+  const documentTitle = hasFullColor
+    ? `HSB(${displayHue},${saturation},${brightness})`
+    : `Hue: ${displayHue}`;
 
   return (
     <>

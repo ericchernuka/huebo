@@ -29,11 +29,9 @@ export default function ColorOutputs({ brightness, hue, saturation }: Props) {
     <div>
       {formats.map((format) => (
         <ColorFormat
-          key={format.testId}
-          copied={
-            copiedColorFormat !== null && copiedColorFormat === format.value
-          }
+          copied={copiedColorFormat === format.value}
           data-testid={format.testId}
+          key={format.testId}
           label={format.label}
         >
           <ColorProfileButton

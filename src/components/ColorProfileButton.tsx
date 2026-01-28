@@ -8,11 +8,9 @@ export default function ColorProfileButton({
   onClick,
   placeholder = '–',
   value,
-  ...props
 }: Props) {
   return (
     <button
-      {...props}
       className={`color-profile ${!value ? 'color-profile-muted' : ''}`}
       disabled={!value}
       onClick={() => value && onClick(value)}
