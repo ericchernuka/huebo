@@ -1,6 +1,5 @@
 import { useDebouncedCallback } from '@tanstack/react-pacer';
 import { useNavigate, useSearch } from '@tanstack/react-router';
-import copy from 'copy-to-clipboard';
 import { useCallback, useEffect, useState } from 'react';
 import { hsb2Hex } from '../utils/color_utils';
 import ColorOutputs from './ColorOutputs';
@@ -14,9 +13,6 @@ export default function Huebo() {
 
   // Local state for instant UI feedback during slider drag
   const [displayHue = 60, setDisplayHue] = useState(hue);
-  const [copiedColorFormat, setCopiedColorFormat] = useState<string | null>(
-    null,
-  );
 
   // Debounced navigation - commits to URL after 150ms of inactivity
   const commitURL = useDebouncedCallback(
@@ -46,7 +42,6 @@ export default function Huebo() {
     (newHue: number) => {
       setDisplayHue(newHue); // Instant UI update
       commitURL(newHue); // Schedule URL update
-      setCopiedColorFormat(null);
     },
     [commitURL],
   );
@@ -66,12 +61,6 @@ export default function Huebo() {
     },
     [brightness, hue, navigate, saturation],
   );
-
-  const handleCopyColor = useCallback((value: string) => {
-    copy(value);
-    setCopiedColorFormat(value);
-    setTimeout(() => setCopiedColorFormat(null), 2000);
-  }, []);
 
   const documentTitle =
     brightness !== undefined && saturation !== undefined
@@ -96,10 +85,7 @@ export default function Huebo() {
               <HueSelector hue={displayHue} onChange={handleHueChange} />
               <ColorOutputs
                 brightness={brightness}
-                copiedColorFormat={copiedColorFormat}
-                hex={hex}
                 hue={displayHue}
-                onCopy={handleCopyColor}
                 saturation={saturation}
               />
             </div>

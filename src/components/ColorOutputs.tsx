@@ -1,64 +1,48 @@
-import { hsb2Rgb } from '../utils/color_utils';
+import copy from 'copy-to-clipboard';
+import { useCallback, useState } from 'react';
+import { useColorFormats } from '../hooks/useColorFormats';
 import ColorFormat from './ColorFormat';
 import ColorProfileButton from './ColorProfileButton';
 
+const COPY_FEEDBACK_DURATION_MS = 2000;
+
 interface Props {
   brightness: number | undefined;
-  copiedColorFormat: string | null;
-  hex: string | null;
   hue: number;
-  onCopy: (value: string) => void;
   saturation: number | undefined;
 }
 
-export default function ColorOutputs({
-  brightness,
-  copiedColorFormat,
-  hex: hexValue,
-  hue,
-  onCopy,
-  saturation,
-}: Props) {
-  const hsbValue =
-    brightness !== undefined && saturation !== undefined
-      ? `${hue},${saturation},${brightness}`
-      : null;
-  let rgbValue = null;
+export default function ColorOutputs({ brightness, hue, saturation }: Props) {
+  const [copiedColorFormat, setCopiedColorFormat] = useState<string | null>(
+    null,
+  );
 
-  if (brightness !== undefined && saturation !== undefined) {
-    const { b, g, r } = hsb2Rgb(hue, saturation, brightness);
-    rgbValue = `${r},${g},${b}`;
-  }
+  const handleCopyColor = useCallback((value: string) => {
+    copy(value);
+    setCopiedColorFormat(value);
+    setTimeout(() => setCopiedColorFormat(null), COPY_FEEDBACK_DURATION_MS);
+  }, []);
+
+  const formats = useColorFormats(hue, saturation, brightness);
 
   return (
     <div>
-      <ColorFormat
-        copied={copiedColorFormat !== null && copiedColorFormat === hsbValue}
-        data-testid="color-format-hsb"
-        label="HSB"
-      >
-        <ColorProfileButton
-          onClick={onCopy}
-          placeholder="Select a color"
-          value={hsbValue}
-        />
-      </ColorFormat>
-
-      <ColorFormat
-        copied={copiedColorFormat !== null && copiedColorFormat === rgbValue}
-        data-testid="color-format-rgb"
-        label="RGB"
-      >
-        <ColorProfileButton onClick={onCopy} value={rgbValue} />
-      </ColorFormat>
-
-      <ColorFormat
-        copied={copiedColorFormat !== null && copiedColorFormat === hexValue}
-        data-testid="color-format-hex"
-        label="Hex"
-      >
-        <ColorProfileButton onClick={onCopy} value={hexValue} />
-      </ColorFormat>
+      {formats.map((format) => (
+        <ColorFormat
+          key={format.testId}
+          copied={
+            copiedColorFormat !== null && copiedColorFormat === format.value
+          }
+          data-testid={format.testId}
+          label={format.label}
+        >
+          <ColorProfileButton
+            onClick={handleCopyColor}
+            placeholder={format.placeholder}
+            value={format.value}
+          />
+        </ColorFormat>
+      ))}
     </div>
   );
 }
