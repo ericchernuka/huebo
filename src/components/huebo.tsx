@@ -1,7 +1,7 @@
 import { useDebouncedCallback } from '@tanstack/react-pacer';
 import { useNavigate, useSearch } from '@tanstack/react-router';
 import { useCallback, useEffect, useState } from 'react';
-import { hsb2Hex } from '../utils/color_utils';
+import { hsb2Hex } from '../utils/color-utils';
 import { ColorOutputs } from './color-outputs';
 import { DocumentTitle } from './document-title';
 import { HueSelector } from './hue-selector';

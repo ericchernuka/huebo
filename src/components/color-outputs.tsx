@@ -1,6 +1,6 @@
 import copy from 'copy-to-clipboard';
 import { useCallback, useState } from 'react';
-import { useColorFormats } from '../hooks/useColorFormats';
+import { useColorFormats } from '../hooks/use-color-formats';
 import { ColorFormat } from './color-format';
 import { ColorProfileButton } from './color-profile-button';
 

@@ -1,5 +1,5 @@
 import { INCREMENTS, MAX_HUE, MIN_HUE } from '../constants';
-import { hsb2Hex } from './color_utils';
+import { hsb2Hex } from './color-utils';
 
 export interface HSBColor {
   brightness: number;

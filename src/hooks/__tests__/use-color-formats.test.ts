@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { describe, expect, test } from 'vitest';
-import { useColorFormats } from '../useColorFormats';
+import { useColorFormats } from '../use-color-formats';
 
 describe('useColorFormats()', () => {
   test('returns color values when s and b are defined', () => {

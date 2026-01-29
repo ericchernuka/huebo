@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest';
-import { hsb2Hex, hsb2Rgb } from '../color_utils';
+import { hsb2Hex, hsb2Rgb } from '../color-utils';
 
 describe('hsb2Rgb()', () => {
   test('converts all 6 hue segments correctly', () => {

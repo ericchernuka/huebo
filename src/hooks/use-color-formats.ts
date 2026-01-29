@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { hsb2Hex, hsb2Rgb } from '../utils/color_utils';
+import { hsb2Hex, hsb2Rgb } from '../utils/color-utils';
 
 export interface ColorFormat {
   label: string;
