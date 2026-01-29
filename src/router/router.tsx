@@ -1,6 +1,6 @@
 import { createRouter } from '@tanstack/react-router';
-import { GoogleAnalytics } from '../components/GoogleAnalytics.tsx';
-import { routeTree } from './routeTree.gen';
+import { GoogleAnalytics } from '../components/google-analytics';
+import { routeTree } from './route-tree.gen';
 
 export const router = createRouter({
   defaultPreload: 'intent',
