@@ -98,34 +98,34 @@ describe('useColorFormats()', () => {
   });
 
   test('memoizes correctly with same inputs', () => {
-    const { result, rerender } = renderHook(
-      ({ h, s, b }) => useColorFormats(h, s, b),
+    const { rerender, result } = renderHook(
+      ({ b, h, s }) => useColorFormats(h, s, b),
       {
-        initialProps: { h: 180, s: 50, b: 75 },
+        initialProps: { b: 75, h: 180, s: 50 },
       },
     );
 
     const firstResult = result.current;
 
     // Rerender with same props
-    rerender({ h: 180, s: 50, b: 75 });
+    rerender({ b: 75, h: 180, s: 50 });
 
     // Should be the same reference
     expect(result.current).toBe(firstResult);
   });
 
   test('recalculates when inputs change', () => {
-    const { result, rerender } = renderHook(
-      ({ h, s, b }) => useColorFormats(h, s, b),
+    const { rerender, result } = renderHook(
+      ({ b, h, s }) => useColorFormats(h, s, b),
       {
-        initialProps: { h: 180, s: 50, b: 75 },
+        initialProps: { b: 75, h: 180, s: 50 },
       },
     );
 
     const firstResult = result.current;
 
     // Change hue
-    rerender({ h: 240, s: 50, b: 75 });
+    rerender({ b: 75, h: 240, s: 50 });
 
     // Should be a different reference
     expect(result.current).not.toBe(firstResult);

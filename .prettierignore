@@ -6,4 +6,4 @@ build
 dist
 
 # Generated files (excluded per file comment)
-src/router/routeTree.gen.ts
+src/router/route-tree.gen.ts

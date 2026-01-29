@@ -19,7 +19,7 @@ vi.mock('@tanstack/react-pacer', () => ({
 describe('Huebo', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    mockUseSearch.mockReturnValue({ h: 60, s: undefined, b: undefined });
+    mockUseSearch.mockReturnValue({ b: undefined, h: 60, s: undefined });
   });
 
   afterEach(() => {
@@ -27,14 +27,14 @@ describe('Huebo', () => {
   });
 
   test('renders with hue from URL params', () => {
-    mockUseSearch.mockReturnValue({ h: 180, s: undefined, b: undefined });
+    mockUseSearch.mockReturnValue({ b: undefined, h: 180, s: undefined });
     render(<Huebo />);
 
     expect(screen.getByTestId('base-hue')).toHaveTextContent('180°');
   });
 
   test('renders with full color from URL params', () => {
-    mockUseSearch.mockReturnValue({ h: 120, s: 50, b: 75 });
+    mockUseSearch.mockReturnValue({ b: 75, h: 120, s: 50 });
     render(<Huebo />);
 
     expect(screen.getByTestId('base-hue')).toHaveTextContent('120°');

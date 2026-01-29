@@ -14,11 +14,13 @@ describe('/$hue route redirect', () => {
       Route.options.beforeLoad?.({
         params: { hue: '60' },
       } as never);
-    } catch (error: any) {
-      expect(error.status).toBe(307);
-      expect(error.options).toMatchObject({
-        to: '/',
+    } catch (error: unknown) {
+      expect((error as { status: number }).status).toBe(307);
+      expect(
+        (error as { options: { search: unknown; to: string } }).options,
+      ).toMatchObject({
         search: { h: 60 },
+        to: '/',
       });
     }
   });
@@ -28,11 +30,13 @@ describe('/$hue route redirect', () => {
       Route.options.beforeLoad?.({
         params: { hue: '180' },
       } as never);
-    } catch (error: any) {
-      expect(error.status).toBe(307);
-      expect(error.options).toMatchObject({
-        to: '/',
+    } catch (error: unknown) {
+      expect((error as { status: number }).status).toBe(307);
+      expect(
+        (error as { options: { search: unknown; to: string } }).options,
+      ).toMatchObject({
         search: { h: 180 },
+        to: '/',
       });
     }
   });
@@ -42,11 +46,13 @@ describe('/$hue route redirect', () => {
       Route.options.beforeLoad?.({
         params: { hue: '999' },
       } as never);
-    } catch (error: any) {
-      expect(error.status).toBe(307);
-      expect(error.options).toMatchObject({
-        to: '/',
+    } catch (error: unknown) {
+      expect((error as { status: number }).status).toBe(307);
+      expect(
+        (error as { options: { search: unknown; to: string } }).options,
+      ).toMatchObject({
         search: { h: DEFAULT_HUE },
+        to: '/',
       });
     }
   });
@@ -56,11 +62,13 @@ describe('/$hue route redirect', () => {
       Route.options.beforeLoad?.({
         params: { hue: '-1' },
       } as never);
-    } catch (error: any) {
-      expect(error.status).toBe(307);
-      expect(error.options).toMatchObject({
-        to: '/',
+    } catch (error: unknown) {
+      expect((error as { status: number }).status).toBe(307);
+      expect(
+        (error as { options: { search: unknown; to: string } }).options,
+      ).toMatchObject({
         search: { h: DEFAULT_HUE },
+        to: '/',
       });
     }
   });
@@ -70,11 +78,13 @@ describe('/$hue route redirect', () => {
       Route.options.beforeLoad?.({
         params: { hue: 'invalid' },
       } as never);
-    } catch (error: any) {
-      expect(error.status).toBe(307);
-      expect(error.options).toMatchObject({
-        to: '/',
+    } catch (error: unknown) {
+      expect((error as { status: number }).status).toBe(307);
+      expect(
+        (error as { options: { search: unknown; to: string } }).options,
+      ).toMatchObject({
         search: { h: DEFAULT_HUE },
+        to: '/',
       });
     }
   });

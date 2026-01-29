@@ -24,15 +24,12 @@ export function createTestRouter(
 
   const routeTree = rootRoute.addChildren([indexRoute]);
 
+  const searchString = new URLSearchParams(
+    Object.entries(search).map(([key, value]) => [key, String(value)]),
+  ).toString();
+
   const history = createMemoryHistory({
-    initialEntries: [
-      {
-        pathname: path,
-        search: new URLSearchParams(
-          Object.entries(search).map(([key, value]) => [key, String(value)]),
-        ).toString(),
-      },
-    ],
+    initialEntries: [searchString ? `${path}?${searchString}` : path],
   });
 
   return createRouter({

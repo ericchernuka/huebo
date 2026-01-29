@@ -75,35 +75,35 @@ describe('searchParamsSchema', () => {
   test('parses minimal valid params with only hue', () => {
     const result = searchParamsSchema.parse({ h: 60 });
     expect(result).toEqual({
+      b: undefined,
       h: 60,
       s: undefined,
-      b: undefined,
     });
   });
 
   test('parses full valid params', () => {
     const result = searchParamsSchema.parse({
+      b: 75,
       h: 180,
       s: 50,
-      b: 75,
     });
     expect(result).toEqual({
+      b: 75,
       h: 180,
       s: 50,
-      b: 75,
     });
   });
 
   test('applies defaults for all invalid values', () => {
     const result = searchParamsSchema.parse({
+      b: 99, // Invalid increment → INCREMENTS[0]
       h: -1, // Invalid hue → DEFAULT_HUE
       s: 13, // Invalid increment → INCREMENTS[0]
-      b: 99, // Invalid increment → INCREMENTS[0]
     });
     expect(result).toEqual({
+      b: INCREMENTS[0],
       h: DEFAULT_HUE,
       s: INCREMENTS[0],
-      b: INCREMENTS[0],
     });
   });
 
@@ -116,14 +116,14 @@ describe('searchParamsSchema', () => {
 
   test('coerces string params to numbers', () => {
     const result = searchParamsSchema.parse({
+      b: '88',
       h: '240',
       s: '62',
-      b: '88',
     });
     expect(result).toEqual({
+      b: 88,
       h: 240,
       s: 62,
-      b: 88,
     });
   });
 });

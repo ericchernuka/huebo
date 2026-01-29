@@ -4,27 +4,27 @@ import { hsb2Hex, hsb2Rgb } from '../color_utils';
 describe('hsb2Rgb()', () => {
   test('converts all 6 hue segments correctly', () => {
     // Segment 0 (0-59): red dominant
-    expect(hsb2Rgb(0, 100, 100)).toEqual({ r: 255, g: 0, b: 0 });
+    expect(hsb2Rgb(0, 100, 100)).toEqual({ b: 0, g: 0, r: 255 });
 
     // Segment 1 (60-119): green rising
-    expect(hsb2Rgb(60, 100, 100)).toEqual({ r: 255, g: 255, b: 0 });
+    expect(hsb2Rgb(60, 100, 100)).toEqual({ b: 0, g: 255, r: 255 });
 
     // Segment 2 (120-179): green dominant
-    expect(hsb2Rgb(120, 100, 100)).toEqual({ r: 0, g: 255, b: 0 });
+    expect(hsb2Rgb(120, 100, 100)).toEqual({ b: 0, g: 255, r: 0 });
 
     // Segment 3 (180-239): blue rising
-    expect(hsb2Rgb(180, 100, 100)).toEqual({ r: 0, g: 255, b: 255 });
+    expect(hsb2Rgb(180, 100, 100)).toEqual({ b: 255, g: 255, r: 0 });
 
     // Segment 4 (240-299): blue dominant
-    expect(hsb2Rgb(240, 100, 100)).toEqual({ r: 0, g: 0, b: 255 });
+    expect(hsb2Rgb(240, 100, 100)).toEqual({ b: 255, g: 0, r: 0 });
 
     // Segment 5 (300-359): red rising
-    expect(hsb2Rgb(300, 100, 100)).toEqual({ r: 255, g: 0, b: 255 });
+    expect(hsb2Rgb(300, 100, 100)).toEqual({ b: 255, g: 0, r: 255 });
   });
 
   test('handles boundary hue values', () => {
     // Min hue
-    expect(hsb2Rgb(0, 100, 100)).toEqual({ r: 255, g: 0, b: 0 });
+    expect(hsb2Rgb(0, 100, 100)).toEqual({ b: 0, g: 0, r: 255 });
 
     // Max hue (355 should be close to red)
     const result355 = hsb2Rgb(355, 100, 100);
@@ -35,32 +35,32 @@ describe('hsb2Rgb()', () => {
 
   test('handles boundary saturation and brightness', () => {
     // Zero saturation = grayscale
-    expect(hsb2Rgb(60, 0, 100)).toEqual({ r: 255, g: 255, b: 255 });
-    expect(hsb2Rgb(180, 0, 50)).toEqual({ r: 128, g: 128, b: 128 });
+    expect(hsb2Rgb(60, 0, 100)).toEqual({ b: 255, g: 255, r: 255 });
+    expect(hsb2Rgb(180, 0, 50)).toEqual({ b: 128, g: 128, r: 128 });
 
     // Zero brightness = black
-    expect(hsb2Rgb(60, 100, 0)).toEqual({ r: 0, g: 0, b: 0 });
-    expect(hsb2Rgb(180, 100, 0)).toEqual({ r: 0, g: 0, b: 0 });
+    expect(hsb2Rgb(60, 100, 0)).toEqual({ b: 0, g: 0, r: 0 });
+    expect(hsb2Rgb(180, 100, 0)).toEqual({ b: 0, g: 0, r: 0 });
 
     // Max saturation and brightness
-    expect(hsb2Rgb(60, 100, 100)).toEqual({ r: 255, g: 255, b: 0 });
+    expect(hsb2Rgb(60, 100, 100)).toEqual({ b: 0, g: 255, r: 255 });
   });
 
   test('converts known colors correctly', () => {
     // Pure red
-    expect(hsb2Rgb(0, 100, 100)).toEqual({ r: 255, g: 0, b: 0 });
+    expect(hsb2Rgb(0, 100, 100)).toEqual({ b: 0, g: 0, r: 255 });
 
     // Pure green
-    expect(hsb2Rgb(120, 100, 100)).toEqual({ r: 0, g: 255, b: 0 });
+    expect(hsb2Rgb(120, 100, 100)).toEqual({ b: 0, g: 255, r: 0 });
 
     // Pure blue
-    expect(hsb2Rgb(240, 100, 100)).toEqual({ r: 0, g: 0, b: 255 });
+    expect(hsb2Rgb(240, 100, 100)).toEqual({ b: 255, g: 0, r: 0 });
 
     // White
-    expect(hsb2Rgb(0, 0, 100)).toEqual({ r: 255, g: 255, b: 255 });
+    expect(hsb2Rgb(0, 0, 100)).toEqual({ b: 255, g: 255, r: 255 });
 
     // Black
-    expect(hsb2Rgb(0, 0, 0)).toEqual({ r: 0, g: 0, b: 0 });
+    expect(hsb2Rgb(0, 0, 0)).toEqual({ b: 0, g: 0, r: 0 });
   });
 
   test('handles rounding edge cases', () => {
@@ -92,12 +92,12 @@ describe('hsb2Hex()', () => {
     // Test another low value
     const lowValue = hsb2Hex(0, 0, 1);
     expect(lowValue).toHaveLength(7);
-    expect(lowValue).toMatch(/^#[0-9A-F]{6}$/);
+    expect(lowValue).toMatch(/^#[\dA-F]{6}$/);
   });
 
   test('produces uppercase hex values', () => {
     const result = hsb2Hex(180, 50, 75);
     expect(result).toBe(result.toUpperCase());
-    expect(result).toMatch(/^#[0-9A-F]{6}$/);
+    expect(result).toMatch(/^#[\dA-F]{6}$/);
   });
 });

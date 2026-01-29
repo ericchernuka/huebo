@@ -7,16 +7,18 @@ describe('/$hue/$saturation/$brightness route redirect', () => {
     try {
       Route.options.beforeLoad?.({
         params: {
+          brightness: '75',
           hue: '180',
           saturation: '50',
-          brightness: '75',
         },
       } as never);
-    } catch (error: any) {
-      expect(error.status).toBe(307);
-      expect(error.options).toMatchObject({
+    } catch (error: unknown) {
+      expect((error as { status: number }).status).toBe(307);
+      expect(
+        (error as { options: { search: unknown; to: string } }).options,
+      ).toMatchObject({
+        search: { b: 75, h: 180, s: 50 },
         to: '/',
-        search: { h: 180, s: 50, b: 75 },
       });
     }
   });
@@ -25,16 +27,18 @@ describe('/$hue/$saturation/$brightness route redirect', () => {
     try {
       Route.options.beforeLoad?.({
         params: {
+          brightness: '88',
           hue: '60',
           saturation: '12',
-          brightness: '88',
         },
       } as never);
-    } catch (error: any) {
-      expect(error.status).toBe(307);
-      expect(error.options).toMatchObject({
+    } catch (error: unknown) {
+      expect((error as { status: number }).status).toBe(307);
+      expect(
+        (error as { options: { search: unknown; to: string } }).options,
+      ).toMatchObject({
+        search: { b: 88, h: 60, s: 12 },
         to: '/',
-        search: { h: 60, s: 12, b: 88 },
       });
     }
   });
@@ -43,20 +47,22 @@ describe('/$hue/$saturation/$brightness route redirect', () => {
     try {
       Route.options.beforeLoad?.({
         params: {
+          brightness: '99', // Invalid increment
           hue: '60',
           saturation: '13', // Invalid increment
-          brightness: '99', // Invalid increment
         },
       } as never);
-    } catch (error: any) {
-      expect(error.status).toBe(307);
-      expect(error.options).toMatchObject({
-        to: '/',
+    } catch (error: unknown) {
+      expect((error as { status: number }).status).toBe(307);
+      expect(
+        (error as { options: { search: unknown; to: string } }).options,
+      ).toMatchObject({
         search: {
+          b: INCREMENTS[0], // Falls back to first increment
           h: 60,
           s: INCREMENTS[0], // Falls back to first increment
-          b: INCREMENTS[0], // Falls back to first increment
         },
+        to: '/',
       });
     }
   });
@@ -65,20 +71,22 @@ describe('/$hue/$saturation/$brightness route redirect', () => {
     try {
       Route.options.beforeLoad?.({
         params: {
+          brightness: '75',
           hue: '999', // Invalid hue
           saturation: '50',
-          brightness: '75',
         },
       } as never);
-    } catch (error: any) {
-      expect(error.status).toBe(307);
-      expect(error.options).toMatchObject({
-        to: '/',
+    } catch (error: unknown) {
+      expect((error as { status: number }).status).toBe(307);
+      expect(
+        (error as { options: { search: unknown; to: string } }).options,
+      ).toMatchObject({
         search: {
+          b: 75,
           h: DEFAULT_HUE, // Falls back to default hue
           s: 50,
-          b: 75,
         },
+        to: '/',
       });
     }
   });
@@ -87,20 +95,22 @@ describe('/$hue/$saturation/$brightness route redirect', () => {
     try {
       Route.options.beforeLoad?.({
         params: {
+          brightness: 'invalid',
           hue: 'invalid',
           saturation: 'invalid',
-          brightness: 'invalid',
         },
       } as never);
-    } catch (error: any) {
-      expect(error.status).toBe(307);
-      expect(error.options).toMatchObject({
-        to: '/',
+    } catch (error: unknown) {
+      expect((error as { status: number }).status).toBe(307);
+      expect(
+        (error as { options: { search: unknown; to: string } }).options,
+      ).toMatchObject({
         search: {
+          b: INCREMENTS[0],
           h: DEFAULT_HUE,
           s: INCREMENTS[0],
-          b: INCREMENTS[0],
         },
+        to: '/',
       });
     }
   });

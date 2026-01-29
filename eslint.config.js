@@ -6,7 +6,7 @@ export default [
     ignores: [
       'build/',
       'dist/',
-      'src/router/routeTree.gen.ts',
+      'src/router/route-tree.gen.ts',
       'vite.config.ts.timestamp-*',
     ],
   },

@@ -1,6 +1,4 @@
-import { cleanup, render, screen, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import copy from 'copy-to-clipboard';
+import { cleanup, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, test, vi } from 'vitest';
 import { ColorOutputs } from '../color-outputs';
 
@@ -19,7 +17,7 @@ describe('ColorOutputs', () => {
 
   test('renders all color formats with values', () => {
     const { container } = render(
-      <ColorOutputs hue={60} saturation={50} brightness={75} />,
+      <ColorOutputs brightness={75} hue={60} saturation={50} />,
     );
 
     expect(screen.getByTestId('color-format-hsb')).toBeInTheDocument();
@@ -33,7 +31,7 @@ describe('ColorOutputs', () => {
 
   test('shows placeholders when no full color', () => {
     const { container } = render(
-      <ColorOutputs hue={60} saturation={undefined} brightness={undefined} />,
+      <ColorOutputs brightness={undefined} hue={60} saturation={undefined} />,
     );
 
     // HSB has a custom placeholder
@@ -45,7 +43,7 @@ describe('ColorOutputs', () => {
   });
 
   test('disables buttons when no full color', () => {
-    render(<ColorOutputs hue={60} saturation={undefined} brightness={75} />);
+    render(<ColorOutputs brightness={75} hue={60} saturation={undefined} />);
 
     const buttons = screen.getAllByRole('button');
     buttons.forEach((button) => {
@@ -54,7 +52,7 @@ describe('ColorOutputs', () => {
   });
 
   test('enables copy buttons when color is selected', () => {
-    render(<ColorOutputs hue={60} saturation={50} brightness={75} />);
+    render(<ColorOutputs brightness={75} hue={60} saturation={50} />);
 
     const formatContainers = [
       screen.getByTestId('color-format-hsb'),
