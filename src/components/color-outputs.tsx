@@ -29,7 +29,9 @@ export function ColorOutputs({ brightness, hue, saturation }: Props) {
     <div>
       {formats.map((format) => (
         <ColorFormat
-          copied={copiedColorFormat === format.value}
+          copied={
+            copiedColorFormat ? copiedColorFormat === format.value : false
+          }
           data-testid={format.testId}
           key={format.testId}
           label={format.label}
