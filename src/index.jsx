@@ -5,7 +5,7 @@ import App from './components/App';
 import { initializeAnalytics } from './analytics'
 import registerServiceWorker from './registerServiceWorker';
 
-initializeAnalytics(import.meta.env.REACT_APP_GOOGLE_ANALYTICS_ID)
+initializeAnalytics(import.meta.env.VITE_GOOGLE_ANALYTICS_ID)
 
 createRoot(document.getElementById('root')).render(
   <Router>
