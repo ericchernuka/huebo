@@ -35,6 +35,7 @@ describe('when a value is present', () => {
 describe('when no value', () => {
   test('renders placeholder text when present', () => {
     const placeholderText = 'Select a color'
+
     const { container } = render(
       <ColorProfileButton onClick={vi.fn()} placeholder={placeholderText} />,
     )

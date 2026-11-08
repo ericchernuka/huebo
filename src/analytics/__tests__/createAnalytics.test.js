@@ -17,6 +17,7 @@ test('loads the Google tag and configures the GA4 measurement ID', () => {
   const script = document.querySelector(
     'script[src*="googletagmanager.com/gtag/js"]',
   )
+
   expect(script.src).toBe(
     'https://www.googletagmanager.com/gtag/js?id=G-TEST123',
   )

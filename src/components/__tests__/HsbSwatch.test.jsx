@@ -19,7 +19,7 @@ test('without saturation or brightness the link is to a full HSB', () => {
 
   const swatchNode = getByText('60,12,12').parentNode
   expect(swatchNode).toBeTruthy()
-  expect(swatchNode.getAttribute('aria-pressed')).toEqual('false')
+  expect(swatchNode.getAttribute('aria-current')).toBeNull()
   expect(swatchNode.getAttribute('href')).toEqual('/60/12/12')
 })
 
@@ -36,6 +36,6 @@ test('with saturation or brightness the link clears the saturation and brightnes
 
   const swatchNode = getByText('60,12,12').parentNode
   expect(swatchNode).toBeTruthy()
-  expect(swatchNode.getAttribute('aria-pressed')).toEqual('true')
+  expect(swatchNode.getAttribute('aria-current')).toEqual('true')
   expect(swatchNode.getAttribute('href')).toEqual('/60')
 })

@@ -42,6 +42,7 @@ describe('when HSB selected', () => {
       let utils = renderWithRouter(<App />, {
         route: `/60/${increment}/${increment}`,
       })
+
       expect(utils.history.location.pathname).toEqual(
         `/60/${increment}/${increment}`,
       )

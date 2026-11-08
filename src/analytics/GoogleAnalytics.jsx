@@ -9,6 +9,7 @@ const GoogleAnalytics = () => {
 
   useEffect(() => {
     const location = describeLocation(pathname)
+
     if (location) {
       analytics.trackPageView(location)
     }

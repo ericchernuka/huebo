@@ -10,12 +10,14 @@ afterEach(cleanup)
 const renderTracked = route => {
   const pageViews = []
   const analytics = { trackPageView: pageView => pageViews.push(pageView) }
+
   const utils = renderWithRouter(
     <AnalyticsContext value={analytics}>
       <GoogleAnalytics />
     </AnalyticsContext>,
     { route },
   )
+
   return { ...utils, pageViews }
 }
 

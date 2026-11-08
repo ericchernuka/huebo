@@ -7,10 +7,13 @@ import { HUE_PATHS, toTemplate } from '../routes'
  */
 export function describeLocation(pathname) {
   const match = matchPath(pathname, { exact: true, path: HUE_PATHS })
+
   if (!match) {
     return null
   }
+
   const { brightness, hue, saturation } = match.params
+
   return {
     page: toTemplate(match.path),
     params: { brightness, hue, saturation },

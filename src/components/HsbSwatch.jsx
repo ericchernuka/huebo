@@ -18,9 +18,8 @@ const HsbSwatch = ({ hex, matchRoute, title, to, ...props }) => {
           {({ scale, shadow }) => (
             <Link
               {...props}
-              aria-pressed={Boolean(match)}
+              aria-current={match ? 'true' : undefined}
               className="hue-swatch"
-              role="button"
               style={{
                 backgroundColor: hex,
                 boxShadow: match

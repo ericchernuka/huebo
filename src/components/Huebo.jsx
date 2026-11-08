@@ -49,6 +49,7 @@ class Huebo extends React.Component {
 
   render() {
     const { copiedColorFormat, draggingHue, isDragging } = this.state
+
     const {
       brightness,
       hue: urlHue,

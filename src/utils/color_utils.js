@@ -8,54 +8,22 @@ export function hsb2Rgb(h, s, b) {
   const hue = h / 360
   const saturation = s / 100
   const brightness = b / 100
-  let red, green, blue
-
   const i = Math.floor(hue * 6)
   const f = hue * 6 - i
   const p = brightness * (1 - saturation)
   const q = brightness * (1 - f * saturation)
   const t = brightness * (1 - (1 - f) * saturation)
 
-  switch (i % 6) {
-    case 0: {
-      red = brightness
-      green = t
-      blue = p
-      break
-    }
-    case 1: {
-      red = q
-      green = brightness
-      blue = p
-      break
-    }
-    case 2: {
-      red = p
-      green = brightness
-      blue = t
-      break
-    }
-    case 3: {
-      red = p
-      green = q
-      blue = brightness
-      break
-    }
-    case 4: {
-      red = t
-      green = p
-      blue = brightness
-      break
-    }
-    case 5: {
-      red = brightness
-      green = p
-      blue = q
-      break
-    }
-    default:
-      break
-  }
+  const sectors = [
+    [brightness, t, p],
+    [q, brightness, p],
+    [p, brightness, t],
+    [p, q, brightness],
+    [t, p, brightness],
+    [brightness, p, q],
+  ]
+
+  const [red, green, blue] = sectors[i % 6]
 
   return {
     b: Math.round(blue * 255),

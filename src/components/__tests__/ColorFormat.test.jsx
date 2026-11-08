@@ -8,6 +8,7 @@ afterEach(cleanup)
 describe('when not copied', () => {
   test('renders without "copied to clipboard" text', () => {
     const children = '255, 255, 255'
+
     const { container } = render(
       <ColorFormat label="RGB">{children}</ColorFormat>,
     )
@@ -20,6 +21,7 @@ describe('when not copied', () => {
 describe('when copied', () => {
   test('renders with "copied to clipboard" text', () => {
     const children = '255, 255, 255'
+
     const { container } = render(
       <ColorFormat copied label="RGB">
         {children}

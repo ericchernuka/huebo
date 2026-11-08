@@ -15,4 +15,5 @@ createRoot(document.getElementById('root')).render(
     </Router>
   </AnalyticsContext>,
 )
+
 registerServiceWorker()

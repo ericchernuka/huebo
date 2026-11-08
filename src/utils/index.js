@@ -34,5 +34,6 @@ export const extractHSBValuesFromParams = params =>
   Object.keys(params).reduce((acc, key) => {
     const parsedNum = Number(params[key])
     acc[key] = parsedNum >= 0 ? parsedNum : null
+
     return acc
   }, {})

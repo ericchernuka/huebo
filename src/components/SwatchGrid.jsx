@@ -5,6 +5,7 @@ import HsbSwatch from './HsbSwatch'
 
 const SwatchGrid = ({ hue }) => {
   const matchRoute = `/${hue}`
+
   return (
     <div className="hue-swatches">
       {buildHueIncrements(hue).map(({ brightness, hex, saturation }) => (

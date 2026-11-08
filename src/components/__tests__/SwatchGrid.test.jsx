@@ -10,6 +10,7 @@ test('renders a grid of 64 swatches', () => {
   const { container } = renderWithRouter(
     <SwatchGrid hue={60} onSelect={vi.fn()} />,
   )
+
   const swatches = container.querySelectorAll('a.hue-swatch')
   expect(swatches).toHaveLength(64)
 })

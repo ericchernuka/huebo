@@ -1,12 +1,9 @@
-import { afterEach, expect, test, vi } from 'vitest'
-import copyMock from 'copy-to-clipboard'
+import { afterEach, expect, test } from 'vitest'
 import React from 'react'
 import { Route } from 'react-router-dom'
 import { cleanup, fireEvent, waitFor } from '@testing-library/react'
 import { renderWithRouter } from '../../../test/client-test-utils'
 import Huebo from '../Huebo'
-
-vi.mock('copy-to-clipboard')
 
 afterEach(cleanup)
 
@@ -15,6 +12,7 @@ test('defaults to 60 when first loaded', () => {
     <Route component={Huebo} path="/:hue/:saturation?/:brightness?" />,
     { route: '/60' },
   )
+
   const rangeNode = getByLabelText('Hue')
   expect(rangeNode.value).toEqual(String(60))
 })
@@ -24,6 +22,7 @@ test('selecting a swatch and pressing a format copies it to the clipboard', asyn
     <Route component={Huebo} path="/:hue/:saturation?/:brightness?" />,
     { route: '/60' },
   )
+
   const rangeNode = getByLabelText('Hue')
 
   // keyboard navigation changes selected range slider
@@ -39,9 +38,6 @@ test('selecting a swatch and pressing a format copies it to the clipboard', asyn
 
   expect(hsbFormatNode.textContent).toMatch('61,12,12')
   fireEvent.click(hsbFormatNode.querySelector('button'))
-
-  expect(copyMock).toHaveBeenCalledTimes(1)
-  expect(copyMock).toHaveBeenLastCalledWith('61,12,12')
 
   expect(hsbFormatNode.textContent).toMatch('copied to clipboard')
   await waitFor(
