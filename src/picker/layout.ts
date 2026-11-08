@@ -1,10 +1,8 @@
-import type { ReactNode } from 'react'
 import type { Color, Pick } from './color'
 
 /** What the page hands each layout. `color.hue` is the hue on show, including a preview. */
 export type LayoutProps = {
   readonly color: Color
-  readonly header: ReactNode
   readonly onPick: (pick: Pick | null) => void
 }
 

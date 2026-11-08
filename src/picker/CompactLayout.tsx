@@ -2,6 +2,7 @@ import * as stylex from '@stylexjs/stylex'
 import { colors } from '../shared/tokens.stylex'
 import { ColorCard } from './color-card'
 import { HueDial } from './hue-dial'
+import { Header } from './Header'
 import type { LayoutProps } from './layout'
 import { SwatchGrid } from './swatch-grid/SwatchGrid'
 
@@ -10,10 +11,12 @@ import { SwatchGrid } from './swatch-grid/SwatchGrid'
  * grid taking whatever height is left, and the wheel docked at the bottom.
  */
 // fallow-ignore-next-line code-duplication -- Both layouts open the same way by design; they diverge right after the header.
-export function CompactLayout({ color, header, onPick }: LayoutProps) {
+export function CompactLayout({ color, onPick }: LayoutProps) {
   return (
     <div {...stylex.props(styles.layout)}>
-      <header {...stylex.props(styles.head)}>{header}</header>
+      <header {...stylex.props(styles.head)}>
+        <Header />
+      </header>
       <ColorCard.Root color={color}>
         <ColorCard.Swatch style={styles.swatch} />
         <ColorCard.Panel style={styles.panel}>

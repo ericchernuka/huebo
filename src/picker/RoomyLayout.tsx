@@ -1,14 +1,17 @@
 import * as stylex from '@stylexjs/stylex'
 import { ColorCard } from './color-card'
 import { HueDial } from './hue-dial'
+import { Header } from './Header'
 import type { LayoutProps } from './layout'
 import { SwatchGrid } from './swatch-grid/SwatchGrid'
 
 /** Tablets and desktops: the ring around the grid, beside the card or above it. */
-export function RoomyLayout({ color, header, onPick }: LayoutProps) {
+export function RoomyLayout({ color, onPick }: LayoutProps) {
   return (
     <div {...stylex.props(styles.layout)}>
-      <header {...stylex.props(styles.head)}>{header}</header>
+      <header {...stylex.props(styles.head)}>
+        <Header />
+      </header>
       <div {...stylex.props(styles.dial)}>
         <div {...stylex.props(styles.ring)}>
           <HueDial.Ring>

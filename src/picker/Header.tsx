@@ -1,16 +1,25 @@
 import { Popover } from '@base-ui/react/popover'
 import * as stylex from '@stylexjs/stylex'
-import { useRef, type ReactNode } from 'react'
-import { shared } from '../styles'
-import { colors, motion, radii } from '../tokens.stylex'
-import { transitionClass } from '../transition'
+import { useRef } from 'react'
+import { shared } from '../shared/styles'
+import { colors, motion, radii } from '../shared/tokens.stylex'
+import { transitionClass } from '../shared/transition'
+
+/** The title, and a help button beside it. */
+export function Header() {
+  return (
+    <>
+      <h1 {...stylex.props(styles.title)}>Huebo</h1>
+      <Help />
+    </>
+  )
+}
 
 /**
- * A small round button that opens a popover of help, after React Spectrum's
- * ContextualHelp. Put a `Heading` and `Content` inside. It works by tap,
- * click and keyboard, unlike a hover tooltip.
+ * A small round button that opens a popover of help. It works by tap, click
+ * and keyboard, unlike a hover tooltip.
  */
-export function Root({ children }: { readonly children: ReactNode }) {
+function Help() {
   // The popover renders here rather than in <body>, so it keeps the page's
   // theme variables and font.
   const host = useRef<HTMLSpanElement>(null)
@@ -29,25 +38,26 @@ export function Root({ children }: { readonly children: ReactNode }) {
           <Popover.Popup
             className={transitionClass(styles.popup, styles.hidden)}
           >
-            {children}
+            <Popover.Title {...stylex.props(styles.heading)}>
+              Picking a colour
+            </Popover.Title>
+            <Popover.Description
+              render={<div />}
+              {...stylex.props(styles.content)}
+            >
+              <p {...stylex.props(styles.text)}>
+                Turn the dial to choose a hue, then pick one of its 64 steps.
+                Copy it as HSB, RGB or Hex.
+              </p>
+              <p {...stylex.props(styles.text)}>
+                On the dial, the arrow keys step 5° and Shift steps 45°. In the
+                grid, the arrow keys move, Enter picks and Escape clears.
+              </p>
+            </Popover.Description>
           </Popover.Popup>
         </Popover.Positioner>
       </Popover.Portal>
     </Popover.Root>
-  )
-}
-
-export function Heading({ children }: { readonly children: ReactNode }) {
-  return (
-    <Popover.Title {...stylex.props(styles.heading)}>{children}</Popover.Title>
-  )
-}
-
-export function Content({ children }: { readonly children: ReactNode }) {
-  return (
-    <Popover.Description render={<div />} {...stylex.props(styles.content)}>
-      {children}
-    </Popover.Description>
   )
 }
 
@@ -69,6 +79,13 @@ const styles = stylex.create({
     transitionProperty: 'opacity, transform',
   },
   positioner: { zIndex: 10 },
+  text: { margin: 0 },
+  title: {
+    fontSize: 22,
+    fontWeight: 800,
+    letterSpacing: '-0.01em',
+    margin: 0,
+  },
   trigger: {
     alignItems: 'center',
     backgroundColor: { default: colors.panel, ':hover': '#fff' },

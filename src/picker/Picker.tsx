@@ -9,7 +9,6 @@ import {
   hueTheme,
   motion,
 } from '../shared/tokens.stylex'
-import { ContextualHelp } from '../shared/contextual-help'
 import { hexOf, type Color, type Hue, type Pick } from './color'
 import { HueDial } from './hue-dial'
 import { CompactLayout } from './CompactLayout'
@@ -30,6 +29,7 @@ export function Picker() {
   const [preview, setPreview] = useState<Hue | null>(null)
   const compact = useMediaQuery(COMPACT_QUERY)
   const stopMotionRef = useRef<(() => void) | null>(null)
+
   const hue = preview ?? color.hue
 
   const go = (next: Color) => {
@@ -55,7 +55,6 @@ export function Picker() {
 
   const layout = {
     color: { hue, pick: color.pick },
-    header: <Header />,
     onPick: pick,
   }
 
@@ -75,33 +74,6 @@ export function Picker() {
   )
 }
 
-function Header() {
-  return (
-    <>
-      <h1 {...stylex.props(styles.title)}>Huebo</h1>
-      <Help />
-    </>
-  )
-}
-
-function Help() {
-  return (
-    <ContextualHelp.Root>
-      <ContextualHelp.Heading>Picking a colour</ContextualHelp.Heading>
-      <ContextualHelp.Content>
-        <p {...stylex.props(styles.helpText)}>
-          Turn the dial to choose a hue, then pick one of its 64 steps. Copy it
-          as HSB, RGB or Hex.
-        </p>
-        <p {...stylex.props(styles.helpText)}>
-          On the dial, the arrow keys step 5° and Shift steps 45°. In the grid,
-          the arrow keys move, Enter picks and Escape clears.
-        </p>
-      </ContextualHelp.Content>
-    </ContextualHelp.Root>
-  )
-}
-
 function documentTitle({ hue, pick }: Color): string {
   return pick
     ? `HSB(${hue},${pick.saturation},${pick.brightness}) | Huebo`
@@ -109,7 +81,6 @@ function documentTitle({ hue, pick }: Color): string {
 }
 
 const styles = stylex.create({
-  helpText: { margin: 0 },
   hue: (degrees: string) => ({ [hueVar.degrees]: degrees }),
   page: {
     backgroundColor: colors.background,
@@ -121,11 +92,5 @@ const styles = stylex.create({
     minHeight: '100svh',
     transitionDuration: motion.fade,
     transitionProperty: 'background-color',
-  },
-  title: {
-    fontSize: 22,
-    fontWeight: 800,
-    letterSpacing: '-0.01em',
-    margin: 0,
   },
 })
