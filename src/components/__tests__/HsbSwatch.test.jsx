@@ -1,5 +1,6 @@
+import { afterEach, expect, test } from "vitest";
 import React from 'react'
-import { cleanup } from 'react-testing-library'
+import { cleanup } from '@testing-library/react'
 import { renderWithRouter } from '../../../test/client-test-utils'
 import HsbSwatch from '../HsbSwatch'
 
@@ -10,8 +11,8 @@ test('without saturation or brightness the link is to a full HSB', () => {
     <HsbSwatch
       hex="#FFFF00"
       matchRoute="/60"
-      to="/60/12/12"
       title="60,12,12"
+      to="/60/12/12"
     />,
     { route: '/60' },
   )
@@ -27,8 +28,8 @@ test('with saturation or brightness the link clears the saturation and brightnes
     <HsbSwatch
       hex="#FFFF00"
       matchRoute="/60"
-      to="/60/12/12"
       title="60,12,12"
+      to="/60/12/12"
     />,
     { route: '/60/12/12' },
   )

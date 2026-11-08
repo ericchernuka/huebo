@@ -13,10 +13,10 @@ export const buildHueIncrements = (hue = 60) => {
   return INCREMENTS.reduce((acc, brightness) => {
     INCREMENTS.forEach(saturation => {
       acc.push({
-        hue,
-        saturation,
         brightness,
         hex: hsb2Hex(hue, saturation, brightness),
+        hue,
+        saturation,
       })
     })
 

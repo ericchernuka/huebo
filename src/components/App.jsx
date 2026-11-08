@@ -1,7 +1,6 @@
 import React from 'react'
 import { Redirect, Route, Switch } from 'react-router-dom'
 import { DEFAULT_HUE, INCREMENTS } from '../constants'
-import GoogleAnalytics from './GoogleAnalytics'
 import Huebo from './Huebo'
 
 const incrementOptions = INCREMENTS.join('|')
@@ -12,13 +11,12 @@ const huePath = `/:hue(${hueRange})/:saturation(${incrementOptions})?/:brightnes
 
 const App = () => (
   <React.Fragment>
-    <GoogleAnalytics />
     <Switch>
       <Route
-        path={huePath}
         exact
+        path={huePath}
         render={routeProps => {
-          const { saturation, brightness } = routeProps.match.params
+          const { brightness, saturation } = routeProps.match.params
           if (saturation && !brightness) {
             return <Redirect to={`/${DEFAULT_HUE}`} />
           }

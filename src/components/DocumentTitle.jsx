@@ -7,7 +7,7 @@ export default class DocumentTitle extends React.Component {
     updateDocumentTitle(this.props.title)
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (this.props.title !== prevProps.title) {
       updateDocumentTitle(this.props.title)
     }

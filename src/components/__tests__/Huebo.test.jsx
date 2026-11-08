@@ -1,15 +1,18 @@
+import { afterEach, expect, test, vi } from "vitest";
 import copyMock from 'copy-to-clipboard'
 import React from 'react'
 import { Route } from 'react-router-dom'
-import { cleanup, fireEvent, wait } from 'react-testing-library'
+import { cleanup, fireEvent, waitFor } from '@testing-library/react'
 import { renderWithRouter } from '../../../test/client-test-utils'
 import Huebo from '../Huebo'
+
+vi.mock('copy-to-clipboard')
 
 afterEach(cleanup)
 
 test('defaults to 60 when first loaded', () => {
   const { getByLabelText } = renderWithRouter(
-    <Route path="/:hue/:saturation?/:brightness?" component={Huebo} />,
+    <Route component={Huebo} path="/:hue/:saturation?/:brightness?" />,
     { route: '/60' },
   )
   const rangeNode = getByLabelText('Hue')
@@ -17,8 +20,8 @@ test('defaults to 60 when first loaded', () => {
 })
 
 test('selecting a swatch and pressing a format copies it to the clipboard', async () => {
-  const { container, getByTestId, getByLabelText, history } = renderWithRouter(
-    <Route path="/:hue/:saturation?/:brightness?" component={Huebo} />,
+  const { container, getByLabelText, getByTestId, history } = renderWithRouter(
+    <Route component={Huebo} path="/:hue/:saturation?/:brightness?" />,
     { route: '/60' },
   )
   const rangeNode = getByLabelText('Hue')
@@ -27,7 +30,7 @@ test('selecting a swatch and pressing a format copies it to the clipboard', asyn
   fireEvent.keyDown(rangeNode, { charCode: 39 })
   fireEvent.change(rangeNode, { target: { value: 61 } })
   fireEvent.keyUp(rangeNode, { charCode: 39 })
-  await wait(() => expect(history.location.pathname).toEqual('/61'))
+  await waitFor(() => expect(history.location.pathname).toEqual('/61'))
 
   const firstSwatch = container.querySelectorAll('.hue-swatch')[0]
   fireEvent.click(firstSwatch)
@@ -41,7 +44,7 @@ test('selecting a swatch and pressing a format copies it to the clipboard', asyn
   expect(copyMock).toHaveBeenLastCalledWith('61,12,12')
 
   expect(hsbFormatNode.textContent).toMatch('copied to clipboard')
-  await wait(
+  await waitFor(
     () => expect(hsbFormatNode.textContent).not.toMatch('copied to clipboard'),
     { timeout: 3000 },
   )
@@ -51,5 +54,5 @@ test('selecting a swatch and pressing a format copies it to the clipboard', asyn
   fireEvent.change(rangeNode, { target: { value: 255 } })
   fireEvent.mouseUp(rangeNode, { button: 2 })
   expect(rangeNode.value).toEqual(String(255))
-  await wait(() => expect(history.location.pathname).toEqual('/255/12/12'))
+  await waitFor(() => expect(history.location.pathname).toEqual('/255/12/12'))
 })

@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
-exports[`when copied renders with "copied to clipboard" text 1`] = `
+exports[`when copied > renders with "copied to clipboard" text 1`] = `
 <div>
   <div
     class="color-format-block"
@@ -13,7 +13,7 @@ exports[`when copied renders with "copied to clipboard" text 1`] = `
 </div>
 `;
 
-exports[`when not copied renders without "copied to clipboard" text 1`] = `
+exports[`when not copied > renders without "copied to clipboard" text 1`] = `
 <div>
   <div
     class="color-format-block"

@@ -1,14 +1,15 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client'
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './components/App';
-import './index.css';
+import { initializeAnalytics } from './analytics'
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(
+initializeAnalytics(import.meta.env.VITE_GOOGLE_ANALYTICS_ID)
+
+createRoot(document.getElementById('root')).render(
   <Router>
     <App />
   </Router>,
-  document.getElementById('root'),
 )
 registerServiceWorker()

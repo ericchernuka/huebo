@@ -7,13 +7,13 @@ const SwatchGrid = ({ hue }) => {
   const matchRoute = `/${hue}`
   return (
     <div className="hue-swatches">
-      {buildHueIncrements(hue).map(({ saturation, brightness, hex }) => (
+      {buildHueIncrements(hue).map(({ brightness, hex, saturation }) => (
         <HsbSwatch
-          key={hex}
           hex={hex}
+          key={hex}
           matchRoute={matchRoute}
-          to={`/${hue}/${saturation}/${brightness}`}
           title={`${hue},${saturation},${brightness}`}
+          to={`/${hue}/${saturation}/${brightness}`}
         />
       ))}
     </div>
