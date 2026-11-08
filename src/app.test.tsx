@@ -1,5 +1,5 @@
 import { createMemoryHistory, RouterProvider } from '@tanstack/react-router'
-import { beforeEach, describe, expect, test } from 'vitest'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
 import { render } from 'vitest-browser-react'
 import './global.css'
@@ -17,9 +17,9 @@ async function openAt(path: string) {
   )
 
   await page.viewport(1280, 900)
-  await render(<RouterProvider router={router} />)
+  const screen = await render(<RouterProvider router={router} />)
 
-  return { history, views }
+  return { history, screen, views }
 }
 
 const square = (saturation: number, brightness: number) =>
@@ -203,6 +203,73 @@ describe('turning the hue', () => {
     await expect
       .element(hueSlider())
       .toHaveAttribute('aria-valuetext', '200 degrees, azure')
+  })
+})
+
+describe('the grid by keyboard', () => {
+  test('given a picked square has focus, when arrows move and Enter is pressed, then the new square is picked', async () => {
+    const { history } = await openAt('/200/62/75')
+
+    square(62, 75).element().focus()
+    await userEvent.keyboard('{ArrowRight}{ArrowDown}{Enter}')
+
+    await expectPath(history, '/200/75/62')
+    await expect.element(square(75, 62)).toHaveFocus()
+  })
+
+  test('given a pick, when Escape is pressed in the grid, then the pick clears', async () => {
+    const { history } = await openAt('/200/62/75')
+
+    square(62, 75).element().focus()
+    await userEvent.keyboard('{Escape}')
+
+    await expectPath(history, '/200')
+  })
+
+  test('given focus at the end of a row, when Home is pressed, then focus goes to the row start', async () => {
+    await openAt('/200/100/75')
+
+    square(100, 75).element().focus()
+    await userEvent.keyboard('{Home}')
+
+    await expect.element(square(12, 75)).toHaveFocus()
+  })
+})
+
+describe('the colour card', () => {
+  test('given a pick, when Copy is pressed, then the value is copied and confirmed', async () => {
+    const writeText = vi
+      .spyOn(navigator.clipboard, 'writeText')
+      .mockResolvedValue(undefined)
+
+    await openAt('/200/62/75')
+
+    await page.getByRole('button', { name: 'Copy Hex' }).click()
+
+    expect(writeText).toHaveBeenCalledWith('#4998BF')
+    await expect.element(page.getByText('Copied Hex #4998BF')).toBeVisible()
+    writeText.mockRestore()
+  })
+
+  test('given nothing is picked, then Copy is disabled', async () => {
+    await openAt('/200')
+
+    await expect
+      .element(page.getByRole('button', { name: 'Copy' }))
+      .toBeDisabled()
+  })
+
+  test('given a format was chosen, when the app opens again, then it remembers the format', async () => {
+    const first = await openAt('/200/62/75')
+    await page.getByRole('radio', { name: 'RGB' }).click()
+    await expect
+      .element(page.getByText('73,152,191', { exact: true }))
+      .toBeVisible()
+    await first.screen.unmount()
+
+    await openAt('/200/62/75')
+
+    await expect.element(page.getByRole('radio', { name: 'RGB' })).toBeChecked()
   })
 })
 
