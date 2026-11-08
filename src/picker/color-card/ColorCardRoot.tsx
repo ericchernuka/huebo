@@ -1,13 +1,6 @@
 import * as stylex from '@stylexjs/stylex'
 import { Toast } from '@base-ui/react/toast'
-import {
-  createContext,
-  use,
-  useRef,
-  useState,
-  type ReactNode,
-  type RefObject,
-} from 'react'
+import { createContext, use, useState, type ReactNode } from 'react'
 import { colors, motion, radii } from '../../shared/tokens.stylex'
 import { transitionClass } from '../../shared/transition'
 import type { Color } from '../color'
@@ -39,8 +32,6 @@ export type RootProps = {
  */
 export function Root({ children, color }: RootProps) {
   const [format, setFormat] = useState(readFormat)
-  // Toasts render here rather than in <body>, so they keep the page's hue and font.
-  const toastHost = useRef<HTMLDivElement>(null)
   const values = valuesOf(color)
 
   const choose = (next: Format) => {
@@ -53,10 +44,10 @@ export function Root({ children, color }: RootProps) {
       <Toast.Provider timeout={1800}>
         <section aria-label="Selected colour" {...stylex.props(styles.card)}>
           {children}
-          {/* Inside the card, so the card stays one element in any layout. */}
-          <div ref={toastHost} />
+          {/* Inside the card rather than <body>, so toasts keep the page's
+              hue and font and the card stays one element in any layout. */}
+          <Toasts />
         </section>
-        <Toasts host={toastHost} />
       </Toast.Provider>
     </CardContext>
   )
@@ -73,32 +64,30 @@ export function useCard(): CardState {
 }
 
 /** Copy confirmations, each anchored to the button that copied. */
-function Toasts({ host }: { readonly host: RefObject<HTMLDivElement | null> }) {
+function Toasts() {
   const { toasts } = Toast.useToastManager()
 
   return (
-    <Toast.Portal container={host}>
-      <Toast.Viewport>
-        {toasts.map(toast => (
-          <Toast.Positioner
-            key={toast.id}
+    <Toast.Viewport>
+      {toasts.map(toast => (
+        <Toast.Positioner
+          key={toast.id}
+          toast={toast}
+          {...stylex.props(styles.positioner)}
+        >
+          <Toast.Root
+            className={transitionClass(
+              styles.toast,
+              styles.toastStarting,
+              styles.toastEnding,
+            )}
             toast={toast}
-            {...stylex.props(styles.positioner)}
           >
-            <Toast.Root
-              className={transitionClass(
-                styles.toast,
-                styles.toastStarting,
-                styles.toastEnding,
-              )}
-              toast={toast}
-            >
-              <Toast.Title {...stylex.props(styles.toastTitle)} />
-            </Toast.Root>
-          </Toast.Positioner>
-        ))}
-      </Toast.Viewport>
-    </Toast.Portal>
+            <Toast.Title {...stylex.props(styles.toastTitle)} />
+          </Toast.Root>
+        </Toast.Positioner>
+      ))}
+    </Toast.Viewport>
   )
 }
 
