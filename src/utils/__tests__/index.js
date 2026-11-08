@@ -1,3 +1,4 @@
+import { describe, expect, it, test } from "vitest";
 import { buildHueIncrements, extractHSBValuesFromParams } from '../index'
 
 describe('buildHueIncrements()', () => {

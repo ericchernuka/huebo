@@ -1,2 +1,3 @@
-const copy = jest.fn((text, options) => true)
+import { vi } from "vitest";
+const copy = vi.fn(() => true)
 export default copy

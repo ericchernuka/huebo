@@ -1,8 +1,9 @@
+import { afterEach, describe, expect, test, vi } from "vitest";
 import React from 'react'
-import { cleanup, render } from 'react-testing-library'
+import { cleanup, render } from '@testing-library/react'
 import ColorOutputs from '../ColorOutputs'
 
-const mockedOnCopy = jest.fn()
+const mockedOnCopy = vi.fn()
 
 afterEach(cleanup)
 
@@ -26,7 +27,7 @@ describe('when hue selected', () => {
     expect(hexNode.textContent).toMatch('#FFFF00')
   })
 
-  describe('when format matches displayed color format', () => {
+  test('when format matches displayed color format', () => {
     const { getByTestId } = render(
       <ColorOutputs
         copiedColorFormat="60,100,100"

@@ -1,14 +1,14 @@
+import { afterEach, describe, expect, test, vi } from 'vitest'
 import React from 'react'
-import { cleanup } from 'react-testing-library'
+import { cleanup } from '@testing-library/react'
 import { renderWithRouter } from '../../../test/client-test-utils'
 import { INCREMENTS } from '../../constants'
 import App from '../App'
 
 afterEach(cleanup)
 
-jest.mock('react-ga', () => ({
-  initialize: jest.fn(),
-  pageview: jest.fn(),
+vi.mock('react-ga', () => ({
+  default: { initialize: vi.fn(), pageview: vi.fn() },
 }))
 
 test('defaults to 60 when first loaded', () => {
