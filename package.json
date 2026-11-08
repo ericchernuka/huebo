@@ -47,7 +47,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "lint": "oxlint --deny-warnings",
+    "lint": "oxlint --type-aware --deny-warnings",
     "format": "oxfmt",
     "check": "run-p \"check:*\"",
     "check:format": "oxfmt --check",
