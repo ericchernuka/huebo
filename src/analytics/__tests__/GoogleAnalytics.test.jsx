@@ -46,5 +46,7 @@ test('ignores query-only changes and unmatched routes', () => {
 })
 
 test('does nothing without a provider', () => {
-  expect(() => renderWithRouter(<GoogleAnalytics />, { route: '/60' })).not.toThrow()
+  expect(() =>
+    renderWithRouter(<GoogleAnalytics />, { route: '/60' }),
+  ).not.toThrow()
 })

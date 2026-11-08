@@ -49,9 +49,11 @@ class Huebo extends React.Component {
 
   render() {
     const { copiedColorFormat, draggingHue, isDragging } = this.state
-    const { brightness, hue: urlHue, saturation } = extractHSBValuesFromParams(
-      this.props.match.params,
-    )
+    const {
+      brightness,
+      hue: urlHue,
+      saturation,
+    } = extractHSBValuesFromParams(this.props.match.params)
 
     const documentTitle = brightness
       ? `HSB(${urlHue},${saturation},${brightness})`

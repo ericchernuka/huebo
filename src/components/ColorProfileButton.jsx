@@ -1,7 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const ColorProfileButton = ({ onClick, placeholder = '–', value = null, ...props }) => (
+const ColorProfileButton = ({
+  onClick,
+  placeholder = '–',
+  value = null,
+  ...props
+}) => (
   <button
     {...props}
     className={`color-profile ${!value ? 'color-profile-muted' : ''}`}

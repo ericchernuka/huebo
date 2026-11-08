@@ -1,4 +1,4 @@
-import { afterEach, expect, test, vi } from "vitest";
+import { afterEach, expect, test, vi } from 'vitest'
 import React from 'react'
 import { cleanup } from '@testing-library/react'
 import { renderWithRouter } from '../../../test/client-test-utils'

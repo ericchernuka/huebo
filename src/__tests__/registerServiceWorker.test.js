@@ -14,13 +14,18 @@ test('registers the service worker when the local script is available', async ()
     value: { register: registerWorker },
   })
   vi.stubEnv('PROD', true)
-  vi.stubGlobal('fetch', vi.fn().mockResolvedValue({
-    headers: { get: () => 'application/javascript' },
-    status: 200,
-  }))
+  vi.stubGlobal(
+    'fetch',
+    vi.fn().mockResolvedValue({
+      headers: { get: () => 'application/javascript' },
+      status: 200,
+    }),
+  )
 
   register()
   window.dispatchEvent(new Event('load'))
 
-  await vi.waitFor(() => expect(registerWorker).toHaveBeenCalledWith('/service-worker.js'))
+  await vi.waitFor(() =>
+    expect(registerWorker).toHaveBeenCalledWith('/service-worker.js'),
+  )
 })

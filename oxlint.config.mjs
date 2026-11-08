@@ -1,4 +1,4 @@
-import { defineConfig } from 'oxlint';
+import { defineConfig } from 'oxlint'
 
 export default defineConfig({
   categories: {
@@ -183,4 +183,4 @@ export default defineConfig({
     'unicorn/prefer-top-level-await': 'error',
     'unicorn/text-encoding-identifier-case': 'error',
   },
-});
+})
