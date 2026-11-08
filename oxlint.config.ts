@@ -25,7 +25,6 @@ export default defineConfig({
     '**/node_modules/**',
     '**/dist/**',
     'coverage/**',
-    'docs/**',
     'tools/oxlint/anti-slop/**',
   ],
   jsPlugins: [

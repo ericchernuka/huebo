@@ -1,7 +1,7 @@
 {
   "$schema": "./node_modules/fallow/schema.json",
-  // tools/ is vendored lint rules; docs/design/ holds the static prototypes.
-  "ignorePatterns": ["tools/**", "docs/design/**"],
+  // tools/ is vendored lint rules.
+  "ignorePatterns": ["tools/**"],
   // Only the vendored anti-slop rules in tools/ import it.
   "ignoreDependencies": ["@oxlint/plugins"],
   "includeEntryExports": true,
