@@ -1,7 +1,6 @@
 import {
   createContext,
   use,
-  useRef,
   useState,
   type KeyboardEvent,
   type ReactNode,
@@ -29,6 +28,8 @@ export type RootProps = {
   readonly hue: Hue
   readonly onCommit: (hue: Hue) => void
   readonly onPreview: (hue: Hue) => void
+  /** Where a moving part leaves its stop. The owner calls it before any choice. */
+  readonly stopMotionRef: RefObject<(() => void) | null>
 }
 
 /**
@@ -36,24 +37,23 @@ export type RootProps = {
  * preview mid-gesture. Parts call `onPreview` while a finger is down and
  * `onCommit` once a choice is made, so Back steps through chosen colours.
  */
-export function Root({ children, hue, onCommit, onPreview }: RootProps) {
+export function Root({
+  children,
+  hue,
+  onCommit,
+  onPreview,
+  stopMotionRef,
+}: RootProps) {
   const [rotation, setRotation] = useState({ hue, turn: Number(hue) })
-  const stopMotionRef = useRef<(() => void) | null>(null)
 
   if (rotation.hue !== hue) {
     setRotation({ hue, turn: rotation.turn + shortestTurn(rotation.hue, hue) })
   }
 
-  const commit = (next: Hue) => {
-    stopMotionRef.current?.()
-    stopMotionRef.current = null
-    onCommit(next)
-  }
-
   return (
     <DialContext
       value={{
-        commit,
+        commit: onCommit,
         hue,
         preview: onPreview,
         stopMotionRef,
@@ -87,7 +87,7 @@ const KEY_STEPS = new Map([
 
 /** The ARIA slider props and keyboard steps shared by the ring and the wheel. */
 export function useHueSlider() {
-  const { commit, hue, preview } = useDial()
+  const { commit, hue, preview, stopMotionRef } = useDial()
 
   // A held key is a gesture like a drag: it previews on every repeat and
   // commits once, when the key comes up or focus leaves mid-hold.
@@ -96,6 +96,7 @@ export function useHueSlider() {
 
     if (target !== null) {
       event.preventDefault()
+      stopMotionRef.current?.()
       preview(target)
     }
   }

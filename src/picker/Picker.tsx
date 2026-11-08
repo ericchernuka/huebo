@@ -1,6 +1,6 @@
 import * as stylex from '@stylexjs/stylex'
 import { useNavigate, useParams } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useAnnounce } from '../shared/announcer'
 import { hsbToHex } from '../shared/color'
 import {
@@ -29,9 +29,12 @@ export function Picker() {
   const announce = useAnnounce()
   const [preview, setPreview] = useState<Hue | null>(null)
   const compact = useMediaQuery(COMPACT_QUERY)
+  const stopMotionRef = useRef<(() => void) | null>(null)
   const hue = preview ?? color.hue
 
   const go = (next: Color) => {
+    // A choice made anywhere catches a coasting wheel, so it can't land later and undo it.
+    stopMotionRef.current?.()
     // The preview holds the new hue on screen until the URL catches up.
     void navigate({ params: next, to: ROUTE }).then(() => setPreview(null))
   }
@@ -60,7 +63,12 @@ export function Picker() {
     <main {...stylex.props(hueTheme, styles.hue(String(hue)), styles.page)}>
       <title>{documentTitle(color)}</title>
       <meta content={hsbToHex(hue, 12, 90)} name="theme-color" />
-      <HueDial.Root hue={hue} onCommit={commitHue} onPreview={setPreview}>
+      <HueDial.Root
+        hue={hue}
+        onCommit={commitHue}
+        onPreview={setPreview}
+        stopMotionRef={stopMotionRef}
+      >
         {compact ? <CompactLayout {...layout} /> : <RoomyLayout {...layout} />}
       </HueDial.Root>
     </main>

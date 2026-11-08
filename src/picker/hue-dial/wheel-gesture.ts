@@ -1,4 +1,4 @@
-import { useRef, useState, type PointerEvent } from 'react'
+import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import { useAnnounce } from '../../shared/announcer'
 import { hueAt } from '../color'
 import { describeHue } from './geometry'
@@ -49,20 +49,16 @@ export function useWheelGesture(wheel: WheelGeometry) {
     preview(hueAt(at))
   }
 
-  // Committing runs the dial's stopMotion, which is `halt` while this moves.
   const settle = (at: number) => {
+    setFree(null)
     commit(hueAt(at))
     announce(`Hue ${describeHue(hueAt(at))}`)
   }
 
   const momentum = useCoast(follow, settle)
 
-  const halt = () => {
-    momentum.stop()
-    setFree(null)
-  }
-
-  const finish = () => (free === null ? halt() : settle(free))
+  // The pointer down already caught any coast, so only a moved wheel needs settling.
+  const finish = () => free !== null && settle(free)
 
   const release = (ended: Gesture, event: PointerEvent<HTMLElement>) => {
     if (!ended.moved) {
@@ -89,7 +85,11 @@ export function useWheelGesture(wheel: WheelGeometry) {
       // Touching a coasting wheel catches it, and counts as a drag.
       const caught = momentum.stop()
 
-      stopMotionRef.current = halt
+      stopMotionRef.current = () => {
+        momentum.stop()
+        setFree(null)
+      }
+
       event.currentTarget.setPointerCapture(event.pointerId)
       gestureRef.current = startGesture(event, caught, free ?? turn)
     },
@@ -120,6 +120,9 @@ function useCoast(
   onRest: (turn: number) => void,
 ) {
   const frameRef = useRef(0)
+
+  // A coast mustn't outlive the wheel, say when a rotated phone swaps layouts.
+  useEffect(() => () => cancelAnimationFrame(frameRef.current), [])
 
   const start = (from: Coast) => {
     let state = from
