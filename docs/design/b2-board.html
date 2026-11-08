@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Huebo Responsive Board</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#E4E4E4;--ink:#1E1E1E;--ink-2:#5A5A5A;--line:#C8C8C8;color-scheme:light}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 16px/1.45 "Bricolage Grotesque",system-ui,sans-serif}
+main{max-width:1500px;margin:0 auto;padding:32px 24px 56px}
+h1{font-size:28px;margin:0 0 6px;letter-spacing:-.02em}
+.intro{color:var(--ink-2);margin:0 0 32px;max-width:68ch}
+.row{display:flex;gap:32px;align-items:flex-start;flex-wrap:wrap}
+figure{margin:0}
+.frame{border-radius:18px;overflow:hidden;box-shadow:0 0 0 1px var(--line),0 18px 40px rgba(0,0,0,.12);background:#fff;position:relative}
+.frame iframe{border:0;transform-origin:0 0;display:block;position:absolute;top:0;left:0}
+figcaption{margin-top:14px;max-width:34ch}
+figcaption h2{font-size:18px;margin:0 0 4px}
+figcaption ul{margin:0;padding-left:18px;color:var(--ink-2)}
+figcaption li{margin:3px 0}
+</style>
+</head>
+<body>
+<main>
+  <h1>Huebo Dial at three sizes</h1>
+  <p class="intro">Every frame is the live prototype, so you can click, drag and tab through it. Each one opens on a different hue to show the background following along. The hue control is the same slider everywhere; only its shape changes with the screen.</p>
+  <div class="row">
+    <figure>
+      <div class="frame" style="width:576px;height:369px"><iframe title="Desktop" src="b2-dial.html#/280/75/62" width="1280" height="820" style="transform:scale(.45)"></iframe></div>
+      <figcaption><h2>Desktop, 960px and up</h2><ul>
+        <li>Full ring on the left, card on the right.</li>
+        <li>Drag, click or scroll the ring, or use the − / + below it.</li>
+        <li>The card shows the value, the other formats and text contrast.</li></ul></figcaption>
+    </figure>
+    <figure>
+      <div class="frame" style="width:328px;height:472px"><iframe title="Tablet" src="b2-dial.html#/30/50/88" width="820" height="1180" style="transform:scale(.4)"></iframe></div>
+      <figcaption><h2>Tablet, 600–959px</h2><ul>
+        <li>One centred column: ring, stepper, then the card.</li>
+        <li>The ring caps at 480px, so cells stay above 30px.</li></ul></figcaption>
+    </figure>
+    <figure>
+      <div class="frame" style="width:234px;height:506px"><iframe title="Phone" src="b2-dial.html#/200/62/75" width="390" height="844" style="transform:scale(.6)"></iframe></div>
+      <figcaption><h2>Phone, under 600px</h2><ul>
+        <li>The ring becomes the top edge of a large wheel, docked in the thumb zone.</li>
+        <li>Swipe sideways to turn it. Each 5° step is about 45px of travel, and a tap jumps to that segment.</li>
+        <li>Flick to spin it. It coasts and slows down, the grid and background change as it goes, and it settles on the nearest 5°. Touching it catches it.</li>
+        <li>The grid goes full width with 42px cells. The card shrinks to the value, Copy and the format switch.</li>
+        <li>Everything fits on one 390 × 844 screen with no scrolling.</li></ul></figcaption>
+    </figure>
+  </div>
+</main>
+</body>
+</html>
