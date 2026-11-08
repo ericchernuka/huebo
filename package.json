@@ -27,12 +27,16 @@
     "react-router-dom": "^5.0.0"
   },
   "scripts": {
-    "start": "vite",
+    "dev": "vite",
     "build": "vite build",
+    "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
     "lint": "oxlint --config oxlint.config.mjs",
-    "checks": "run-p lint test build"
+    "check": "run-p \"check:*\"",
+    "check:lint": "pnpm lint",
+    "check:test": "pnpm test",
+    "check:build": "pnpm build"
   },
   "prettier": {
     "printWidth": 80,
