@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test, vi } from 'vitest'
+import { afterEach, describe, expect, test } from 'vitest'
 import React from 'react'
 import { cleanup } from '@testing-library/react'
 import { renderWithRouter } from '../../../test/client-test-utils'
@@ -6,11 +6,6 @@ import { INCREMENTS } from '../../constants'
 import App from '../App'
 
 afterEach(cleanup)
-
-vi.mock('react-ga', () => ({
-  initialize: vi.fn(),
-  pageview: vi.fn(),
-}))
 
 test('defaults to 60 when first loaded', () => {
   const { getByLabelText } = renderWithRouter(<App />)
