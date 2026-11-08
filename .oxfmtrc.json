@@ -8,5 +8,10 @@
   "arrowParens": "avoid",
   "semi": false,
   "trailingComma": "all",
-  "sortPackageJson": false
+  "sortPackageJson": false,
+  "ignorePatterns": [
+    "tools/oxlint/anti-slop/",
+    "docs/design/",
+    "pnpm-lock.yaml"
+  ]
 }

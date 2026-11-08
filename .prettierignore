@@ -1,4 +1,0 @@
-# Vendored and reference files stay byte-for-byte as copied.
-tools/oxlint/anti-slop/
-docs/design/
-pnpm-lock.yaml
