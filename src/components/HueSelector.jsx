@@ -27,8 +27,7 @@ class HueSelector extends React.Component {
           type="range"
           id="hue-slider"
           className="hue-slider"
-          tabIndex={1}
-          onChange={e => this.handleChange(e)}
+          onChange={this.handleChange}
           onKeyDown={this.handleDragStart}
           onMouseDown={this.handleDragStart}
           onTouchStart={this.handleDragStart}

@@ -17,7 +17,7 @@ const HsbSwatch = ({ hex, matchRoute, to, title, ...props }) => {
             shadow: spring(match ? 16 : 1, springConfig),
           }}
         >
-          {({ scale, shadow, y }) => (
+          {({ scale, shadow }) => (
             <Link
               {...props}
               role="button"

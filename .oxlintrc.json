@@ -1,0 +1,8 @@
+{
+  "$schema": "./node_modules/oxlint/configuration_schema.json",
+  "plugins": ["eslint", "react", "jsx-a11y", "import", "unicorn", "oxc"],
+  "categories": { "correctness": "error", "suspicious": "error", "perf": "error" },
+  "rules": { "import/no-unassigned-import": "off", "import/no-named-as-default-member": "off", "unicorn/consistent-function-scoping": "off", "unicorn/prefer-add-event-listener": "off", "react/no-children-prop": "off", "jsx-a11y/prefer-tag-over-role": "off" },
+  "env": { "browser": true, "node": true },
+  "ignorePatterns": ["build/**", "coverage/**"]
+}
