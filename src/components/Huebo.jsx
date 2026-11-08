@@ -9,9 +9,9 @@ import SwatchGrid from './SwatchGrid'
 
 class Huebo extends React.Component {
   state = {
+    copiedColorFormat: null,
     draggingHue: Number(this.props.match.params.hue),
     isDragging: false,
-    copiedColorFormat: null,
   }
 
   handleCopy = format => {
@@ -27,7 +27,7 @@ class Huebo extends React.Component {
   }
 
   handleHueChange = hue =>
-    this.setState({ draggingHue: hue, copiedColorFormat: null })
+    this.setState({ copiedColorFormat: null, draggingHue: hue })
 
   handleDrag = ({ isDragging = false }) => {
     this.setState({ isDragging })
@@ -35,7 +35,7 @@ class Huebo extends React.Component {
 
   syncUrlWithHueSelection = hue => {
     const { match } = this.props
-    const { saturation, brightness } = extractHSBValuesFromParams(match.params)
+    const { brightness, saturation } = extractHSBValuesFromParams(match.params)
     this.props.history.push(
       `/${hue}${brightness ? `/${saturation}/${brightness}` : ''}`,
     )
@@ -49,7 +49,7 @@ class Huebo extends React.Component {
 
   render() {
     const { copiedColorFormat, draggingHue, isDragging } = this.state
-    const { hue: urlHue, saturation, brightness } = extractHSBValuesFromParams(
+    const { brightness, hue: urlHue, saturation } = extractHSBValuesFromParams(
       this.props.match.params,
     )
 
@@ -77,12 +77,12 @@ class Huebo extends React.Component {
                   onDrag={this.handleDrag}
                 />
                 <ColorOutputs
-                  hue={hue}
-                  hex={hex}
-                  saturation={saturation}
                   brightness={brightness}
                   copiedColorFormat={copiedColorFormat}
+                  hex={hex}
+                  hue={hue}
                   onCopy={this.handleCopy}
+                  saturation={saturation}
                 />
               </div>
               <SwatchGrid hue={hue} selectedHex={hex} />

@@ -15,10 +15,10 @@ const App = () => (
     <GoogleAnalytics />
     <Switch>
       <Route
-        path={huePath}
         exact
+        path={huePath}
         render={routeProps => {
-          const { saturation, brightness } = routeProps.match.params
+          const { brightness, saturation } = routeProps.match.params
           if (saturation && !brightness) {
             return <Redirect to={`/${DEFAULT_HUE}`} />
           }

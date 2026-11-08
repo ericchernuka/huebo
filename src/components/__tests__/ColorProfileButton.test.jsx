@@ -11,7 +11,7 @@ describe('when a value is present', () => {
 
   test('it renders the value', () => {
     const { getByText } = render(
-      <ColorProfileButton value={value} onClick={onClickHandler} />,
+      <ColorProfileButton onClick={onClickHandler} value={value} />,
     )
 
     const buttonNode = getByText(value)
@@ -21,7 +21,7 @@ describe('when a value is present', () => {
 
   test('clicking returns the value', () => {
     const { getByText } = render(
-      <ColorProfileButton value={value} onClick={onClickHandler} />,
+      <ColorProfileButton onClick={onClickHandler} value={value} />,
     )
 
     const buttonNode = getByText(value)
@@ -36,7 +36,7 @@ describe('when no value', () => {
   test('renders placeholder text when present', () => {
     const placeholderText = 'Select a color'
     const { container } = render(
-      <ColorProfileButton placeholder={placeholderText} onClick={vi.fn()} />,
+      <ColorProfileButton onClick={vi.fn()} placeholder={placeholderText} />,
     )
 
     expect(container.textContent).toMatch(placeholderText)

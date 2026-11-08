@@ -5,11 +5,11 @@ import BaseHue from './BaseHue'
 
 class HueSelector extends React.Component {
   static propTypes = {
-    onChange: PropTypes.func.isRequired,
     hue: PropTypes.number.isRequired,
+    onChange: PropTypes.func.isRequired,
   }
 
-  handleChange = event => this.props.onChange(parseInt(event.target.value, 10))
+  handleChange = event => this.props.onChange(Number.parseInt(event.target.value, 10))
 
   handleDragStart = () => this.props.onDrag({ isDragging: true })
   handleDragEnd = () => this.props.onDrag({ isDragging: false })
@@ -20,27 +20,27 @@ class HueSelector extends React.Component {
     return (
       <div>
         <BaseHue hue={hue} />
-        <label htmlFor="hue-slider" className="sr-only">
+        <label className="sr-only" htmlFor="hue-slider">
           Hue
         </label>
         <input
-          type="range"
-          id="hue-slider"
+          aria-valuemax={MAX_HUE}
+          aria-valuemin={MIN_HUE}
+          aria-valuenow={hue}
           className="hue-slider"
+          id="hue-slider"
+          max={MAX_HUE}
+          min={MIN_HUE}
           onChange={this.handleChange}
           onKeyDown={this.handleDragStart}
-          onMouseDown={this.handleDragStart}
-          onTouchStart={this.handleDragStart}
           onKeyUp={this.handleDragEnd}
+          onMouseDown={this.handleDragStart}
           onMouseUp={this.handleDragEnd}
           onTouchEnd={this.handleDragEnd}
-          value={hue}
-          aria-valuenow={hue}
-          min={MIN_HUE}
-          max={MAX_HUE}
+          onTouchStart={this.handleDragStart}
           step={HUE_STEP}
-          aria-valuemin={MIN_HUE}
-          aria-valuemax={MAX_HUE}
+          type="range"
+          value={hue}
         />
       </div>
     )

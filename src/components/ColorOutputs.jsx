@@ -5,60 +5,60 @@ import ColorFormat from './ColorFormat'
 import ColorProfileButton from './ColorProfileButton'
 
 const ColorOutputs = ({
-  copiedColorFormat = null,
-  hue,
-  saturation = null,
   brightness = null,
+  copiedColorFormat = null,
   hex: hexValue,
+  hue,
   onCopy,
+  saturation = null,
 }) => {
   const hsbValue = brightness ? `${hue},${saturation},${brightness}` : null
   let rgbValue = null
 
   if (brightness) {
-    const { r, g, b } = hsb2Rgb(hue, saturation, brightness)
+    const { b, g, r } = hsb2Rgb(hue, saturation, brightness)
     rgbValue = `${r},${g},${b}`
   }
 
   return (
     <div>
       <ColorFormat
-        label="HSB"
         copied={copiedColorFormat && copiedColorFormat === hsbValue}
         data-testid="color-format-hsb"
+        label="HSB"
       >
         <ColorProfileButton
-          value={hsbValue}
-          placeholder="Select a color"
           onClick={onCopy}
+          placeholder="Select a color"
+          value={hsbValue}
         />
       </ColorFormat>
 
       <ColorFormat
-        label="RGB"
         copied={copiedColorFormat && copiedColorFormat === rgbValue}
         data-testid="color-format-rgb"
+        label="RGB"
       >
-        <ColorProfileButton value={rgbValue} onClick={onCopy} />
+        <ColorProfileButton onClick={onCopy} value={rgbValue} />
       </ColorFormat>
 
       <ColorFormat
-        label="Hex"
         copied={copiedColorFormat && copiedColorFormat === hexValue}
         data-testid="color-format-hex"
+        label="Hex"
       >
-        <ColorProfileButton value={hexValue} onClick={onCopy} />
+        <ColorProfileButton onClick={onCopy} value={hexValue} />
       </ColorFormat>
     </div>
   )
 }
 
 ColorOutputs.propTypes = {
+  brightness: PropTypes.number,
   copiedColorFormat: PropTypes.string,
   hue: PropTypes.number.isRequired,
-  saturation: PropTypes.number,
-  brightness: PropTypes.number,
   onCopy: PropTypes.func.isRequired,
+  saturation: PropTypes.number,
 }
 
 export default ColorOutputs

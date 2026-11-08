@@ -4,10 +4,10 @@ import PropTypes from 'prop-types'
 const ColorProfileButton = ({ onClick, placeholder = '–', value = null, ...props }) => (
   <button
     {...props}
+    className={`color-profile ${!value ? 'color-profile-muted' : ''}`}
+    disabled={!value}
     onClick={() => onClick(value)}
     type="button"
-    disabled={!value}
-    className={`color-profile ${!value ? 'color-profile-muted' : ''}`}
   >
     {value || placeholder}
   </button>

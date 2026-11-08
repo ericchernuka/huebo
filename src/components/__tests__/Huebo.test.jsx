@@ -12,7 +12,7 @@ afterEach(cleanup)
 
 test('defaults to 60 when first loaded', () => {
   const { getByLabelText } = renderWithRouter(
-    <Route path="/:hue/:saturation?/:brightness?" component={Huebo} />,
+    <Route component={Huebo} path="/:hue/:saturation?/:brightness?" />,
     { route: '/60' },
   )
   const rangeNode = getByLabelText('Hue')
@@ -20,8 +20,8 @@ test('defaults to 60 when first loaded', () => {
 })
 
 test('selecting a swatch and pressing a format copies it to the clipboard', async () => {
-  const { container, getByTestId, getByLabelText, history } = renderWithRouter(
-    <Route path="/:hue/:saturation?/:brightness?" component={Huebo} />,
+  const { container, getByLabelText, getByTestId, history } = renderWithRouter(
+    <Route component={Huebo} path="/:hue/:saturation?/:brightness?" />,
     { route: '/60' },
   )
   const rangeNode = getByLabelText('Hue')

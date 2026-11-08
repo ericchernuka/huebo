@@ -21,7 +21,7 @@ describe('when copied', () => {
   test('renders with "copied to clipboard" text', () => {
     const children = '255, 255, 255'
     const { container } = render(
-      <ColorFormat label="RGB" copied>
+      <ColorFormat copied label="RGB">
         {children}
       </ColorFormat>,
     )

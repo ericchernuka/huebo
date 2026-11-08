@@ -10,7 +10,7 @@ afterEach(cleanup)
 test('displays the range value', () => {
   const onChangeHandler = vi.fn()
   const { container, getByLabelText } = render(
-    <HueSelector onChange={onChangeHandler} hue={defaultHue} />,
+    <HueSelector hue={defaultHue} onChange={onChangeHandler} />,
   )
 
   const rangeInputNode = getByLabelText('Hue')
@@ -21,7 +21,7 @@ test('displays the range value', () => {
 test.skip('moving the range updates the value', () => {
   const onChangeHandler = vi.fn()
   const { getByLabelText } = render(
-    <HueSelector onChange={onChangeHandler} hue={defaultHue} />,
+    <HueSelector hue={defaultHue} onChange={onChangeHandler} />,
   )
 
   const rangeInputNode = getByLabelText('Hue')

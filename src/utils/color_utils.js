@@ -58,9 +58,9 @@ export function hsb2Rgb(h, s, b) {
   }
 
   return {
-    r: Math.round(red * 255),
-    g: Math.round(green * 255),
     b: Math.round(blue * 255),
+    g: Math.round(green * 255),
+    r: Math.round(red * 255),
   }
 }
 
@@ -71,7 +71,7 @@ export function hsb2Rgb(h, s, b) {
  * @param {Number} b Brightness
  */
 export function hsb2Hex(h, s, b) {
-  const { r: red, g: green, b: blue } = hsb2Rgb(h, s, b)
+  const { b: blue, g: green, r: red } = hsb2Rgb(h, s, b)
 
   return (
     '#' +

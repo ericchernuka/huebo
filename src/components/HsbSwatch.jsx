@@ -3,14 +3,12 @@ import React from 'react'
 import { Motion, spring } from 'react-motion'
 import { Link, Route } from 'react-router-dom'
 
-const springConfig = { stiffness: 300, damping: 24 }
+const springConfig = { damping: 24, stiffness: 300 }
 
-const HsbSwatch = ({ hex, matchRoute, to, title, ...props }) => {
+const HsbSwatch = ({ hex, matchRoute, title, to, ...props }) => {
   return (
-    <Route
-      path={to}
-      exact={true}
-      children={({ match }) => (
+    <Route exact={true} path={to}>
+      {({ match }) => (
         <Motion
           style={{
             scale: spring(match ? 1.1 : 1, springConfig),
@@ -20,34 +18,34 @@ const HsbSwatch = ({ hex, matchRoute, to, title, ...props }) => {
           {({ scale, shadow }) => (
             <Link
               {...props}
-              role="button"
-              className="hue-swatch"
               aria-pressed={Boolean(match)}
-              to={match ? matchRoute : to}
+              className="hue-swatch"
+              role="button"
               style={{
+                backgroundColor: hex,
                 boxShadow: match
                   ? `inset 0 0 0 3px #FFF, 0 4px ${shadow}px 0 rgba(0,0,0,0.25)`
                   : undefined,
                 transform: `translate3d(0, 0, 0) scale(${scale})`,
                 WebkitTransform: `translate3d(0, 0, 0) scale(${scale})`,
-                backgroundColor: hex,
                 zIndex: match ? 1 : undefined,
               }}
+              to={match ? matchRoute : to}
             >
               <span className="sr-only">{title}</span>
             </Link>
           )}
         </Motion>
       )}
-    />
+    </Route>
   )
 }
 
 HsbSwatch.propTypes = {
   hex: PropTypes.string.isRequired,
   matchRoute: PropTypes.string.isRequired,
-  to: PropTypes.string.isRequired,
   title: PropTypes.string.isRequired,
+  to: PropTypes.string.isRequired,
 }
 
 export default HsbSwatch

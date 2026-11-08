@@ -1,6 +1,9 @@
 import { describe, expect, it, test } from "vitest";
 import { buildHueIncrements, extractHSBValuesFromParams } from '../index'
 
+const belowRange = () => buildHueIncrements(-1)
+const aboveRange = () => buildHueIncrements(356)
+
 describe('buildHueIncrements()', () => {
   test('defaults to a hue of 60', () => {
     const result = buildHueIncrements()
@@ -18,9 +21,6 @@ describe('buildHueIncrements()', () => {
   })
 
   test('throws an error if the value is not within 0-355', () => {
-    const belowRange = () => buildHueIncrements(-1)
-    const aboveRange = () => buildHueIncrements(356)
-
     expect(belowRange).toThrowError(/between 0 and 355/)
     expect(aboveRange).toThrowError(/between 0 and 355/)
   })
@@ -28,21 +28,21 @@ describe('buildHueIncrements()', () => {
 
 describe('extractHSBValuesFromParams()', () => {
   it('converts all url params to numbers', () => {
-    const params = { hue: '60', saturation: '10', brightness: '10' }
+    const params = { brightness: '10', hue: '60', saturation: '10' }
     expect(extractHSBValuesFromParams(params)).toEqual({
+      brightness: 10,
       hue: 60,
       saturation: 10,
-      brightness: 10,
     })
   })
 
   it('returns null if a value cant be coerced to a number', () => {
-    const params = { hue: '60', saturation: '10', brightness: '10', foo: 'bar' }
+    const params = { brightness: '10', foo: 'bar', hue: '60', saturation: '10' }
     expect(extractHSBValuesFromParams(params)).toEqual({
-      hue: 60,
-      saturation: 10,
       brightness: 10,
       foo: null,
+      hue: 60,
+      saturation: 10,
     })
   })
 })
