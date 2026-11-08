@@ -1,5 +1,4 @@
 import * as v from 'valibot'
-import { hsbToHex } from '../shared/color'
 
 /** The eight saturation and brightness steps. This stepping is Huebo's core idea. */
 export const STEPS = [12, 25, 38, 50, 62, 75, 88, 100] as const
@@ -33,10 +32,6 @@ export function hueAt(degrees: number): Hue {
   return v.parse(HueNumber, ((stop % 360) + 360) % 360)
 }
 
-export function hexOf(hue: Hue, pick: Pick): string {
-  return hsbToHex(hue, pick.saturation, pick.brightness)
-}
-
 const HueParam = v.pipe(
   v.string(),
   v.regex(/^\d{1,3}$/),
@@ -51,12 +46,21 @@ const StepParam = v.pipe(
 )
 
 const ColorParams = v.union([
-  v.object({ brightness: StepParam, hue: HueParam, saturation: StepParam }),
-  v.object({
-    brightness: v.optional(v.undefined()),
-    hue: HueParam,
-    saturation: v.optional(v.undefined()),
-  }),
+  v.pipe(
+    v.object({ brightness: StepParam, hue: HueParam, saturation: StepParam }),
+    v.transform(({ brightness, hue, saturation }): Color => ({
+      hue,
+      pick: { brightness, saturation },
+    })),
+  ),
+  v.pipe(
+    v.object({
+      brightness: v.optional(v.undefined()),
+      hue: HueParam,
+      saturation: v.optional(v.undefined()),
+    }),
+    v.transform(({ hue }): Color => ({ hue, pick: null })),
+  ),
 ])
 
 /** The raw path params of `/$hue/{-$saturation}/{-$brightness}`. */
@@ -73,20 +77,7 @@ export type ColorPath = {
 export function parseColorPath(raw: ColorPath): Color | null {
   const result = v.safeParse(ColorParams, raw)
 
-  if (!result.success) {
-    return null
-  }
-
-  const params = result.output
-
-  if (params.saturation === undefined) {
-    return { hue: params.hue, pick: null }
-  }
-
-  return {
-    hue: params.hue,
-    pick: { brightness: params.brightness, saturation: params.saturation },
-  }
+  return result.success ? result.output : null
 }
 
 export function colorPath(color: Color): ColorPath {

@@ -1,6 +1,6 @@
 import * as v from 'valibot'
 import { hsbToHex, hsbToRgb, type Rgb } from '../../shared/color'
-import type { Color, Pick, Hue } from '../color'
+import type { Color } from '../color'
 
 export const FORMATS = ['HSB', 'RGB', 'Hex'] as const
 
@@ -14,10 +14,11 @@ export type Values = {
 
 /** The picked colour's values, or null when nothing's picked. */
 export function valuesOf({ hue, pick }: Color): Values | null {
-  return pick === null ? null : writeOut(hue, pick)
-}
+  if (pick === null) {
+    return null
+  }
 
-function writeOut(hue: Hue, { brightness, saturation }: Pick): Values {
+  const { brightness, saturation } = pick
   const rgb = hsbToRgb(hue, saturation, brightness)
 
   return {

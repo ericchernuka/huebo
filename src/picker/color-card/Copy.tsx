@@ -1,6 +1,5 @@
 import * as stylex from '@stylexjs/stylex'
 import { Toast } from '@base-ui/react/toast'
-import { useRef } from 'react'
 import { shared } from '../../shared/styles'
 import { colors, motion, radii } from '../../shared/tokens.stylex'
 import { useCard } from './ColorCardRoot'
@@ -17,7 +16,6 @@ const draw = stylex.keyframes({
 export function Copy() {
   const { format, values } = useCard()
   const toasts = Toast.useToastManager()
-  const button = useRef<HTMLButtonElement>(null)
   const value = values?.text[format]
 
   // The button shows its tick for as long as the confirmation is up.
@@ -25,7 +23,7 @@ export function Copy() {
     toast => toast.transitionStatus !== 'ending',
   )
 
-  const copy = async (text: string) => {
+  const copy = async (text: string, button: HTMLButtonElement) => {
     const title = await navigator.clipboard.writeText(text).then(
       () => `Copied ${format} ${text}`,
       () => `Couldn't copy ${format}`,
@@ -33,7 +31,7 @@ export function Copy() {
 
     toasts.close()
     toasts.add({
-      positionerProps: { anchor: button.current, side: 'top', sideOffset: 10 },
+      positionerProps: { anchor: button, side: 'top', sideOffset: 10 },
       title,
     })
   }
@@ -41,8 +39,9 @@ export function Copy() {
   return (
     <button
       disabled={value === undefined}
-      onClick={() => value !== undefined && void copy(value)}
-      ref={button}
+      onClick={event =>
+        value !== undefined && void copy(value, event.currentTarget)
+      }
       type="button"
       {...stylex.props(shared.focusRing, styles.copy, copied && styles.copied)}
     >

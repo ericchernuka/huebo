@@ -1,5 +1,5 @@
 import * as stylex from '@stylexjs/stylex'
-import { useRef, useState, type KeyboardEvent } from 'react'
+import { useState, type KeyboardEvent } from 'react'
 import { hsbToHex } from '../../shared/color'
 import { colors, motion } from '../../shared/tokens.stylex'
 import { STEPS, type Hue, type Pick } from '../color'
@@ -29,8 +29,6 @@ export function SwatchGrid({ hue, onPick, pick, style }: SwatchGridProps) {
     pick ? cellOf(pick) : { column: 0, row: 0 },
   )
 
-  const grid = useRef<HTMLTableElement>(null)
-
   const onKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Escape' && pick) {
       onPick(null)
@@ -44,9 +42,9 @@ export function SwatchGrid({ hue, onPick, pick, style }: SwatchGridProps) {
       event.preventDefault()
       setFocus(next)
 
-      const cells = grid.current?.querySelectorAll('button')
+      const cells = event.currentTarget.querySelectorAll('button')
 
-      cells?.[next.row * STEPS.length + next.column]?.focus()
+      cells[next.row * STEPS.length + next.column]?.focus()
     }
   }
 
@@ -54,7 +52,6 @@ export function SwatchGrid({ hue, onPick, pick, style }: SwatchGridProps) {
     <table
       aria-label={`Saturation and brightness for hue ${hue} degrees`}
       onKeyDown={onKeyDown}
-      ref={grid}
       role="grid"
       tabIndex={-1}
       {...stylex.props(styles.grid, style)}

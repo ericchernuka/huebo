@@ -40,9 +40,7 @@ export function CompactLayout({ color, onPick }: LayoutProps) {
         <HueDial.Degrees style={styles.degrees} />
         <HueDial.Increment style={styles.stepButton} />
       </HueDial.Stepper>
-      <div {...stylex.props(styles.wheel)}>
-        <HueDial.Wheel style={styles.wheelInset} />
-      </div>
+      <HueDial.Wheel style={styles.wheel} />
     </div>
   )
 }
@@ -94,12 +92,11 @@ const styles = stylex.create({
     gap: 12,
     justifyContent: 'space-between',
   },
-  // Full bleed to the sides and the bottom edge.
+  // Full bleed to the sides and the bottom edge. The padding keeps the pin
+  // and labels clear of the home indicator while the band runs on under it.
   wheel: {
     marginLeft: `calc(-1 * ${GUTTER})`,
     marginRight: `calc(-1 * ${GUTTER_END})`,
+    paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
   },
-  // Keeps the pin and labels clear of the home indicator. The band itself
-  // runs on underneath it to the edge.
-  wheelInset: { paddingBottom: 'max(8px, env(safe-area-inset-bottom))' },
 })

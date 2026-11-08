@@ -9,7 +9,7 @@ import {
   hueTheme,
   motion,
 } from '../shared/tokens.stylex'
-import { hexOf, type Color, type Hue, type Pick } from './color'
+import type { Color, Hue, Pick } from './color'
 import { HueDial } from './hue-dial'
 import { CompactLayout } from './CompactLayout'
 import { COMPACT_QUERY } from './layout'
@@ -57,7 +57,11 @@ export function Picker() {
 
   const pick = (next: Pick | null) => {
     go({ hue, pick: next })
-    announce(next ? `Picked ${hexOf(hue, next)}` : 'Selection cleared')
+    announce(
+      next
+        ? `Picked ${hsbToHex(hue, next.saturation, next.brightness)}`
+        : 'Selection cleared',
+    )
   }
 
   const layout = {

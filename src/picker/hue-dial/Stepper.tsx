@@ -37,9 +37,9 @@ export function Degrees({ style }: PartProps) {
   const { hue } = useDial()
 
   return (
-    <output aria-hidden="true" {...stylex.props(styles.degrees, style)}>
+    <span aria-hidden="true" {...stylex.props(styles.degrees, style)}>
       {hue}°
-    </output>
+    </span>
   )
 }
 
