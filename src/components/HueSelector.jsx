@@ -9,7 +9,8 @@ class HueSelector extends React.Component {
     onChange: PropTypes.func.isRequired,
   }
 
-  handleChange = event => this.props.onChange(Number.parseInt(event.target.value, 10))
+  handleChange = event =>
+    this.props.onChange(Number.parseInt(event.target.value, 10))
 
   handleDragStart = () => this.props.onDrag({ isDragging: true })
   handleDragEnd = () => this.props.onDrag({ isDragging: false })

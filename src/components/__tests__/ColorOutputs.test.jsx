@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, test, vi } from "vitest";
+import { afterEach, describe, expect, test, vi } from 'vitest'
 import React from 'react'
 import { cleanup, render } from '@testing-library/react'
 import ColorOutputs from '../ColorOutputs'

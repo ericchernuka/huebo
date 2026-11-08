@@ -1,4 +1,4 @@
-import { describe, expect, it, test } from "vitest";
+import { describe, expect, it, test } from 'vitest'
 import { buildHueIncrements, extractHSBValuesFromParams } from '../index'
 
 const belowRange = () => buildHueIncrements(-1)

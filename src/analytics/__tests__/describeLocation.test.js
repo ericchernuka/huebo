@@ -15,6 +15,9 @@ test('describes a hue-only path with its own template', () => {
   })
 })
 
-test.each(['/', '/not-a-route', '/400', '/60/50'])('returns null for %s', pathname => {
-  expect(describeLocation(pathname)).toBeNull()
-})
+test.each(['/', '/not-a-route', '/400', '/60/50'])(
+  'returns null for %s',
+  pathname => {
+    expect(describeLocation(pathname)).toBeNull()
+  },
+)

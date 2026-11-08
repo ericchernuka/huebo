@@ -11,5 +11,8 @@ export function describeLocation(pathname) {
     return null
   }
   const { brightness, hue, saturation } = match.params
-  return { page: toTemplate(match.path), params: { brightness, hue, saturation } }
+  return {
+    page: toTemplate(match.path),
+    params: { brightness, hue, saturation },
+  }
 }
