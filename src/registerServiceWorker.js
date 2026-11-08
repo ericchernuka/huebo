@@ -1,4 +1,3 @@
-/* oxlint-disable no-console -- Preserve service worker diagnostics. */
 // In production, we register a service worker to serve assets from local cache.
 
 // This lets the app load faster on subsequent visits in production, and gives
@@ -37,14 +36,6 @@ export default function register() {
         // This is running on localhost. Lets check if a service worker still exists or not.
         checkValidServiceWorker(swUrl)
 
-        // Add some additional logging to localhost, pointing developers to the
-        // service worker/PWA documentation.
-        navigator.serviceWorker.ready.then(() => {
-          console.log(
-            'This web app is being served cache-first by a service ' +
-              'worker. To learn more, visit https://goo.gl/SC7cgQ',
-          )
-        })
       } else {
         // Is not local host. Just register service worker
         registerValidSW(swUrl)
@@ -54,32 +45,7 @@ export default function register() {
 }
 
 function registerValidSW(swUrl) {
-  navigator.serviceWorker
-    .register(swUrl)
-    .then(registration => {
-      registration.addEventListener('updatefound', () => {
-        const installingWorker = registration.installing
-        installingWorker.addEventListener('statechange', () => {
-          if (installingWorker.state === 'installed') {
-            if (navigator.serviceWorker.controller) {
-              // At this point, the old content will have been purged and
-              // the fresh content will have been added to the cache.
-              // It's the perfect time to display a "New content is
-              // available; please refresh." message in your web app.
-              console.log('New content is available; please refresh.')
-            } else {
-              // At this point, everything has been precached.
-              // It's the perfect time to display a
-              // "Content is cached for offline use." message.
-              console.log('Content is cached for offline use.')
-            }
-          }
-        })
-      })
-    })
-    .catch(error => {
-      console.error('Error during service worker registration:', error)
-    })
+  navigator.serviceWorker.register(swUrl)
 }
 
 function checkValidServiceWorker(swUrl) {
@@ -102,11 +68,7 @@ function checkValidServiceWorker(swUrl) {
         registerValidSW(swUrl)
       }
     })
-    .catch(() => {
-      console.log(
-        'No internet connection found. App is running in offline mode.',
-      )
-    })
+    .catch(() => undefined)
 }
 
 export function unregister() {
