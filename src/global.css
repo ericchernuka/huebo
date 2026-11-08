@@ -1,0 +1,19 @@
+@import '@fontsource-variable/bricolage-grotesque/wght.css';
+
+/* Element selectors only, so any StyleX class wins over the reset. */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+}
+
+button,
+output {
+  font: inherit;
+  color: inherit;
+}
