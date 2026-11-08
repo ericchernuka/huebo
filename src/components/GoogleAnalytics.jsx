@@ -1,10 +1,10 @@
 import React from 'react'
-import ReactGA from 'react-ga'
+import { initialize, pageview } from 'react-ga'
 import { withRouter } from 'react-router-dom'
 
 class GoogleAnalytics extends React.Component {
   componentDidMount() {
-    ReactGA.initialize(import.meta.env.REACT_APP_GOOGLE_ANALYTICS_ID)
+    initialize(import.meta.env.REACT_APP_GOOGLE_ANALYTICS_ID)
     this.trackPage()
   }
 
@@ -19,7 +19,7 @@ class GoogleAnalytics extends React.Component {
 
   trackPage = () => {
     const { location } = this.props
-    ReactGA.pageview(`${location.pathname}${location.search}`)
+    pageview(`${location.pathname}${location.search}`)
   }
 
   render() {

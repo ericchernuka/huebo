@@ -57,9 +57,9 @@ function registerValidSW(swUrl) {
   navigator.serviceWorker
     .register(swUrl)
     .then(registration => {
-      registration.onupdatefound = () => {
+      registration.addEventListener('updatefound', () => {
         const installingWorker = registration.installing
-        installingWorker.onstatechange = () => {
+        installingWorker.addEventListener('statechange', () => {
           if (installingWorker.state === 'installed') {
             if (navigator.serviceWorker.controller) {
               // At this point, the old content will have been purged and
@@ -74,8 +74,8 @@ function registerValidSW(swUrl) {
               console.log('Content is cached for offline use.')
             }
           }
-        }
-      }
+        })
+      })
     })
     .catch(error => {
       console.error('Error during service worker registration:', error)

@@ -8,7 +8,8 @@ import App from '../App'
 afterEach(cleanup)
 
 vi.mock('react-ga', () => ({
-  default: { initialize: vi.fn(), pageview: vi.fn() },
+  initialize: vi.fn(),
+  pageview: vi.fn(),
 }))
 
 test('defaults to 60 when first loaded', () => {
