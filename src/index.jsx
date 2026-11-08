@@ -2,14 +2,17 @@ import React from 'react';
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './components/App';
-import { initializeAnalytics } from './analytics'
+import { createAnalytics } from './analytics/createAnalytics'
+import { AnalyticsContext } from './analytics/AnalyticsContext'
 import registerServiceWorker from './registerServiceWorker';
 
-initializeAnalytics(import.meta.env.VITE_GOOGLE_ANALYTICS_ID)
+const analytics = createAnalytics(import.meta.env.VITE_GOOGLE_ANALYTICS_ID)
 
 createRoot(document.getElementById('root')).render(
-  <Router>
-    <App />
-  </Router>,
+  <AnalyticsContext value={analytics}>
+    <Router>
+      <App />
+    </Router>
+  </AnalyticsContext>,
 )
 registerServiceWorker()
