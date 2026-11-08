@@ -7,6 +7,4 @@ cache:
 script:
   - corepack enable
   - pnpm install --frozen-lockfile
-  - pnpm lint
-  - pnpm build
-  - pnpm test
+  - pnpm checks
