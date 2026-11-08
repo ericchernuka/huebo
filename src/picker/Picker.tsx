@@ -27,22 +27,29 @@ export function Picker() {
   const navigate = useNavigate()
   const announce = useAnnounce()
   const [preview, setPreview] = useState<Hue | null>(null)
+  const [seenHue, setSeenHue] = useState(color.hue)
   const compact = useMediaQuery(COMPACT_QUERY)
   const stopMotionRef = useRef<(() => void) | null>(null)
+
+  // Once the URL's hue moves, by a commit or by Back, the preview is spent.
+  if (seenHue !== color.hue) {
+    setSeenHue(color.hue)
+    setPreview(null)
+  }
 
   const hue = preview ?? color.hue
 
   const go = (next: Color) => {
     // A choice made anywhere catches a coasting wheel, so it can't land later and undo it.
     stopMotionRef.current?.()
-    // The preview holds the new hue on screen until the URL catches up.
-    void navigate({ params: next, to: ROUTE }).then(() => setPreview(null))
+    void navigate({ params: next, to: ROUTE })
   }
 
   const commitHue = (next: Hue) => {
     if (next === color.hue) {
       setPreview(null)
     } else {
+      // The preview holds the new hue on screen until the URL catches up.
       setPreview(next)
       go({ hue: next, pick: color.pick })
     }

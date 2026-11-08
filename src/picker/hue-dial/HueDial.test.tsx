@@ -101,6 +101,7 @@ describe('turning the hue', () => {
     expect(views).toHaveLength(2)
     history.back()
     await expectPath(history, '/200')
+    await expect.element(hueSlider()).toHaveAttribute('aria-valuenow', '200')
   })
 
   test('given the dial has focus at 0, when Home is pressed, then no history entry is added', async () => {
