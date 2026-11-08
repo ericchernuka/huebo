@@ -10,7 +10,7 @@ import {
 import { hueAt, type Hue } from '../color'
 import { describeHue, shortestTurn } from './geometry'
 
-type DialState = {
+export type DialState = {
   /** Commits a hue: the URL and history follow, unless it's the hue already there. Stops any coasting first. */
   readonly commit: (hue: Hue) => void
   readonly hue: Hue
@@ -24,7 +24,7 @@ type DialState = {
 
 const DialContext = createContext<DialState | null>(null)
 
-type RootProps = {
+export type RootProps = {
   readonly children: ReactNode
   readonly hue: Hue
   readonly onCommit: (hue: Hue) => void

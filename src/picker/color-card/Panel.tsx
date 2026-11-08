@@ -2,7 +2,7 @@ import * as stylex from '@stylexjs/stylex'
 import type { ReactNode } from 'react'
 import { colors, radii } from '../../shared/tokens.stylex'
 
-type PanelProps = {
+export type PanelProps = {
   readonly children: ReactNode
   readonly style?: stylex.StyleXStyles
 }

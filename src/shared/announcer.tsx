@@ -1,6 +1,5 @@
 import * as stylex from '@stylexjs/stylex'
 import { createContext, use, useState, type ReactNode } from 'react'
-import { shared } from './styles'
 
 const AnnounceContext = createContext<(message: string) => void>(
   () => undefined,
@@ -19,7 +18,7 @@ export function Announcer({ children }: { readonly children: ReactNode }) {
   return (
     <AnnounceContext value={announce}>
       {children}
-      <div aria-live="polite" {...stylex.props(shared.visuallyHidden)}>
+      <div aria-live="polite" {...stylex.props(styles.visuallyHidden)}>
         <span key={message.id}>{message.text}</span>
       </div>
     </AnnounceContext>
@@ -30,3 +29,15 @@ export function Announcer({ children }: { readonly children: ReactNode }) {
 export function useAnnounce(): (message: string) => void {
   return use(AnnounceContext)
 }
+
+const styles = stylex.create({
+  visuallyHidden: {
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    top: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+  },
+})

@@ -9,6 +9,7 @@ import {
   type RefObject,
 } from 'react'
 import { colors, motion, radii } from '../../shared/tokens.stylex'
+import { transitionClass } from '../../shared/transition'
 import type { Color } from '../color'
 import {
   readFormat,
@@ -18,7 +19,7 @@ import {
   type Values,
 } from './formats'
 
-type CardState = {
+export type CardState = {
   readonly format: Format
   readonly setFormat: (format: Format) => void
   /** Every format's value, or null when nothing is picked. */
@@ -27,7 +28,7 @@ type CardState = {
 
 const CardContext = createContext<CardState | null>(null)
 
-type RootProps = {
+export type RootProps = {
   readonly children: ReactNode
   readonly color: Color
 }
@@ -85,13 +86,11 @@ function Toasts({ host }: { readonly host: RefObject<HTMLDivElement | null> }) {
             {...stylex.props(styles.positioner)}
           >
             <Toast.Root
-              className={state =>
-                stylex.props(
-                  styles.toast,
-                  state.transitionStatus === 'starting' && styles.toastStarting,
-                  state.transitionStatus === 'ending' && styles.toastEnding,
-                ).className
-              }
+              className={transitionClass(
+                styles.toast,
+                styles.toastStarting,
+                styles.toastEnding,
+              )}
               toast={toast}
             >
               <Toast.Title {...stylex.props(styles.toastTitle)} />

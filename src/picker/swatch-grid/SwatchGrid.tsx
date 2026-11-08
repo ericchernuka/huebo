@@ -10,7 +10,7 @@ const LAST = STEPS.length - 1
 
 type Cell = { readonly column: number; readonly row: number }
 
-type SwatchGridProps = {
+export type SwatchGridProps = {
   readonly hue: Hue
   /** Called with the picked square, or null to clear the pick. */
   readonly onPick: (pick: Pick | null) => void

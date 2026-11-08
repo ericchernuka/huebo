@@ -7,7 +7,7 @@ import { hueAt } from '../color'
 import { describeHue } from './geometry'
 import { useDial } from './HueDialRoot'
 
-type PartProps = { readonly style?: stylex.StyleXStyles }
+export type PartProps = { readonly style?: stylex.StyleXStyles }
 
 /**
  * Groups the − and + buttons that step the hue 5° and wrap at 355°/0°: the

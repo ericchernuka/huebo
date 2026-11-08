@@ -26,7 +26,7 @@ type Gesture = {
   readonly startX: number
 }
 
-type WheelGeometry = {
+export type WheelGeometry = {
   readonly radius: number
   /** How far below the top of the wheel's box the top of the wheel sits. */
   readonly top: number

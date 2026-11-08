@@ -10,13 +10,4 @@ export const shared = stylex.create({
     },
     outlineOffset: 3,
   },
-  visuallyHidden: {
-    clipPath: 'inset(50%)',
-    height: 1,
-    overflow: 'hidden',
-    position: 'absolute',
-    top: 0,
-    whiteSpace: 'nowrap',
-    width: 1,
-  },
 })

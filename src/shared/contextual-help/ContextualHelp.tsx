@@ -3,24 +3,14 @@ import * as stylex from '@stylexjs/stylex'
 import { useRef, type ReactNode } from 'react'
 import { shared } from '../styles'
 import { colors, motion, radii } from '../tokens.stylex'
-
-const VARIANTS = {
-  help: { glyph: '?', label: 'Help' },
-  info: { glyph: 'i', label: 'Information' },
-} as const
-
-type RootProps = {
-  readonly children: ReactNode
-  /** `help` explains how to use something; `info` adds background. */
-  readonly variant?: keyof typeof VARIANTS
-}
+import { transitionClass } from '../transition'
 
 /**
  * A small round button that opens a popover of help, after React Spectrum's
  * ContextualHelp. Put a `Heading` and `Content` inside. It works by tap,
  * click and keyboard, unlike a hover tooltip.
  */
-export function Root({ children, variant = 'help' }: RootProps) {
+export function Root({ children }: { readonly children: ReactNode }) {
   // The popover renders here rather than in <body>, so it keeps the page's
   // theme variables and font.
   const host = useRef<HTMLSpanElement>(null)
@@ -28,22 +18,16 @@ export function Root({ children, variant = 'help' }: RootProps) {
   return (
     <Popover.Root>
       <Popover.Trigger
-        aria-label={VARIANTS[variant].label}
+        aria-label="Help"
         {...stylex.props(shared.focusRing, styles.trigger)}
       >
-        <span aria-hidden="true">{VARIANTS[variant].glyph}</span>
+        <span aria-hidden="true">?</span>
       </Popover.Trigger>
       <span ref={host} />
       <Popover.Portal container={host}>
         <Popover.Positioner sideOffset={8} {...stylex.props(styles.positioner)}>
           <Popover.Popup
-            className={state =>
-              stylex.props(
-                styles.popup,
-                state.transitionStatus === 'starting' && styles.hidden,
-                state.transitionStatus === 'ending' && styles.hidden,
-              ).className
-            }
+            className={transitionClass(styles.popup, styles.hidden)}
           >
             {children}
           </Popover.Popup>

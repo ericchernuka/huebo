@@ -1,7 +1,7 @@
 import * as stylex from '@stylexjs/stylex'
 import { polar, segmentPath, STOPS } from './geometry'
 
-type SegmentsProps = {
+export type SegmentsProps = {
   readonly inner: number
   readonly outer: number
   /** How far in from the outer edge the short notches reach. Every 45° the notch runs the full depth. */
