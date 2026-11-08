@@ -109,7 +109,6 @@ export default defineConfig({
     ],
     'import-x/export': 'error',
     'import-x/no-namespace': 'error',
-    'import/no-unassigned-import': ['error', { allow: ['**/*.css'] }],
     'no-array-constructor': 'error',
     'no-case-declarations': 'error',
     'no-console': 'error',
