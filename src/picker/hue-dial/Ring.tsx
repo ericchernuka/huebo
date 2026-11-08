@@ -1,14 +1,23 @@
 import * as stylex from '@stylexjs/stylex'
-import type { PointerEvent, ReactNode } from 'react'
+import {
+  useEffect,
+  useEffectEvent,
+  useRef,
+  type PointerEvent,
+  type ReactNode,
+} from 'react'
 import { colors, motion } from '../../shared/tokens.stylex'
 import { hueAt, type Hue } from '../color'
 import { useDial, useHueSlider } from './HueDialRoot'
 import { Segments } from './Segments'
 
+/** How long the mouse wheel rests before its turn counts as a choice. */
+const WHEEL_PAUSE_MS = 250
+
 /**
  * The full hue ring, with `children` (the grid) in its middle. Click or drag
- * the ring to set the angle; the mouse wheel steps 5°. It's a square that
- * fills its container's width.
+ * the ring to set the angle; the mouse wheel steps 5°, committing once it
+ * pauses. It's a square that fills its container's width.
  */
 export function Ring({ children }: { readonly children: ReactNode }) {
   const { commit, hue, preview, turn } = useDial()
@@ -26,18 +35,7 @@ export function Ring({ children }: { readonly children: ReactNode }) {
     }
   }
 
-  const onWheel = (event: WheelEvent) => {
-    event.preventDefault()
-    commit(hueAt(hue + (event.deltaY > 0 ? 5 : -5)))
-  }
-
-  // React's wheel listener is passive, so the step and preventDefault go on
-  // a native listener instead.
-  const stepOnWheel = (svg: SVGSVGElement) => {
-    svg.addEventListener('wheel', onWheel, { passive: false })
-
-    return () => svg.removeEventListener('wheel', onWheel)
-  }
+  const svgRef = useScrollToTurn()
 
   return (
     <div {...stylex.props(styles.dial)}>
@@ -46,7 +44,7 @@ export function Ring({ children }: { readonly children: ReactNode }) {
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={() => commit(hue)}
-        ref={stepOnWheel}
+        ref={svgRef}
         viewBox="-100 -100 200 200"
         {...stylex.props(stylex.defaultMarker(), styles.ring)}
       >
@@ -59,6 +57,55 @@ export function Ring({ children }: { readonly children: ReactNode }) {
 }
 
 /** The ring's handle, with a focus ring that shows when the ring has focus. */
+/** A scroll in progress: where it has got to, and the timer for its pause. */
+type Scroll = { readonly at: Hue; readonly pause: number }
+
+/**
+ * Steps the hue 5° a notch while the mouse wheel scrolls, and commits once
+ * the notches stop coming, so a scroll is one choice like a drag. Notches
+ * can arrive faster than React renders, so each steps from the last.
+ */
+function useScrollToTurn() {
+  const { commit, hue, preview } = useDial()
+  const svgRef = useRef<SVGSVGElement>(null)
+  const scrollRef = useRef<Scroll | null>(null)
+
+  const settle = useEffectEvent((at: Hue) => {
+    scrollRef.current = null
+    commit(at)
+  })
+
+  const step = useEffectEvent((by: number) => {
+    const at = hueAt((scrollRef.current?.at ?? hue) + by)
+
+    clearTimeout(scrollRef.current?.pause)
+    preview(at)
+    scrollRef.current = {
+      at,
+      pause: window.setTimeout(() => settle(at), WHEEL_PAUSE_MS),
+    }
+  })
+
+  // React's wheel listener is passive, so preventDefault needs a native one.
+  useEffect(() => {
+    const svg = svgRef.current
+
+    const onWheel = (event: WheelEvent) => {
+      event.preventDefault()
+      step(event.deltaY > 0 ? 5 : -5)
+    }
+
+    svg?.addEventListener('wheel', onWheel, { passive: false })
+
+    return () => {
+      svg?.removeEventListener('wheel', onWheel)
+      clearTimeout(scrollRef.current?.pause)
+    }
+  }, [])
+
+  return svgRef
+}
+
 function Thumb({ turn }: { readonly turn: number }) {
   return (
     <g

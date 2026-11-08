@@ -114,6 +114,23 @@ describe('turning the hue', () => {
     expect(history.length).toBe(1)
   })
 
+  test('given the ring at 200, when the mouse wheel scrolls three notches, then the hue turns live and history gets one entry', async () => {
+    const { history, views } = await openAt('/200')
+    const ring = hueSlider().element()
+
+    for (let notch = 0; notch < 3; notch++) {
+      ring.dispatchEvent(
+        new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: 1 }),
+      )
+    }
+
+    await expect.element(hueSlider()).toHaveAttribute('aria-valuenow', '215')
+    expect(history.location.pathname).toBe('/200')
+
+    await expectPath(history, '/215')
+    expect(views).toHaveLength(2)
+  })
+
   test('given a turn, then the dial describes the hue', async () => {
     await openAt('/200')
 
