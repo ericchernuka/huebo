@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const ColorProfileButton = ({ onClick, placeholder, value, ...props }) => (
+const ColorProfileButton = ({ onClick, placeholder = '–', value = null, ...props }) => (
   <button
     {...props}
     onClick={() => onClick(value)}
@@ -17,11 +17,6 @@ ColorProfileButton.propTypes = {
   onClick: PropTypes.func.isRequired,
   placeholder: PropTypes.string,
   value: PropTypes.string,
-}
-
-ColorProfileButton.defaultProps = {
-  placeholder: '–',
-  value: null,
 }
 
 export default ColorProfileButton

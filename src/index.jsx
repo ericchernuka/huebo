@@ -1,14 +1,13 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client'
 import { BrowserRouter as Router } from 'react-router-dom';
 import App from './components/App';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(
+createRoot(document.getElementById('root')).render(
   <Router>
     <App />
   </Router>,
-  document.getElementById('root'),
 )
 registerServiceWorker()

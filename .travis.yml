@@ -5,5 +5,8 @@ cache:
   directories:
     - node_modules
 script:
-  - yarn build
-  - yarn test
+  - corepack enable
+  - pnpm install --frozen-lockfile
+  - pnpm lint
+  - pnpm build
+  - pnpm test

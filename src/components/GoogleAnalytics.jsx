@@ -4,7 +4,7 @@ import { withRouter } from 'react-router-dom'
 
 class GoogleAnalytics extends React.Component {
   componentDidMount() {
-    ReactGA.initialize(process.env.REACT_APP_GOOGLE_ANALYTICS_ID)
+    ReactGA.initialize(import.meta.env.REACT_APP_GOOGLE_ANALYTICS_ID)
     this.trackPage()
   }
 

@@ -5,10 +5,10 @@ import ColorFormat from './ColorFormat'
 import ColorProfileButton from './ColorProfileButton'
 
 const ColorOutputs = ({
-  copiedColorFormat,
+  copiedColorFormat = null,
   hue,
-  saturation,
-  brightness,
+  saturation = null,
+  brightness = null,
   hex: hexValue,
   onCopy,
 }) => {
@@ -59,12 +59,6 @@ ColorOutputs.propTypes = {
   saturation: PropTypes.number,
   brightness: PropTypes.number,
   onCopy: PropTypes.func.isRequired,
-}
-
-ColorOutputs.defaultProps = {
-  copiedColorFormat: null,
-  saturation: null,
-  brightness: null,
 }
 
 export default ColorOutputs

@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Label from './Label'
 
-const ColorFormat = ({ children, copied, label, ...props }) => (
+const ColorFormat = ({ children, copied = false, label, ...props }) => (
   <div className="color-format-block" {...props}>
     <Label>{copied ? `${label} copied to clipboard` : label}</Label>
     {children}
@@ -12,10 +12,6 @@ const ColorFormat = ({ children, copied, label, ...props }) => (
 ColorFormat.propTypes = {
   copied: PropTypes.bool,
   label: PropTypes.string.isRequired,
-}
-
-ColorFormat.defaultProps = {
-  copied: false,
 }
 
 export default ColorFormat
