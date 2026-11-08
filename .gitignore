@@ -32,3 +32,4 @@ dist-ssr
 
 # Vitest browser failure screenshots
 .vitest
+.fallow/

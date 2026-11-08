@@ -11,6 +11,7 @@
     "@vitest/browser-playwright": "^5.1.0",
     "eslint-plugin-no-only-tests": "^3.4.0",
     "eslint-plugin-react-hooks": "7.1.1",
+    "fallow": "~3.39.0",
     "npm-run-all2": "^9.0.4",
     "oxc-transform-react": "^0.157.0",
     "oxfmt": "^0.76.0",
@@ -46,7 +47,8 @@
     "check:types": "tsc",
     "check:lint": "pnpm lint",
     "check:test": "pnpm test",
-    "check:build": "pnpm build"
+    "check:build": "pnpm build",
+    "check:fallow": "fallow"
   },
   "packageManager": "pnpm@12.18.0",
   "engines": {

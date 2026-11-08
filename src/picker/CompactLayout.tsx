@@ -9,6 +9,7 @@ import { SwatchGrid } from './swatch-grid/SwatchGrid'
  * Phones and short windows: one screen, no scrolling. The card on top, the
  * grid taking whatever height is left, and the wheel docked at the bottom.
  */
+// fallow-ignore-next-line code-duplication -- Both layouts open the same way by design; they diverge right after the header.
 export function CompactLayout({ color, header, onPick }: LayoutProps) {
   return (
     <div {...stylex.props(styles.layout)}>

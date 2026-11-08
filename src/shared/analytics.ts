@@ -14,16 +14,23 @@ export type Analytics = { readonly trackPageView: (view: PageView) => void }
 
 const noopAnalytics: Analytics = { trackPageView: () => undefined }
 
+/** The slice of react-ga4 this uses, so tests can pass a fake. */
+export type GaClient = Pick<
+  InstanceType<typeof ReactGAImplementation>,
+  'initialize' | 'send'
+>
+
 /**
  * A missing or non-GA4 measurement ID gives an adapter that does nothing, so
  * callers never check whether analytics is on.
  */
-export function createAnalytics(measurementId: string | undefined): Analytics {
+export function createAnalytics(
+  measurementId: string | undefined,
+  ga: GaClient = new ReactGAImplementation(),
+): Analytics {
   if (measurementId?.startsWith('G-') !== true) {
     return noopAnalytics
   }
-
-  const ga = new ReactGAImplementation()
 
   ga.initialize(measurementId, { gtagOptions: { send_page_view: false } })
 

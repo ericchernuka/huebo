@@ -1,3 +1,4 @@
+// fallow-ignore-file coverage-gaps -- The composition root. The build, Lighthouse and the browser check exercise it; importing it in a test would boot the real router inside Vitest's frame.
 import { RouterProvider } from '@tanstack/react-router'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
