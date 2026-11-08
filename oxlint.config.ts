@@ -72,6 +72,39 @@ export default defineConfig({
     'anti-slop/require-readable-spacing': 'error',
     'anti-slop/require-safety-comment-for-type-assertion': 'error',
 
+    // The automatic JSX runtime doesn't need React in scope.
+    'react/react-in-jsx-scope': 'off',
+    // The React Compiler memoizes context values.
+    'react/jsx-no-constructed-context-values': 'off',
+    // eslint-plugin-jsx-a11y's recommended options, so a table can be an ARIA grid.
+    'jsx-a11y/no-noninteractive-element-to-interactive-role': [
+      'error',
+      {
+        fieldset: ['radiogroup', 'presentation'],
+        li: ['menuitem', 'option', 'row', 'tab', 'treeitem'],
+        ol: [
+          'listbox',
+          'menu',
+          'menubar',
+          'radiogroup',
+          'tablist',
+          'tree',
+          'treegrid',
+        ],
+        table: ['grid'],
+        td: ['gridcell'],
+        ul: [
+          'listbox',
+          'menu',
+          'menubar',
+          'radiogroup',
+          'tablist',
+          'tree',
+          'treegrid',
+        ],
+      },
+    ],
+    'import/no-unassigned-import': ['error', { allow: ['**/*.css'] }],
     'react/rules-of-hooks': 'error',
     'react/exhaustive-deps': 'error',
     'react/button-has-type': 'error',
@@ -109,6 +142,11 @@ export default defineConfig({
         'max-lines': 'off',
         'max-statements': 'off',
         'max-nested-callbacks': 'off',
+        // expectPath polls the URL with expect.poll.
+        'vitest/expect-expect': [
+          'error',
+          { assertFunctionNames: ['expect', 'expect.*', 'expectPath'] },
+        ],
       },
     },
   ],
