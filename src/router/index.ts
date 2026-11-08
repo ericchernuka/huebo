@@ -3,9 +3,9 @@ import {
   createRouter,
   type RouterHistory,
 } from '@tanstack/react-router'
-import { pickerRoute } from './picker/route'
-import { rootRoute } from './root-route'
-import type { Analytics } from './shared/analytics'
+import { pickerRoute } from './picker'
+import { rootRoute } from './root'
+import type { Analytics } from '../shared/analytics'
 
 export function createAppRouter(analytics: Analytics, history?: RouterHistory) {
   return createRouter({

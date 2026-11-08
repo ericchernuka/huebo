@@ -1,7 +1,7 @@
 import { createRoute } from '@tanstack/react-router'
-import { rootRoute } from '../root-route'
-import { colorPath, parseColorPath, type Color } from './color'
-import { Picker } from './Picker'
+import { rootRoute } from './root'
+import { colorPath, parseColorPath, type Color } from '../picker/color'
+import { Picker } from '../picker/Picker'
 
 /**
  * The only page. Valibot parses the path into a Color here, and nothing

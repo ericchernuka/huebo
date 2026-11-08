@@ -3,9 +3,9 @@ import {
   Outlet,
   createRootRouteWithContext,
 } from '@tanstack/react-router'
-import { Announcer } from './shared/announcer'
-import { DEFAULT_HUE } from './picker/color'
-import type { Analytics } from './shared/analytics'
+import { Announcer } from '../shared/announcer'
+import { DEFAULT_HUE } from '../picker/color'
+import type { Analytics } from '../shared/analytics'
 
 export const rootRoute = createRootRouteWithContext<{ analytics: Analytics }>()(
   {
