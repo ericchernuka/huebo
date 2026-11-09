@@ -29,8 +29,10 @@ export function Copy() {
       () => `Couldn't copy ${format}`,
     )
 
-    toasts.close()
+    // One confirmation at a time: copying again while it's up updates it and
+    // restarts its timer rather than stacking another.
     toasts.add({
+      id: 'copy',
       positionerProps: { anchor: button, side: 'top', sideOffset: 10 },
       title,
     })

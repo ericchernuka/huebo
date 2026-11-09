@@ -21,6 +21,29 @@ describe('the colour card', () => {
     writeText.mockRestore()
   })
 
+  test('given a confirmation is up, when Copy is pressed again, then the same confirmation stays up rather than a new one popping', async () => {
+    const writeText = vi
+      .spyOn(navigator.clipboard, 'writeText')
+      .mockResolvedValue(undefined)
+
+    await openAt('/200/62/75')
+
+    const copy = page.getByRole('button', { name: 'Copy Hex' })
+    const confirmation = page.getByText('Copied Hex #4998BF')
+
+    await copy.click()
+    await expect.element(confirmation).toBeVisible()
+    const first = confirmation.element()
+
+    await copy.click()
+    await copy.click()
+    await expect.poll(() => writeText.mock.calls.length).toBe(3)
+
+    expect(confirmation.element()).toBe(first)
+    expect(confirmation.elements()).toHaveLength(1)
+    writeText.mockRestore()
+  })
+
   test('given nothing is picked, then Copy is disabled', async () => {
     await openAt('/200')
 
