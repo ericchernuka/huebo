@@ -16,12 +16,18 @@ import { execFileSync } from 'node:child_process'
 const [command, ...args] = process.argv.slice(2)
 const numbers = args.map(Number)
 
-if (!['wheel', 'tap', 'swipe', 'read-clipboard', 'front'].includes(command) || numbers.some(Number.isNaN)) {
-  console.error('usage: input.mjs front | wheel <x> <y> <deltaY> [notches] [gapMs] | tap <x> <y> | swipe <x1> <y> <x2> <ms> [steps] | read-clipboard')
+if (
+  !['wheel', 'tap', 'swipe', 'read-clipboard', 'front'].includes(command) ||
+  numbers.some(Number.isNaN)
+) {
+  console.error(
+    'usage: input.mjs front | wheel <x> <y> <deltaY> [notches] [gapMs] | tap <x> <y> | swipe <x1> <y> <x2> <ms> [steps] | read-clipboard',
+  )
   process.exit(2)
 }
 
-const agent = (...flags) => execFileSync('agent-browser', flags, { encoding: 'utf8' })
+const agent = (...flags) =>
+  execFileSync('agent-browser', flags, { encoding: 'utf8' })
 const browserUrl = agent('get', 'cdp-url').trim()
 const tabs = JSON.parse(agent('tab', 'list', '--json')).data.tabs
 const tab = tabs.find(t => t.active && t.url.startsWith(process.env.URL ?? ''))
@@ -52,7 +58,9 @@ function call(method, params = {}, sessionId) {
 
   return new Promise((resolve, reject) => {
     waiting.set(id, message =>
-      message.error ? reject(new Error(`${method}: ${message.error.message}`)) : resolve(message.result),
+      message.error
+        ? reject(new Error(`${method}: ${message.error.message}`))
+        : resolve(message.result),
     )
   })
 }
@@ -61,13 +69,18 @@ const sleep = ms => new Promise(done => setTimeout(done, ms))
 
 await new Promise(open => socket.addEventListener('open', open, { once: true }))
 
-const { sessionId } = await call('Target.attachToTarget', { flatten: true, targetId: tab.targetId })
+const { sessionId } = await call('Target.attachToTarget', {
+  flatten: true,
+  targetId: tab.targetId,
+})
 const page = (method, params) => call(method, params, sessionId)
 
 if (command === 'front') {
   await page('Page.bringToFront')
 } else if (command === 'read-clipboard') {
-  const { targetInfo } = await call('Target.getTargetInfo', { targetId: tab.targetId })
+  const { targetInfo } = await call('Target.getTargetInfo', {
+    targetId: tab.targetId,
+  })
 
   await call('Browser.grantPermissions', {
     browserContextId: targetInfo.browserContextId,
@@ -82,7 +95,9 @@ if (command === 'front') {
   })
 
   if (exceptionDetails) {
-    throw new Error(exceptionDetails.exception?.description ?? exceptionDetails.text)
+    throw new Error(
+      exceptionDetails.exception?.description ?? exceptionDetails.text,
+    )
   }
 
   console.log(result.value)
@@ -90,14 +105,26 @@ if (command === 'front') {
   const [x, y, deltaY, notches = 1, gapMs = 30] = numbers
 
   for (let notch = 0; notch < notches; notch++) {
-    await page('Input.dispatchMouseEvent', { deltaX: 0, deltaY, type: 'mouseWheel', x, y })
+    await page('Input.dispatchMouseEvent', {
+      deltaX: 0,
+      deltaY,
+      type: 'mouseWheel',
+      x,
+      y,
+    })
     await sleep(gapMs)
   }
 } else {
-  await page('Emulation.setTouchEmulationEnabled', { enabled: true, maxTouchPoints: 1 })
+  await page('Emulation.setTouchEmulationEnabled', {
+    enabled: true,
+    maxTouchPoints: 1,
+  })
 
   const touch = (type, x, y) =>
-    page('Input.dispatchTouchEvent', { touchPoints: type === 'touchEnd' ? [] : [{ id: 1, x, y }], type })
+    page('Input.dispatchTouchEvent', {
+      touchPoints: type === 'touchEnd' ? [] : [{ id: 1, x, y }],
+      type,
+    })
 
   if (command === 'tap') {
     const [x, y] = numbers

@@ -61,16 +61,16 @@ The layout switches at `(max-width: 599px), (max-width: 959px) and (max-height: 
 
 These are the stable handles. Use them, not CSS classes or the order of elements:
 
-| What | Handle |
-| --- | --- |
-| Hue dial (ring or wheel) | `[role="slider"][aria-label="Hue"]`, with `aria-valuenow` as the hue on show |
-| − and + | `find role button click --name "Decrease hue by 5 degrees"` and `"Increase hue by 5 degrees"` |
-| A swatch | `find role button click --name "Saturation 62, brightness 75, #4998BF"`. The name starts with `Saturation <s>, brightness <b>,` |
-| The picked swatch | `td[aria-selected="true"]`, whose `button` carries the name |
-| Format | `find role radio click --name "RGB"` (or `HSB`, `Hex`) |
-| Copy | `find role button click --name "Copy Hex"`. The name follows the format |
-| Copy confirmation | the dialog `Copied Hex #4998BF` inside the region `Notifications` |
-| Help | `find role button click --name "Help"`, which opens the dialog `Picking a colour` |
+| What                     | Handle                                                                                                                          |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| Hue dial (ring or wheel) | `[role="slider"][aria-label="Hue"]`, with `aria-valuenow` as the hue on show                                                    |
+| − and +                  | `find role button click --name "Decrease hue by 5 degrees"` and `"Increase hue by 5 degrees"`                                   |
+| A swatch                 | `find role button click --name "Saturation 62, brightness 75, #4998BF"`. The name starts with `Saturation <s>, brightness <b>,` |
+| The picked swatch        | `td[aria-selected="true"]`, whose `button` carries the name                                                                     |
+| Format                   | `find role radio click --name "RGB"` (or `HSB`, `Hex`)                                                                          |
+| Copy                     | `find role button click --name "Copy Hex"`. The name follows the format                                                         |
+| Copy confirmation        | the dialog `Copied Hex #4998BF` inside the region `Notifications`                                                               |
+| Help                     | `find role button click --name "Help"`, which opens the dialog `Picking a colour`                                               |
 
 Read state through what a person or the browser sees: `agent-browser get url`, `agent-browser get attr '[role="slider"]' aria-valuenow`, `agent-browser eval "history.length"`, `agent-browser eval "document.title"`, and `agent-browser snapshot -c`.
 
