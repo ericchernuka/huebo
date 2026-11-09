@@ -29,3 +29,9 @@ output {
   font: inherit;
   color: inherit;
 }
+
+/* A long press on a button shouldn't start selecting its label. */
+button {
+  -webkit-user-select: none;
+  user-select: none;
+}
