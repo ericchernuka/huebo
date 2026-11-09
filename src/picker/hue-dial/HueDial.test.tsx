@@ -184,6 +184,24 @@ describe('the phone wheel', () => {
     await expectPath(history, '/200')
   })
 
+  test('given a focused, coasting wheel, when + is pressed, then the step is the only history entry', async () => {
+    const { history } = await openAt('/200', PHONE)
+
+    hueSlider().element().focus()
+    await flickWheel()
+    await expect.poll(() => hueSlider().element().ariaValueNow).not.toBe('200')
+    await page
+      .getByRole('button', { name: 'Increase hue by 5 degrees' })
+      .click()
+
+    const stepped = hueSlider().element().ariaValueNow
+
+    await restAfterCoast()
+
+    expect(history.length).toBe(2)
+    expect(history.location.pathname).toBe(`/${stepped}`)
+  })
+
   test('given a coasting wheel, when the viewer goes Back, then the coast stops and Back holds', async () => {
     const { history } = await openAt('/100', PHONE)
 
