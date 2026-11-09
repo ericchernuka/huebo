@@ -40,6 +40,7 @@
     "test": "vitest run --project unit --project browser",
     "test:watch": "vitest",
     "verify": "vitest run --project verify",
+    "brand": "node tools/brand/render.mjs",
     "lint": "oxlint --type-aware --deny-warnings",
     "format": "oxfmt",
     "check": "run-p \"check:*\"",

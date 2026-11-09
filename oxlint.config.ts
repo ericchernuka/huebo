@@ -134,7 +134,7 @@ export default defineConfig({
   },
   overrides: [
     {
-      files: ['.claude/skills/**/*.mjs'],
+      files: ['.claude/skills/**/*.mjs', 'tools/brand/*.mjs'],
       rules: {
         // Command-line helpers: they print results, and input timing is sequential on purpose.
         'no-await-in-loop': 'off',
