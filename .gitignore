@@ -33,3 +33,6 @@ dist-ssr
 # Vitest browser failure screenshots
 .vitest
 .fallow/
+
+# Verification runs (state and evidence)
+.verify/
