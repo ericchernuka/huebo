@@ -4,19 +4,18 @@ import {
   useState,
   type KeyboardEvent,
   type ReactNode,
-  type RefObject,
 } from 'react'
 import { hueAt, type Hue } from '../color'
+import type { DialMotion } from './dial-motion'
 import { describeHue, shortestTurn } from './geometry'
+import type { Motion, MotionEvent } from './motion'
 
 export type DialState = {
-  /** Commits a hue: the URL and history follow, unless it's the hue already there. Stops any coasting first. */
-  readonly commit: (hue: Hue) => void
+  /** The hue on show, including one in motion. */
   readonly hue: Hue
-  /** Shows a hue mid-gesture without touching the URL. */
-  readonly preview: (hue: Hue) => void
-  /** Set by a part while it's in motion; calling it stops that motion. */
-  readonly stopMotionRef: RefObject<(() => void) | null>
+  readonly motion: Motion
+  /** Tells the motion machine what an input did. */
+  readonly send: (event: MotionEvent) => void
   /** The thumb's rotation in degrees. It never wraps, so 355° → 0° turns forward one notch. */
   readonly turn: number
 }
@@ -25,40 +24,25 @@ const DialContext = createContext<DialState | null>(null)
 
 export type RootProps = {
   readonly children: ReactNode
+  readonly dial: DialMotion
   readonly hue: Hue
-  readonly onCommit: (hue: Hue) => void
-  readonly onPreview: (hue: Hue) => void
-  /** Where a moving part leaves its stop. The owner calls it before any choice. */
-  readonly stopMotionRef: RefObject<(() => void) | null>
+  readonly motion: Motion
 }
 
-/**
- * Holds the hue for its parts. `hue` is what's showing now, including a
- * preview mid-gesture. Parts call `onPreview` while a finger is down and
- * `onCommit` once a choice is made, so Back steps through chosen colours.
- */
-export function Root({
-  children,
-  hue,
-  onCommit,
-  onPreview,
-  stopMotionRef,
-}: RootProps) {
-  const [rotation, setRotation] = useState({ hue, turn: Number(hue) })
+/** Shares the hue on show and the motion machine with the dial's parts. */
+export function Root({ children, dial, hue, motion }: RootProps) {
+  // The winding number can't be derived from the hue alone, so the turn is
+  // kept and nudged the short way round whenever the hue moves.
+  const [turn, setTurn] = useState<number>(hue)
+  const pointing = hueAt(turn)
 
-  if (rotation.hue !== hue) {
-    setRotation({ hue, turn: rotation.turn + shortestTurn(rotation.hue, hue) })
+  if (pointing !== hue) {
+    setTurn(turn + shortestTurn(pointing, hue))
   }
 
   return (
     <DialContext
-      value={{
-        commit: onCommit,
-        hue,
-        preview: onPreview,
-        stopMotionRef,
-        turn: rotation.turn,
-      }}
+      value={{ hue, motion, send: event => dial.send(event, hue), turn }}
     >
       {children}
     </DialContext>
@@ -85,25 +69,20 @@ const KEY_STEPS = new Map([
   ['PageUp', 45],
 ])
 
-/** The ARIA slider props and keyboard steps shared by the ring and the wheel. */
+/**
+ * The ARIA slider props and keys shared by the ring and the wheel. A held
+ * key previews on every repeat and commits once, when it comes up or focus
+ * leaves.
+ */
 export function useHueSlider() {
-  const { commit, hue, preview, stopMotionRef } = useDial()
+  const { hue, send } = useDial()
 
-  // A held key is a gesture like a drag: it previews on every repeat and
-  // commits once, when the key comes up or focus leaves mid-hold.
   const onKeyDown = (event: KeyboardEvent) => {
-    const target = keyTarget(event, hue)
+    const input = keyInput(event)
 
-    if (target !== null) {
+    if (input) {
       event.preventDefault()
-      stopMotionRef.current?.()
-      preview(target)
-    }
-  }
-
-  const onKeyUp = (event: KeyboardEvent) => {
-    if (keyTarget(event, hue) !== null) {
-      commit(hue)
+      send(input)
     }
   }
 
@@ -113,21 +92,18 @@ export function useHueSlider() {
     'aria-valuemin': 0,
     'aria-valuenow': hue,
     'aria-valuetext': describeHue(hue),
-    onBlur: () => commit(hue),
+    onBlur: () => send({ type: 'letGo' }),
     onKeyDown,
-    onKeyUp,
+    onKeyUp: (event: KeyboardEvent) =>
+      keyInput(event) && send({ type: 'letGo' }),
     role: 'slider',
     tabIndex: 0,
   } as const
 }
 
-function keyTarget(event: KeyboardEvent, hue: Hue): Hue | null {
-  if (event.key === 'Home') {
-    return hueAt(0)
-  }
-
-  if (event.key === 'End') {
-    return hueAt(355)
+function keyInput(event: KeyboardEvent): MotionEvent | null {
+  if (event.key === 'Home' || event.key === 'End') {
+    return { hue: hueAt(event.key === 'Home' ? 0 : 355), type: 'aim' }
   }
 
   const step = KEY_STEPS.get(event.key)
@@ -136,5 +112,7 @@ function keyTarget(event: KeyboardEvent, hue: Hue): Hue | null {
     return null
   }
 
-  return hueAt(hue + (event.shiftKey && Math.abs(step) === 5 ? step * 9 : step))
+  const shifted = event.shiftKey && Math.abs(step) === 5
+
+  return { by: shifted ? step * 9 : step, type: 'nudge' }
 }

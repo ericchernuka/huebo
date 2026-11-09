@@ -169,4 +169,70 @@ describe('the phone wheel', () => {
     await userEvent.keyboard('{/ArrowRight}')
     await expectPath(history, `/${stepped}`)
   })
+
+  test('given a focused, coasting wheel, when a square is picked, then the pick is the only history entry', async () => {
+    const { history } = await openAt('/200', PHONE)
+
+    hueSlider().element().focus()
+    await flickWheel()
+    await expect.poll(() => hueSlider().element().ariaValueNow).not.toBe('200')
+    await square(62, 75).click()
+    await restAfterCoast()
+
+    expect(history.length).toBe(2)
+    history.back()
+    await expectPath(history, '/200')
+  })
+
+  test('given a coasting wheel, when the viewer goes Back, then the coast stops and Back holds', async () => {
+    const { history } = await openAt('/100', PHONE)
+
+    await page
+      .getByRole('button', { name: 'Increase hue by 5 degrees' })
+      .click()
+    await expectPath(history, '/105')
+    await flickWheel()
+    await expect.poll(() => hueSlider().element().ariaValueNow).not.toBe('105')
+    history.back()
+    await expectPath(history, '/100')
+    await restAfterCoast()
+
+    expect(history.location.pathname).toBe('/100')
+    await expect.element(hueSlider()).toHaveAttribute('aria-valuenow', '100')
+  })
+
+  test('given a coasting wheel, when the screen widens to the ring, then the coast still lands and the URL matches the dial', async () => {
+    const { history } = await openAt('/200', PHONE)
+
+    await flickWheel()
+    await expect.poll(() => hueSlider().element().ariaValueNow).not.toBe('200')
+    await page.viewport(1280, 900)
+    await restAfterCoast()
+
+    const shown = hueSlider().element().ariaValueNow
+
+    expect(shown).not.toBe('200')
+    expect(history.location.pathname).toBe(`/${shown}`)
+  })
+})
+
+describe('the mouse wheel', () => {
+  test('given a scroll waiting for its pause, when an arrow key steps, then the key wins and the pause adds nothing', async () => {
+    const { history, views } = await openAt('/200')
+    const ring = hueSlider().element()
+
+    for (let notch = 0; notch < 3; notch++) {
+      ring.dispatchEvent(
+        new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: 1 }),
+      )
+    }
+
+    ring.focus()
+    await userEvent.keyboard('{ArrowRight}')
+    await expectPath(history, '/220')
+    await new Promise(resolve => setTimeout(resolve, 400))
+
+    expect(history.location.pathname).toBe('/220')
+    expect(views).toHaveLength(2)
+  })
 })

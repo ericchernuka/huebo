@@ -1,10 +1,7 @@
 import * as stylex from '@stylexjs/stylex'
 import type { ReactNode } from 'react'
-import { useAnnounce } from '../../shared/announcer'
 import { shared } from '../../shared/styles'
 import { colors, radii } from '../../shared/tokens.stylex'
-import { hueAt } from '../color'
-import { describeHue } from './geometry'
 import { useDial } from './HueDialRoot'
 
 export type PartProps = { readonly style?: stylex.StyleXStyles }
@@ -50,20 +47,12 @@ type StepButtonProps = PartProps & {
 }
 
 function StepButton({ by, label, style, symbol }: StepButtonProps) {
-  const { commit, hue } = useDial()
-  const announce = useAnnounce()
-
-  const step = () => {
-    const next = hueAt(hue + by)
-
-    commit(next)
-    announce(`Hue ${describeHue(next)}`)
-  }
+  const { send } = useDial()
 
   return (
     <button
       aria-label={`${label} hue by 5 degrees`}
-      onClick={step}
+      onClick={() => send({ by, type: 'step' })}
       type="button"
       {...stylex.props(shared.focusRing, styles.button, style)}
     >

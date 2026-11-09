@@ -1,11 +1,18 @@
 import * as stylex from '@stylexjs/stylex'
-import { useNavigate, useParams } from '@tanstack/react-router'
-import { useRef, useState } from 'react'
+import { useNavigate, useParams, useRouter } from '@tanstack/react-router'
+import { useEffect, useEffectEvent } from 'react'
 import { useAnnounce } from '../shared/announcer'
 import { hsbToHex } from '../shared/color'
 import { colors, hue as hueVar, hueTheme } from '../shared/tokens.stylex'
-import type { Color, Hue, Pick } from './color'
-import { HueDial } from './hue-dial'
+import type { Color, Pick } from './color'
+import {
+  describeHue,
+  HueDial,
+  shownHue,
+  useDialMotion,
+  type Commit,
+  type DialMotion,
+} from './hue-dial'
 import { CompactLayout } from './CompactLayout'
 import { COMPACT_QUERY } from './layout'
 import { RoomyLayout } from './RoomyLayout'
@@ -14,45 +21,21 @@ import { useMediaQuery } from './use-media-query'
 const ROUTE = '/$hue/{-$saturation}/{-$brightness}'
 
 /**
- * The page. The URL holds the colour; a hue being dragged lives here as a
- * preview until the gesture ends, so history only records chosen colours.
+ * The page. The URL holds the chosen colour; the dial's motion machine holds
+ * a hue on its way there, so history only records choices.
  */
 export function Picker() {
   const color = useParams({ from: ROUTE })
-  const navigate = useNavigate()
   const announce = useAnnounce()
-  const [preview, setPreview] = useState<Hue | null>(null)
-  const [seenHue, setSeenHue] = useState(color.hue)
   const compact = useMediaQuery(COMPACT_QUERY)
-  const stopMotionRef = useRef<(() => void) | null>(null)
-
-  // Once the URL's hue moves, by a commit or by Back, the preview is spent.
-  if (seenHue !== color.hue) {
-    setSeenHue(color.hue)
-    setPreview(null)
-  }
-
-  const hue = preview ?? color.hue
+  const [motion, dial] = useDialMotion()
+  const hue = shownHue(motion, color.hue)
   const background = hsbToHex(hue, 12, 90)
 
-  const go = (next: Color) => {
-    // A choice made anywhere catches a coasting wheel, so it can't land later and undo it.
-    stopMotionRef.current?.()
-    void navigate({ params: next, to: ROUTE })
-  }
-
-  const commitHue = (next: Hue) => {
-    if (next === color.hue) {
-      setPreview(null)
-    } else {
-      // The preview holds the new hue on screen until the URL catches up.
-      setPreview(next)
-      go({ hue: next, pick: color.pick })
-    }
-  }
+  useCommits(dial, color)
 
   const pick = (next: Pick | null) => {
-    go({ hue, pick: next })
+    dial.send({ pick: next, type: 'choose' }, hue)
     announce(
       next
         ? `Picked ${hsbToHex(hue, next.saturation, next.brightness)}`
@@ -60,10 +43,7 @@ export function Picker() {
     )
   }
 
-  const layout = {
-    color: { hue, pick: color.pick },
-    onPick: pick,
-  }
+  const layout = { color: { hue, pick: color.pick }, onPick: pick }
 
   return (
     <main {...stylex.props(hueTheme, styles.hue(String(hue)), styles.page)}>
@@ -72,16 +52,55 @@ export function Picker() {
       {/* On the root, so the colour also fills the status bar and the strip
           behind a floating browser toolbar, outside <main>. */}
       <style>{`html { background-color: ${background}; }`}</style>
-      <HueDial.Root
-        hue={hue}
-        onCommit={commitHue}
-        onPreview={setPreview}
-        stopMotionRef={stopMotionRef}
-      >
+      <HueDial.Root dial={dial} hue={hue} motion={motion}>
         {compact ? <CompactLayout {...layout} /> : <RoomyLayout {...layout} />}
       </HueDial.Root>
     </main>
   )
+}
+
+/**
+ * Turns the dial's commits into navigations, and stops anything moving on
+ * its own when the viewer goes Back or Forward.
+ */
+function useCommits(dial: DialMotion, color: Color) {
+  const navigate = useNavigate()
+  const router = useRouter()
+  const announce = useAnnounce()
+
+  const commit = useEffectEvent(({ announce: speak, hue, pick }: Commit) => {
+    const landed = () => dial.send({ hue, type: 'landed' })
+
+    // The URL already holds it, so there's nothing to record.
+    if (pick === undefined && hue === color.hue) {
+      landed()
+
+      return
+    }
+
+    if (speak) {
+      announce(`Hue ${describeHue(hue)}`)
+    }
+
+    const params = { hue, pick: pick === undefined ? color.pick : pick }
+
+    void navigate({ params, to: ROUTE }).then(landed)
+  })
+
+  useEffect(() => {
+    const disconnect = dial.connect(next => commit(next))
+
+    const unlisten = router.history.subscribe(({ action }) => {
+      if (action.type !== 'PUSH' && action.type !== 'REPLACE') {
+        dial.send({ type: 'traverse' })
+      }
+    })
+
+    return () => {
+      disconnect()
+      unlisten()
+    }
+  }, [dial, router])
 }
 
 function documentTitle({ hue, pick }: Color): string {
