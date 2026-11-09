@@ -28,6 +28,7 @@ if (
 
 const agent = (...flags) =>
   execFileSync('agent-browser', flags, { encoding: 'utf8' })
+
 const browserUrl = agent('get', 'cdp-url').trim()
 const tabs = JSON.parse(agent('tab', 'list', '--json')).data.tabs
 const tab = tabs.find(t => t.active && t.url.startsWith(process.env.URL ?? ''))
@@ -73,6 +74,7 @@ const { sessionId } = await call('Target.attachToTarget', {
   flatten: true,
   targetId: tab.targetId,
 })
+
 const page = (method, params) => call(method, params, sessionId)
 
 if (command === 'front') {
@@ -147,7 +149,9 @@ if (command === 'front') {
 }
 
 await call('Target.detachFromTarget', { sessionId })
+
 socket.close()
+
 if (command !== 'read-clipboard') {
   console.log(`✓ ${command} ${args.join(' ')}`)
 }

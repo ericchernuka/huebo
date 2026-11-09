@@ -134,6 +134,14 @@ export default defineConfig({
   },
   overrides: [
     {
+      files: ['.claude/skills/**/*.mjs'],
+      rules: {
+        // Command-line helpers: they print results, and input timing is sequential on purpose.
+        'no-await-in-loop': 'off',
+        'no-console': 'off',
+      },
+    },
+    {
       files: ['**/*.test.{ts,tsx,js,jsx}', '**/__tests__/**'],
       rules: {
         'max-lines-per-function': 'off',
