@@ -23,6 +23,14 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          name: 'verify',
+          environment: 'node',
+          include: ['src/**/*.verify.ts'],
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: 'browser',
           include: ['src/**/*.test.tsx'],
           browser: {
