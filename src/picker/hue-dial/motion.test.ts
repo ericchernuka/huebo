@@ -14,7 +14,6 @@ const AT_200 = hueAt(200)
 
 type Run = { readonly commits: ReadonlyArray<Commit>; readonly motion: Motion }
 
-/** Runs events in order from `start`, collecting every commit. */
 function run(start: Motion, events: ReadonlyArray<MotionEvent>) {
   return events.reduce<Run>(
     (state, event) => {

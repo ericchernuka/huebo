@@ -14,7 +14,6 @@ export type Analytics = { readonly trackPageView: (view: PageView) => void }
 
 const noopAnalytics: Analytics = { trackPageView: () => undefined }
 
-/** The slice of react-ga4 this uses, so tests can pass a fake. */
 export type GaClient = Pick<
   InstanceType<typeof ReactGAImplementation>,
   'initialize' | 'send'

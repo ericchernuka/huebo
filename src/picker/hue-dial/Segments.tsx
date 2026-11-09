@@ -37,7 +37,5 @@ export function Segments({ inner, outer, tick }: SegmentsProps) {
 }
 
 const styles = stylex.create({
-  // The SVG ignores the pointer except over a segment, so the middle of
-  // the ring stays free for the grid.
   hit: { pointerEvents: 'auto' },
 })

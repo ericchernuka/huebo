@@ -2,7 +2,6 @@ import * as stylex from '@stylexjs/stylex'
 import { colors, motion, radii } from '../../shared/tokens.stylex'
 import { useCard } from './ColorCardRoot'
 
-/** The picked colour as a block, or a dashed outline while nothing is picked. */
 export function Swatch({ style }: { readonly style?: stylex.StyleXStyles }) {
   const { values } = useCard()
 

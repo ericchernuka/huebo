@@ -1,14 +1,10 @@
 {
   "$schema": "./node_modules/fallow/schema.json",
-  // tools/ is vendored lint rules.
   "ignorePatterns": ["tools/**"],
-  // Only the vendored anti-slop rules in tools/ import it.
   "ignoreDependencies": ["@oxlint/plugins"],
   "includeEntryExports": true,
   "typeAware": { "enabled": true, "projects": ["tsconfig.json"] },
-  // Semantic mode catches clones even when identifiers are renamed.
   "duplicates": { "mode": "semantic", "minOccurrences": 2 },
-  // The same limits oxlint enforces.
   "health": {
     "maxCyclomatic": 10,
     "maxCognitive": 10,

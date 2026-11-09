@@ -1,33 +1,29 @@
-/** Velocity kept per millisecond while coasting. A hard flick travels about 200°. */
-const FRICTION = 0.9975
+const VELOCITY_KEPT_PER_MS = 0.9975
 
-/** Makes a flick feel a little livelier than the finger's own speed. */
 const FLICK_GAIN = 1.5
 
-/** In degrees per ms. A release slower than this is a placement, not a flick. */
-const MIN_FLICK = 0.04
+const MIN_FLICK_DEG_PER_MS = 0.04
 
-/** In degrees per ms. Below this, a coasting wheel has stopped. */
-const STOP = 0.008
+const STOP_DEG_PER_MS = 0.008
 
-/** Only the last stretch of a drag counts towards the release velocity. */
 const WINDOW_MS = 80
 
-/** A finger that paused this long before lifting has no velocity left. */
 const STALE_MS = 60
+
+const NEWEST_ALWAYS_KEPT = 2
 
 export type Sample = { readonly time: number; readonly x: number }
 
 export type Coast = { readonly turn: number; readonly velocity: number }
 
-/** Keeps the samples a release velocity needs: the newest, plus the last 80ms. */
 export function recordSample(
   samples: ReadonlyArray<Sample>,
   sample: Sample,
 ): Array<Sample> {
   return [...samples, sample].filter(
     (kept, index, all) =>
-      index >= all.length - 2 || sample.time - kept.time <= WINDOW_MS,
+      index >= all.length - NEWEST_ALWAYS_KEPT ||
+      sample.time - kept.time <= WINDOW_MS,
   )
 }
 
@@ -58,14 +54,14 @@ export function flickVelocity(
     (180 / Math.PI) *
     FLICK_GAIN
 
-  return Math.abs(velocity) > MIN_FLICK ? velocity : null
+  return Math.abs(velocity) > MIN_FLICK_DEG_PER_MS ? velocity : null
 }
 
 /** Advances a coasting wheel by `elapsed` ms, or returns null once it has stopped. */
 export function coast(state: Coast, elapsed: number): Coast | null {
-  const velocity = state.velocity * FRICTION ** elapsed
+  const velocity = state.velocity * VELOCITY_KEPT_PER_MS ** elapsed
 
-  if (Math.abs(velocity) < STOP) {
+  if (Math.abs(velocity) < STOP_DEG_PER_MS) {
     return null
   }
 

@@ -3,11 +3,7 @@ import { rootRoute } from './root'
 import { colorPath, parseColorPath, type Color } from '../picker/color'
 import { Picker } from '../picker/Picker'
 
-/**
- * The only page. Valibot parses the path into a Color here, and nothing
- * below this seam checks validity again. A path that doesn't parse doesn't
- * match, so it falls through to the root's redirect.
- */
+/** A path that doesn't parse doesn't match, so it falls through to the root's redirect. */
 export const pickerRoute = createRoute({
   component: Picker,
   getParentRoute: () => rootRoute,

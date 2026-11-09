@@ -6,24 +6,17 @@ import { useDial, useHueSlider } from './HueDialRoot'
 import { freeTurn } from './motion'
 import { Segments } from './Segments'
 
-/** The wheel's radius in px. One 5° step is about 45px of finger travel. */
-const RADIUS = 520
-const BAND = 74
+const RADIUS_PX = 520
+const BAND_PX = 74
 
-/** How far below the top of the wheel area the top of the wheel sits. */
-const TOP = 26
+const TOP_INSET_PX = 26
 
 /** Pointer downs this close to a side edge belong to the system's back swipe. */
-const EDGE = 24
+const EDGE_PX = 24
 
 const DEGREES_PER_RADIAN = 180 / Math.PI
 
-/**
- * The phone's hue control: the top edge of a big wheel docked at the bottom
- * of the screen, turning under a fixed pin. Drag it sideways, flick it to
- * coast, or tap a segment to jump there. `style` can pad its bottom (for a
- * safe area, say): the band keeps drawing into the padding.
- */
+/** `style` can pad its bottom (for a safe area, say): the band keeps drawing into the padding. */
 export function Wheel({ style }: { readonly style?: stylex.StyleXStyles }) {
   const { motion: state, send, turn } = useDial()
   const slider = useHueSlider()
@@ -34,9 +27,15 @@ export function Wheel({ style }: { readonly style?: stylex.StyleXStyles }) {
     event.currentTarget.setPointerCapture(event.pointerId)
 
     const fromEdge =
-      event.clientX < EDGE || event.clientX > window.innerWidth - EDGE
+      event.clientX < EDGE_PX || event.clientX > window.innerWidth - EDGE_PX
 
-    send({ ...pointerOf(event), fromEdge, radius: RADIUS, turn, type: 'press' })
+    send({
+      ...pointerOf(event),
+      fromEdge,
+      radius: RADIUS_PX,
+      turn,
+      type: 'press',
+    })
   }
 
   const onPointerUp = (event: PointerEvent<HTMLElement>) => {
@@ -63,16 +62,16 @@ export function Wheel({ style }: { readonly style?: stylex.StyleXStyles }) {
     >
       <svg
         aria-hidden="true"
-        height={RADIUS * 2}
-        viewBox={`${-RADIUS} ${-RADIUS} ${RADIUS * 2} ${RADIUS * 2}`}
-        width={RADIUS * 2}
+        height={RADIUS_PX * 2}
+        viewBox={`${-RADIUS_PX} ${-RADIUS_PX} ${RADIUS_PX * 2} ${RADIUS_PX * 2}`}
+        width={RADIUS_PX * 2}
         {...stylex.props(styles.svg)}
       >
         <g
           style={{ transform: `rotate(${-rotation}deg)` }}
           {...stylex.props(styles.rotor, free !== null && styles.moving)}
         >
-          <Segments inner={RADIUS - BAND} outer={RADIUS} tick={18} />
+          <Segments inner={RADIUS_PX - BAND_PX} outer={RADIUS_PX} tick={18} />
           <Labels />
         </g>
       </svg>
@@ -85,11 +84,10 @@ function pointerOf(event: PointerEvent<HTMLElement>) {
   return { pointerId: event.pointerId, time: event.timeStamp, x: event.clientX }
 }
 
-/** The angle from the pin to a tap, measured at the wheel's centre. */
 function tapAngle(event: PointerEvent<HTMLElement>): number {
   const box = event.currentTarget.getBoundingClientRect()
   const centreX = box.left + box.width / 2
-  const centreY = box.top + TOP + RADIUS
+  const centreY = box.top + TOP_INSET_PX + RADIUS_PX
 
   return (
     Math.atan2(event.clientX - centreX, centreY - event.clientY) *
@@ -97,11 +95,10 @@ function tapAngle(event: PointerEvent<HTMLElement>): number {
   )
 }
 
-/** Hue labels every 45°, following the curve of the wheel. */
 function Labels() {
   return Array.from({ length: 8 }, (_, index) => {
     const angle = index * 45
-    const { x, y } = polar(angle, RADIUS - BAND - 16)
+    const { x, y } = polar(angle, RADIUS_PX - BAND_PX - 16)
 
     return (
       <text
@@ -147,14 +144,13 @@ const styles = stylex.create({
   },
   svg: {
     left: '50%',
-    marginLeft: -RADIUS,
+    marginLeft: -RADIUS_PX,
     overflow: 'visible',
     pointerEvents: 'none',
     position: 'absolute',
-    top: TOP,
+    top: TOP_INSET_PX,
   },
   wheel: {
-    // Padding adds to the 150px rather than eating into it.
     boxSizing: 'content-box',
     cursor: 'grab',
     display: 'block',

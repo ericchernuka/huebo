@@ -21,7 +21,6 @@ export function describeHue(hue: Hue): string {
   return `${hue} degrees, ${NAMES[Math.round(hue / 30) % NAMES.length] ?? 'red'}`
 }
 
-/** The 72 stops of the dial, each with its bright swatch colour. */
 export const STOPS = Array.from({ length: 72 }, (_, index) => {
   const hue = hueAt(index * 5)
 

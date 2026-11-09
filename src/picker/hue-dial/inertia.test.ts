@@ -9,7 +9,6 @@ import {
 
 const RADIUS = 520
 
-/** A drag that moves `pxPerMs` for 100ms in 16ms steps and lifts straight away. */
 function drag(pxPerMs: number) {
   let samples: Array<Sample> = []
 

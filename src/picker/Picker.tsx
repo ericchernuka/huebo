@@ -20,10 +20,6 @@ import { useMediaQuery } from './use-media-query'
 
 const ROUTE = '/$hue/{-$saturation}/{-$brightness}'
 
-/**
- * The page. The URL holds the chosen colour; the dial's motion machine holds
- * a hue on its way there, so history only records choices.
- */
 export function Picker() {
   const color = useParams({ from: ROUTE })
   const announce = useAnnounce()
@@ -59,10 +55,6 @@ export function Picker() {
   )
 }
 
-/**
- * Turns the dial's commits into navigations, and stops anything moving on
- * its own when the viewer goes Back or Forward.
- */
 function useCommits(dial: DialMotion, color: Color) {
   const navigate = useNavigate()
   const router = useRouter()
@@ -71,8 +63,9 @@ function useCommits(dial: DialMotion, color: Color) {
   const commit = useEffectEvent(({ announce: speak, hue, pick }: Commit) => {
     const landed = () => dial.send({ hue, type: 'landed' })
 
-    // The URL already holds it, so there's nothing to record.
-    if (pick === undefined && hue === color.hue) {
+    const alreadyInUrl = pick === undefined && hue === color.hue
+
+    if (alreadyInUrl) {
       landed()
 
       return

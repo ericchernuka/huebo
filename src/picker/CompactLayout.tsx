@@ -6,10 +6,6 @@ import { Header } from './Header'
 import type { LayoutProps } from './layout'
 import { SwatchGrid } from './swatch-grid/SwatchGrid'
 
-/**
- * Phones and short windows: one screen, no scrolling. The card on top, the
- * grid taking whatever height is left, and the wheel docked at the bottom.
- */
 // fallow-ignore-next-line code-duplication -- Both layouts open the same way by design; they diverge right after the header.
 export function CompactLayout({ color, onPick }: LayoutProps) {
   return (
@@ -45,13 +41,14 @@ export function CompactLayout({ color, onPick }: LayoutProps) {
   )
 }
 
+/** Below this the page scrolls rather than shrink the grid's cells under a 24px pitch. */
+const MIN_ONE_SCREEN_HEIGHT_PX = 650
+
 const GUTTER = 'max(12px, env(safe-area-inset-left))'
 const GUTTER_END = 'max(12px, env(safe-area-inset-right))'
 
 const styles = stylex.create({
   degrees: { fontSize: 18 },
-  // The grid fills whichever runs out first: the width, or the height left
-  // between the card and the wheel.
   grid: { gap: 4, width: 'min(100cqw, 100cqh)' },
   gridBox: {
     containerType: 'size',
@@ -60,13 +57,11 @@ const styles = stylex.create({
     placeItems: 'center',
   },
   head: { alignItems: 'center', display: 'flex', gap: 8 },
-  // Exactly one screen, and the grid takes what's left. Below 650px tall the
-  // page scrolls rather than shrink the grid's cells under a 24px pitch.
   layout: {
     display: 'grid',
     gridTemplateRows: 'auto auto minmax(0, 1fr) auto auto',
     height: '100svh',
-    minHeight: 650,
+    minHeight: MIN_ONE_SCREEN_HEIGHT_PX,
     padding: `max(12px, env(safe-area-inset-top)) ${GUTTER_END} 0 ${GUTTER}`,
     rowGap: 12,
   },
@@ -92,8 +87,6 @@ const styles = stylex.create({
     gap: 12,
     justifyContent: 'space-between',
   },
-  // Full bleed to the sides and the bottom edge. The padding keeps the pin
-  // and labels clear of the home indicator while the band runs on under it.
   wheel: {
     marginLeft: `calc(-1 * ${GUTTER})`,
     marginRight: `calc(-1 * ${GUTTER_END})`,

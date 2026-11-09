@@ -1,7 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { createAnalytics, type GaClient } from './analytics'
 
-/** A GA client that records what it's asked to do. */
 function recordingGa() {
   const calls: Array<{ readonly method: string; readonly args: unknown }> = []
 

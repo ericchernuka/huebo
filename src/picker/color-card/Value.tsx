@@ -2,7 +2,6 @@ import * as stylex from '@stylexjs/stylex'
 import { colors } from '../../shared/tokens.stylex'
 import { useCard } from './ColorCardRoot'
 
-/** The picked colour written in the chosen format. */
 export function Value({ style }: { readonly style?: stylex.StyleXStyles }) {
   const { format, values } = useCard()
   const value = values?.text[format]

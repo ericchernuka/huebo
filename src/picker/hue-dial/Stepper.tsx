@@ -29,7 +29,6 @@ export function Increment({ style }: PartProps) {
   return <StepButton by={5} label="Increase" style={style} symbol="+" />
 }
 
-/** The hue in degrees. Hidden from screen readers, which hear the buttons' announcements. */
 export function Degrees({ style }: PartProps) {
   const { hue } = useDial()
 

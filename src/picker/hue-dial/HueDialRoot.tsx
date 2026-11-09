@@ -14,7 +14,6 @@ export type DialState = {
   /** The hue on show, including one in motion. */
   readonly hue: Hue
   readonly motion: Motion
-  /** Tells the motion machine what an input did. */
   readonly send: (event: MotionEvent) => void
   /** The thumb's rotation in degrees. It never wraps, so 355° → 0° turns forward one notch. */
   readonly turn: number
@@ -29,16 +28,8 @@ export type RootProps = {
   readonly motion: Motion
 }
 
-/** Shares the hue on show and the motion machine with the dial's parts. */
 export function Root({ children, dial, hue, motion }: RootProps) {
-  // The winding number can't be derived from the hue alone, so the turn is
-  // kept and nudged the short way round whenever the hue moves.
-  const [turn, setTurn] = useState<number>(hue)
-  const pointing = hueAt(turn)
-
-  if (pointing !== hue) {
-    setTurn(turn + shortestTurn(pointing, hue))
-  }
+  const turn = useWindingTurn(hue)
 
   return (
     <DialContext
@@ -47,6 +38,18 @@ export function Root({ children, dial, hue, motion }: RootProps) {
       {children}
     </DialContext>
   )
+}
+
+/** A rotation that follows `hue` the short way round, so it can pass 355° → 0°. */
+function useWindingTurn(hue: Hue): number {
+  const [turn, setTurn] = useState<number>(hue)
+  const pointing = hueAt(turn)
+
+  if (pointing !== hue) {
+    setTurn(turn + shortestTurn(pointing, hue))
+  }
+
+  return turn
 }
 
 export function useDial(): DialState {
@@ -59,21 +62,18 @@ export function useDial(): DialState {
   return dial
 }
 
-/** Arrow keys step 5°, or 45° with Shift. Page keys always step 45°. */
+const STEP = 5
+const BIG_STEP = 45
+
 const KEY_STEPS = new Map([
-  ['ArrowDown', -5],
-  ['ArrowLeft', -5],
-  ['ArrowRight', 5],
-  ['ArrowUp', 5],
-  ['PageDown', -45],
-  ['PageUp', 45],
+  ['ArrowDown', -STEP],
+  ['ArrowLeft', -STEP],
+  ['ArrowRight', STEP],
+  ['ArrowUp', STEP],
+  ['PageDown', -BIG_STEP],
+  ['PageUp', BIG_STEP],
 ])
 
-/**
- * The ARIA slider props and keys shared by the ring and the wheel. A held
- * key previews on every repeat and commits once, when it comes up or focus
- * leaves.
- */
 export function useHueSlider() {
   const { hue, send } = useDial()
 
@@ -112,7 +112,7 @@ function keyInput(event: KeyboardEvent): MotionEvent | null {
     return null
   }
 
-  const shifted = event.shiftKey && Math.abs(step) === 5
+  const shifted = event.shiftKey && Math.abs(step) === STEP
 
-  return { by: shifted ? step * 9 : step, type: 'nudge' }
+  return { by: shifted ? Math.sign(step) * BIG_STEP : step, type: 'nudge' }
 }

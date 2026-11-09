@@ -25,7 +25,6 @@ export function Announcer({ children }: { readonly children: ReactNode }) {
   )
 }
 
-/** Returns a function that reads a message to screen reader users. */
 export function useAnnounce(): (message: string) => void {
   return use(AnnounceContext)
 }

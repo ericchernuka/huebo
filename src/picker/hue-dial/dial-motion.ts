@@ -8,7 +8,6 @@ import {
   type MotionEvent,
 } from './motion'
 
-/** How long the mouse wheel rests before its turn counts as a choice. */
 const SCROLL_PAUSE_MS = 250
 
 /** The longest frame a coast advances by, so a stalled tab doesn't jump. */
@@ -16,21 +15,16 @@ const MAX_FRAME_MS = 40
 
 export type DialMotion = ReturnType<typeof createDialMotion>
 
-/**
- * Runs the motion machine and hands its commits to whoever is connected.
- * The clocks it needs run alongside, each only in its own state.
- */
 function createDialMotion() {
   let motion: Motion = IDLE
-  let shown: Hue = hueAt(0)
+  let lastShown: Hue = hueAt(0)
   let onCommit: ((commit: Commit) => void) | null = null
   const listeners = new Set<() => void>()
 
-  /** Feeds an event to the machine. `on` is the hue on screen when it happened. */
-  const send = (event: MotionEvent, on: Hue = shown) => {
-    shown = on
+  const send = (event: MotionEvent, shown: Hue = lastShown) => {
+    lastShown = shown
 
-    const next = transition(motion, event, on)
+    const next = transition(motion, event, shown)
 
     if (next.motion !== motion) {
       motion = next.motion
@@ -68,10 +62,6 @@ function createDialMotion() {
   }
 }
 
-/**
- * A frame loop while the wheel coasts, and a timer while the mouse wheel
- * waits for its pause. Leaving the state stops its clock.
- */
 function createClocks(send: (event: MotionEvent) => void) {
   let frame = 0
   let lastFrame = 0

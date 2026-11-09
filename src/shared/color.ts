@@ -20,7 +20,6 @@ export function hsbToRgb(
   const t = to255(v * (1 - (1 - f) * s))
   const max = to255(v)
 
-  // The six 60° sectors of the colour wheel, in the original's order.
   switch (Math.floor(h) % 6) {
     case 0:
       return [max, t, p]

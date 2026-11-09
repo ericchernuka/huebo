@@ -7,7 +7,6 @@ export type PanelProps = {
   readonly style?: stylex.StyleXStyles
 }
 
-/** The frosted panel under the swatch. Its width is a container the value sizes against. */
 export function Panel({ children, style }: PanelProps) {
   return <div {...stylex.props(styles.panel, style)}>{children}</div>
 }

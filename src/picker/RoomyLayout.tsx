@@ -5,7 +5,6 @@ import { Header } from './Header'
 import type { LayoutProps } from './layout'
 import { SwatchGrid } from './swatch-grid/SwatchGrid'
 
-/** Tablets and desktops: the ring around the grid, beside the card or above it. */
 export function RoomyLayout({ color, onPick }: LayoutProps) {
   return (
     <div {...stylex.props(styles.layout)}>
@@ -41,7 +40,13 @@ export function RoomyLayout({ color, onPick }: LayoutProps) {
   )
 }
 
-/** Below this width the ring sits above the card instead of beside it. */
+/** The smallest ring that keeps the grid's cells at a 24px pitch. */
+const MIN_RING_PX = 332
+
+/** Height kept clear of the ring: the stepper beside the card, or the title, stepper and card when stacked. */
+const BESIDE_RESERVE_PX = 150
+const STACKED_RESERVE_PX = 560
+
 const STACKED = '@media (max-width: 959px)'
 
 const styles = stylex.create({
@@ -88,13 +93,10 @@ const styles = stylex.create({
     padding: 24,
     rowGap: 24,
   },
-  // As big as the screen allows while the stepper (and, when stacked, the
-  // title and card) still fit without scrolling. Never below 332px, where
-  // the grid's cells would fall under a 24px pitch.
   ring: {
     width: {
-      default: 'max(332px, min(88vw, 520px, calc(100svh - 150px)))',
-      [STACKED]: 'max(332px, min(84vw, 480px, calc(100svh - 560px)))',
+      default: `max(${MIN_RING_PX}px, min(88vw, 520px, calc(100svh - ${BESIDE_RESERVE_PX}px)))`,
+      [STACKED]: `max(${MIN_RING_PX}px, min(84vw, 480px, calc(100svh - ${STACKED_RESERVE_PX}px)))`,
     },
   },
   valueRow: {

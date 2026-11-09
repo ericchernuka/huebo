@@ -1,13 +1,11 @@
 import { hueAt, type Hue, type Pick } from '../color'
 import { coast, flickVelocity, recordSample, type Sample } from './inertia'
 
-/** Less movement than this, in px, is a tap. */
-const TAP = 6
+const TAP_SLOP_PX = 6
 
-/** A finger on the phone wheel. */
 export type Gesture = {
   readonly fromEdge: boolean
-  readonly moved: boolean
+  readonly dragging: boolean
   readonly pointerId: number
   readonly radius: number
   readonly samples: ReadonlyArray<Sample>
@@ -38,7 +36,6 @@ export type Motion =
   /** Committed, and holding the hue on screen until the URL catches up. */
   | { readonly hue: Hue; readonly kind: 'landing' }
 
-/** Where a pointer on the phone wheel is, and when. */
 export type Pointer = {
   readonly pointerId: number
   readonly time: number
@@ -87,7 +84,6 @@ export type Transition = { readonly commit?: Commit; readonly motion: Motion }
 
 export const IDLE: Motion = { kind: 'idle' }
 
-/** States that move on without the viewer: Back and Forward stop them. */
 const AUTONOMOUS = new Set<Motion['kind']>(['coasting', 'landing', 'scrolling'])
 
 /** What the page shows: the hue in motion, or the URL's when nothing moves. */
@@ -112,7 +108,7 @@ export function freeTurn(motion: Motion): number | null {
 
   const turning =
     motion.kind === 'turning' &&
-    motion.gesture.moved &&
+    motion.gesture.dragging &&
     !motion.gesture.fromEdge
 
   return turning ? motion.at : null
@@ -159,7 +155,7 @@ function wheelTransition(motion: Motion, event: MotionEvent): Transition {
       return release(motion, event)
     case 'cancel':
       return ownGesture(motion, event.pointerId)
-        ? land(hueAt(motion.at), { announce: motion.gesture.moved })
+        ? land(hueAt(motion.at), { announce: motion.gesture.dragging })
         : { motion }
     case 'frame':
       return coastFrame(motion, event.elapsed)
@@ -175,7 +171,6 @@ function land(hue: Hue, commit: Partial<Commit> = {}): Transition {
   }
 }
 
-/** Back and Forward stop anything moving on its own; a landed commit goes idle. */
 function settleHistory(motion: Motion, event: MotionEvent): Motion {
   if (event.type === 'traverse') {
     return AUTONOMOUS.has(motion.kind) ? IDLE : motion
@@ -196,7 +191,6 @@ function ownGesture(
   return motion.kind === 'turning' && motion.gesture.pointerId === pointerId
 }
 
-/** A finger lands. Catching a coasting wheel counts as a drag; a second finger is ignored. */
 function press(
   motion: Motion,
   event: Extract<MotionEvent, { type: 'press' }>,
@@ -212,7 +206,7 @@ function press(
     at: startAt,
     gesture: {
       fromEdge: event.fromEdge,
-      moved: caught,
+      dragging: caught,
       pointerId: event.pointerId,
       radius: event.radius,
       samples: [{ time: event.time, x: event.x }],
@@ -223,7 +217,6 @@ function press(
   }
 }
 
-/** Sliding a finger along the wheel's top edge turns it by the arc travelled. */
 function move(
   motion: Motion,
   event: Extract<MotionEvent, { type: 'move' }>,
@@ -233,15 +226,17 @@ function move(
   }
 
   const { gesture } = motion
-  const moved = gesture.moved || Math.abs(event.x - gesture.startX) > TAP
+
+  const dragging =
+    gesture.dragging || Math.abs(event.x - gesture.startX) > TAP_SLOP_PX
 
   const next = {
     ...gesture,
-    moved,
+    dragging,
     samples: recordSample(gesture.samples, { time: event.time, x: event.x }),
   }
 
-  const turns = moved && !gesture.fromEdge
+  const turns = dragging && !gesture.fromEdge
 
   return {
     at: turns ? dragTurn(next, event.x) : motion.at,
@@ -250,7 +245,6 @@ function move(
   }
 }
 
-/** A tap jumps to that segment; a drag lands where it let go, or coasts if flicked. */
 function release(
   motion: Motion,
   event: Extract<MotionEvent, { type: 'release' }>,
@@ -261,7 +255,7 @@ function release(
 
   const { gesture } = motion
 
-  if (!gesture.moved) {
+  if (!gesture.dragging) {
     return land(hueAt(motion.at + event.tapAngle), { announce: true })
   }
 

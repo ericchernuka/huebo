@@ -71,7 +71,6 @@ export default defineConfig({
     'anti-slop/require-readable-spacing': 'error',
     'anti-slop/require-safety-comment-for-type-assertion': 'error',
 
-    // The automatic JSX runtime doesn't need React in scope.
     'react/react-in-jsx-scope': 'off',
     // The React Compiler memoizes context values.
     'react/jsx-no-constructed-context-values': 'off',
@@ -141,7 +140,6 @@ export default defineConfig({
         'max-lines': 'off',
         'max-statements': 'off',
         'max-nested-callbacks': 'off',
-        // expectPath polls the URL with expect.poll.
         'vitest/expect-expect': [
           'error',
           { assertFunctionNames: ['expect', 'expect.*', 'expectPath'] },

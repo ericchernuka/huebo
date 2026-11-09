@@ -9,17 +9,11 @@ const draw = stylex.keyframes({
   to: { strokeDashoffset: 0 },
 })
 
-/**
- * Copies the value in the chosen format. A copy squeezes the button, ticks
- * it, and pops a confirmation out of it.
- */
 export function Copy() {
   const { format, values } = useCard()
   const toasts = Toast.useToastManager()
   const value = values?.text[format]
 
-  // The button shows its tick for as long as a successful copy's
-  // confirmation is up.
   const copied = toasts.toasts.some(
     toast => toast.type === 'copied' && toast.transitionStatus !== 'ending',
   )
@@ -46,7 +40,6 @@ export function Copy() {
       type="button"
       {...stylex.props(shared.focusRing, styles.copy, copied && styles.copied)}
     >
-      {/* The label keeps its space while the tick shows, so the button never changes size. */}
       <span {...stylex.props(copied && styles.hiddenLabel)}>
         {value === undefined ? 'Copy' : `Copy ${format}`}
       </span>

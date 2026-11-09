@@ -11,11 +11,6 @@ import { hueAt, type Hue } from '../color'
 import { useDial, useHueSlider } from './HueDialRoot'
 import { Segments } from './Segments'
 
-/**
- * The full hue ring, with `children` (the grid) in its middle. Click or drag
- * the ring to set the angle; the mouse wheel steps 5°, committing once it
- * pauses. It's a square that fills its container's width.
- */
 export function Ring({ children }: { readonly children: ReactNode }) {
   const { send, turn } = useDial()
   const slider = useHueSlider()
@@ -58,11 +53,7 @@ export function Ring({ children }: { readonly children: ReactNode }) {
   )
 }
 
-/**
- * Sends each mouse-wheel notch to the motion machine, which steps 5° and
- * commits once the notches pause. React's wheel listener is passive, so
- * preventDefault needs a native one.
- */
+/** React's wheel listener is passive, so preventDefault needs a native one. */
 function useScrollToTurn() {
   const { send } = useDial()
   const svgRef = useRef<SVGSVGElement>(null)
@@ -85,7 +76,6 @@ function useScrollToTurn() {
   return svgRef
 }
 
-/** The ring's handle, with a focus ring that shows when the ring has focus. */
 function Thumb({ turn }: { readonly turn: number }) {
   return (
     <g

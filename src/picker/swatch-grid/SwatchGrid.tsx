@@ -4,7 +4,6 @@ import { hsbToHex } from '../../shared/color'
 import { colors, motion } from '../../shared/tokens.stylex'
 import { STEPS, type Hue, type Pick } from '../color'
 
-/** Brightness 100 is the top row; saturation runs 12 → 100 from left to right. */
 const ROWS = STEPS.toReversed()
 const LAST = STEPS.length - 1
 
@@ -19,11 +18,6 @@ export type SwatchGridProps = {
   readonly style?: stylex.StyleXStyles
 }
 
-/**
- * The 8×8 saturation × brightness grid for one hue. It's a single tab stop:
- * arrow keys move, Home and End go to the ends of a row, Enter or Space picks
- * (or unpicks), and Escape clears the pick.
- */
 export function SwatchGrid({ hue, onPick, pick, style }: SwatchGridProps) {
   const [focus, setFocus] = useState<Cell>(() =>
     pick ? cellOf(pick) : { column: 0, row: 0 },
@@ -88,7 +82,6 @@ export function SwatchGrid({ hue, onPick, pick, style }: SwatchGridProps) {
 }
 
 type SwatchProps = {
-  /** The grid's one tab stop. */
   readonly focusable: boolean
   readonly hue: Hue
   readonly onPress: () => void
@@ -154,7 +147,6 @@ const styles = stylex.create({
   cell: {
     aspectRatio: 1,
     display: 'block',
-    // Relative, so bigger squares on phones round off in proportion.
     borderRadius: '12%',
     borderWidth: 0,
     cursor: 'pointer',
@@ -176,7 +168,6 @@ const styles = stylex.create({
   },
   contents: { display: 'contents' },
   raised: { zIndex: { default: 2, ':focus-within': 3 } },
-  // The focused square, then the picked one, sit above their neighbours.
   slot: {
     display: 'block',
     padding: 0,

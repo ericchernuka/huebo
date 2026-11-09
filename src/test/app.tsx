@@ -6,7 +6,6 @@ import '../global.css'
 import { createAppRouter } from '../router'
 import type { PageView } from '../shared/analytics'
 
-/** Opens the app at `path`, on a desktop-sized screen unless told otherwise, recording page views. */
 export async function openAt(
   path: string,
   [width, height]: readonly [number, number] = [1280, 900],

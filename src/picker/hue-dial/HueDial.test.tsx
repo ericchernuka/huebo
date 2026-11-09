@@ -9,7 +9,6 @@ import {
   square,
 } from '../../test/app'
 
-/** Flicks the wheel leftwards fast enough to leave it coasting for a couple of seconds. */
 function flickWheel() {
   const wheel = hueSlider().element()
   const y = wheel.getBoundingClientRect().top + 20
@@ -28,7 +27,6 @@ function flickWheel() {
 
   send('pointerdown', 300)
 
-  // A move every 4ms, 20px at a time, then a release on the last one.
   return new Promise<void>(resolve => {
     for (const [index, x] of [280, 260, 240, 220, 200].entries()) {
       setTimeout(() => send('pointermove', x), 4 * (index + 1))

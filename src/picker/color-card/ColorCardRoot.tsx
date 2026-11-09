@@ -1,7 +1,7 @@
 import * as stylex from '@stylexjs/stylex'
 import { Toast } from '@base-ui/react/toast'
 import { createContext, use, useState, type ReactNode } from 'react'
-import { colors, motion, radii } from '../../shared/tokens.stylex'
+import { colors, easing, motion, radii } from '../../shared/tokens.stylex'
 import { transitionClass } from '../../shared/transition'
 import type { Color } from '../color'
 import {
@@ -15,7 +15,6 @@ import {
 export type CardState = {
   readonly format: Format
   readonly setFormat: (format: Format) => void
-  /** Every format's value, or null when nothing is picked. */
   readonly values: Values | null
 }
 
@@ -26,10 +25,6 @@ export type RootProps = {
   readonly color: Color
 }
 
-/**
- * The selected colour, shown by the parts inside it. It remembers the
- * viewer's format and hosts the copy toasts.
- */
 export function Root({ children, color }: RootProps) {
   const [format, setFormat] = useState(readFormat)
   const values = valuesOf(color)
@@ -44,8 +39,6 @@ export function Root({ children, color }: RootProps) {
       <Toast.Provider timeout={1800}>
         <section aria-label="Selected colour" {...stylex.props(styles.card)}>
           {children}
-          {/* Inside the card rather than <body>, so toasts keep the page's
-              hue and font and the card stays one element in any layout. */}
           <Toasts />
         </section>
       </Toast.Provider>
@@ -63,7 +56,6 @@ export function useCard(): CardState {
   return card
 }
 
-/** Copy confirmations, each anchored to the button that copied. */
 function Toasts() {
   const { toasts } = Toast.useToastManager()
 
@@ -105,7 +97,7 @@ const styles = stylex.create({
     transformOrigin: 'var(--transform-origin)',
     transitionDuration: motion.pop,
     transitionProperty: 'opacity, transform',
-    transitionTimingFunction: 'cubic-bezier(0.34, 1.56, 0.64, 1)',
+    transitionTimingFunction: easing.pop,
     whiteSpace: 'nowrap',
   },
   toastEnding: {

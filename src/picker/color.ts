@@ -1,6 +1,5 @@
 import * as v from 'valibot'
 
-/** The eight saturation and brightness steps. This stepping is Huebo's core idea. */
 export const STEPS = [12, 25, 38, 50, 62, 75, 88, 100] as const
 
 export type Step = (typeof STEPS)[number]
@@ -17,10 +16,8 @@ const HueNumber = v.pipe(
 /** A hue in degrees: a multiple of 5 from 0 to 355, so one of 72 stops. */
 export type Hue = v.InferOutput<typeof HueNumber>
 
-/** A picked square of the grid. */
 export type Pick = { readonly brightness: Step; readonly saturation: Step }
 
-/** Everything the URL holds: a hue, and maybe a picked square. */
 export type Color = { readonly hue: Hue; readonly pick: Pick | null }
 
 export const DEFAULT_HUE = hueAt(60)
@@ -63,7 +60,6 @@ const ColorParams = v.union([
   ),
 ])
 
-/** The raw path params of `/$hue/{-$saturation}/{-$brightness}`. */
 export type ColorPath = {
   brightness?: string | undefined
   hue: string

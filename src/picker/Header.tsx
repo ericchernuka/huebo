@@ -5,7 +5,6 @@ import { shared } from '../shared/styles'
 import { colors, motion, radii } from '../shared/tokens.stylex'
 import { transitionClass } from '../shared/transition'
 
-/** The title, and a help button beside it. */
 export function Header() {
   return (
     <>
@@ -15,14 +14,8 @@ export function Header() {
   )
 }
 
-/**
- * A small round button that opens a popover of help. It works by tap, click
- * and keyboard, unlike a hover tooltip.
- */
 function Help() {
-  // The popover renders here rather than in <body>, so it keeps the page's
-  // theme variables and font.
-  const host = useRef<HTMLSpanElement>(null)
+  const themedContainer = useRef<HTMLSpanElement>(null)
 
   return (
     <Popover.Root>
@@ -32,8 +25,8 @@ function Help() {
       >
         <span aria-hidden="true">?</span>
       </Popover.Trigger>
-      <span ref={host} />
-      <Popover.Portal container={host}>
+      <span ref={themedContainer} />
+      <Popover.Portal container={themedContainer}>
         <Popover.Positioner sideOffset={8} {...stylex.props(styles.positioner)}>
           <Popover.Popup
             className={transitionClass(styles.popup, styles.hidden)}

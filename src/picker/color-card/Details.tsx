@@ -9,7 +9,6 @@ const TEXT_COLOURS = [
   { name: 'Black', rgb: [0, 0, 0], swatch: '#000' },
 ] as const satisfies ReadonlyArray<{ name: string; rgb: Rgb; swatch: string }>
 
-/** The two formats not on show, and how white and black text read on the colour. */
 export function Details() {
   const { format, values } = useCard()
 
