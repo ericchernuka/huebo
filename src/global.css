@@ -10,6 +10,18 @@
 html,
 body {
   margin: 0;
+  /* The page is one screen: no rubber band, and no pull-to-refresh mid-drag. */
+  overscroll-behavior: none;
+}
+
+html {
+  transition: background-color 500ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    transition: none;
+  }
 }
 
 button,

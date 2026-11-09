@@ -7,14 +7,13 @@ export const hue = stylex.defineVars({ degrees: '60' })
 
 /**
  * The page takes on the current hue. On an element with `hueTheme` applied,
- * every colour below follows `hue.degrees`. The values
- * are the spec's HSB colours converted to HSL so CSS can derive them:
- * background hsb(h,12,90), ink hsb(h,60,20), muted ink hsb(h,40,38) and
- * accent hsb(h,85,92).
+ * every colour below follows `hue.degrees`. The values are HSB colours
+ * converted to HSL so CSS can derive them: ink hsb(h,60,20), muted ink
+ * hsb(h,40,38) and accent hsb(h,85,92). The page background, hsb(h,12,90),
+ * is painted on the root by the picker instead.
  */
 export const colors = stylex.defineVars({
   accent: 'hsl(60 83% 52.9%)',
-  background: 'hsl(60 35.1% 84.6%)',
   ink: 'hsl(60 42.9% 14%)',
   inkMuted: 'hsl(60 25% 30.4%)',
   panel: 'rgb(255 255 255 / 0.74)',
@@ -23,7 +22,6 @@ export const colors = stylex.defineVars({
 /** Derives the colours from `hue.degrees` on the element it's applied to. */
 export const hueTheme = stylex.createTheme(colors, {
   accent: `hsl(${hue.degrees} 83% 52.9%)`,
-  background: `hsl(${hue.degrees} 35.1% 84.6%)`,
   ink: `hsl(${hue.degrees} 42.9% 14%)`,
   inkMuted: `hsl(${hue.degrees} 25% 30.4%)`,
   panel: 'rgb(255 255 255 / 0.74)',

@@ -66,3 +66,14 @@ describe('analytics', () => {
     ])
   })
 })
+
+describe('the page', () => {
+  test('given a hue, then the whole page, root included, takes its background and does not rubber-band', async () => {
+    await openAt('/200/62/75')
+
+    const root = getComputedStyle(document.documentElement)
+
+    await expect.poll(() => root.backgroundColor).toBe('rgb(202, 220, 230)')
+    expect(root.overscrollBehaviorY).toBe('none')
+  })
+})

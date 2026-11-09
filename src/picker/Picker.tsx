@@ -3,12 +3,7 @@ import { useNavigate, useParams } from '@tanstack/react-router'
 import { useRef, useState } from 'react'
 import { useAnnounce } from '../shared/announcer'
 import { hsbToHex } from '../shared/color'
-import {
-  colors,
-  hue as hueVar,
-  hueTheme,
-  motion,
-} from '../shared/tokens.stylex'
+import { colors, hue as hueVar, hueTheme } from '../shared/tokens.stylex'
 import type { Color, Hue, Pick } from './color'
 import { HueDial } from './hue-dial'
 import { CompactLayout } from './CompactLayout'
@@ -38,6 +33,7 @@ export function Picker() {
   }
 
   const hue = preview ?? color.hue
+  const background = hsbToHex(hue, 12, 90)
 
   const go = (next: Color) => {
     // A choice made anywhere catches a coasting wheel, so it can't land later and undo it.
@@ -72,7 +68,10 @@ export function Picker() {
   return (
     <main {...stylex.props(hueTheme, styles.hue(String(hue)), styles.page)}>
       <title>{documentTitle(color)}</title>
-      <meta content={hsbToHex(hue, 12, 90)} name="theme-color" />
+      <meta content={background} name="theme-color" />
+      {/* On the root, so the colour also fills the status bar and the strip
+          behind a floating browser toolbar, outside <main>. */}
+      <style>{`html { background-color: ${background}; }`}</style>
       <HueDial.Root
         hue={hue}
         onCommit={commitHue}
@@ -94,14 +93,11 @@ function documentTitle({ hue, pick }: Color): string {
 const styles = stylex.create({
   hue: (degrees: string) => ({ [hueVar.degrees]: degrees }),
   page: {
-    backgroundColor: colors.background,
     color: colors.ink,
     fontFamily: '"Bricolage Grotesque Variable", system-ui, sans-serif',
     fontSize: 17,
     fontVariantNumeric: 'tabular-nums',
     lineHeight: 1.4,
     minHeight: '100svh',
-    transitionDuration: motion.fade,
-    transitionProperty: 'background-color',
   },
 })
