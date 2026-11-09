@@ -44,6 +44,19 @@ describe('the colour card', () => {
     writeText.mockRestore()
   })
 
+  test('given the clipboard refuses, when Copy is pressed, then it says so and shows no tick', async () => {
+    const writeText = vi
+      .spyOn(navigator.clipboard, 'writeText')
+      .mockRejectedValue(new Error('Denied'))
+
+    await openAt('/200/62/75')
+    await page.getByRole('button', { name: 'Copy Hex' }).click()
+
+    await expect.element(page.getByText("Couldn't copy Hex")).toBeVisible()
+    expect(document.querySelector('button svg')).toBeNull()
+    writeText.mockRestore()
+  })
+
   test('given nothing is picked, then Copy is disabled', async () => {
     await openAt('/200')
 

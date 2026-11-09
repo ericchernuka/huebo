@@ -18,23 +18,22 @@ export function Copy() {
   const toasts = Toast.useToastManager()
   const value = values?.text[format]
 
-  // The button shows its tick for as long as the confirmation is up.
+  // The button shows its tick for as long as a successful copy's
+  // confirmation is up.
   const copied = toasts.toasts.some(
-    toast => toast.transitionStatus !== 'ending',
+    toast => toast.type === 'copied' && toast.transitionStatus !== 'ending',
   )
 
   const copy = async (text: string, button: HTMLButtonElement) => {
-    const title = await navigator.clipboard.writeText(text).then(
-      () => `Copied ${format} ${text}`,
-      () => `Couldn't copy ${format}`,
-    )
+    const ok = await writeToClipboard(text)
 
     // One confirmation at a time: copying again while it's up updates it and
     // restarts its timer rather than stacking another.
     toasts.add({
       id: 'copy',
       positionerProps: { anchor: button, side: 'top', sideOffset: 10 },
-      title,
+      title: ok ? `Copied ${format} ${text}` : `Couldn't copy ${format}`,
+      type: ok ? 'copied' : 'failed',
     })
   }
 
@@ -62,6 +61,20 @@ export function Copy() {
       )}
     </button>
   )
+}
+
+/**
+ * Whether the text reached the clipboard. Outside a secure context, such as a
+ * phone opening a dev server by its LAN address, there is no clipboard at all.
+ */
+async function writeToClipboard(text: string): Promise<boolean> {
+  try {
+    await navigator.clipboard.writeText(text)
+
+    return true
+  } catch {
+    return false
+  }
 }
 
 const styles = stylex.create({
