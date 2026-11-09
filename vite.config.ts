@@ -1,7 +1,6 @@
 import stylex from '@stylexjs/unplugin/vite'
 import react from '@vitejs/plugin-react'
 import { playwright } from '@vitest/browser-playwright'
-import { VitePWA } from 'vite-plugin-pwa'
 import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
@@ -10,11 +9,6 @@ export default defineConfig({
       unstable_moduleResolution: { type: 'commonJS' },
     }),
     react({ compiler: true }),
-    VitePWA({
-      filename: 'service-worker.js',
-      injectRegister: 'script-defer',
-      manifest: false,
-    }),
   ],
   test: {
     projects: [
