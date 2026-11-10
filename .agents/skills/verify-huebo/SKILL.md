@@ -69,7 +69,7 @@ These are the stable handles. Use them, not CSS classes or the order of elements
 | The picked square        | `td[aria-selected="true"]`, whose `button` carries the name                                                                     |
 | Format                   | `find role radio click --name "RGB"` (or `HSB`, `Hex`)                                                                          |
 | Copy                     | `find role button click --name "Copy Hex"`. The name follows the format                                                         |
-| Copy confirmation        | the dialog `Copied Hex #4998BF` inside the region `Notifications`                                                               |
+| Copy confirmation        | the text `Copied Hex #4998BF` inside the region `Selected colour`, and the same words in the page's polite live region          |
 | Help                     | `find role button click --name "Help"`, which opens the dialog `Picking a colour`                                               |
 
 Read state through what a person or the browser sees: `agent-browser get url`, `agent-browser get attr '[role="slider"]' aria-valuenow`, `agent-browser eval "history.length"`, `agent-browser eval "document.title"`, and `agent-browser snapshot -c`.

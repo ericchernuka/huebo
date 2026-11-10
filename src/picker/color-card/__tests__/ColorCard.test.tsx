@@ -5,6 +5,9 @@ import { openAt } from '../../../__tests__/app'
 const copyButton = (format: string) =>
   page.getByRole('button', { name: `Copy ${format}` })
 
+const confirmation = (text: string) =>
+  page.getByRole('region', { name: 'Selected colour' }).getByText(text)
+
 const showsTick = (format: string) =>
   copyButton(format).element().querySelector('svg') !== null
 
@@ -19,25 +22,39 @@ describe('the colour card', () => {
     await copyButton('Hex').click()
 
     await expect.poll(() => navigator.clipboard.readText()).toBe('#4998BF')
-    await expect.element(page.getByText('Copied Hex #4998BF')).toBeVisible()
+    await expect.element(confirmation('Copied Hex #4998BF')).toBeVisible()
     expect(showsTick('Hex')).toBe(true)
+  })
+
+  test('given a pick, when Copy is pressed, then a screen reader hears the confirmation', async () => {
+    await openAt('/200/62/75')
+
+    await copyButton('Hex').click()
+
+    await expect
+      .poll(() =>
+        [...document.querySelectorAll('[aria-live]')].some(region =>
+          region.textContent.includes('Copied Hex #4998BF'),
+        ),
+      )
+      .toBe(true)
   })
 
   test('given a confirmation is up, when Copy is pressed again, then the same confirmation stays up rather than a new one popping', async () => {
     await openAt('/200/62/75')
 
-    const confirmation = page.getByText('Copied Hex #4998BF')
+    const copied = confirmation('Copied Hex #4998BF')
 
     await copyButton('Hex').click()
-    await expect.element(confirmation).toBeVisible()
-    const first = confirmation.element()
+    await expect.element(copied).toBeVisible()
+    const first = copied.element()
 
     await copyButton('Hex').click()
     await copyButton('Hex').click()
 
-    await expect.element(confirmation).toBeVisible()
-    expect(confirmation.element()).toBe(first)
-    expect(confirmation.elements()).toHaveLength(1)
+    await expect.element(copied).toBeVisible()
+    expect(copied.element()).toBe(first)
+    expect(copied.elements()).toHaveLength(1)
   })
 
   test('given the clipboard refuses, when Copy is pressed, then it says so and shows no tick', async () => {
@@ -48,7 +65,7 @@ describe('the colour card', () => {
     await openAt('/200/62/75')
     await copyButton('Hex').click()
 
-    await expect.element(page.getByText("Couldn't copy Hex")).toBeVisible()
+    await expect.element(confirmation("Couldn't copy Hex")).toBeVisible()
     expect(showsTick('Hex')).toBe(false)
   })
 

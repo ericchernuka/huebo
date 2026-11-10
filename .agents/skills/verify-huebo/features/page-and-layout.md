@@ -31,5 +31,5 @@ Preconditions:
 
 - Change the viewport before `open`, or `reload` after, so the layout query is evaluated fresh.
 - The `html` background has a 500 ms transition. Without `input.mjs front`, the tab is hidden, the transition never runs, and the background reads `rgba(0, 0, 0, 0)`. Wait about 600 ms after a change before reading it.
-- Help that's still in the snapshot after Escape means the tab is hidden. Base UI waits for the close transition, which only runs in a visible tab. Run `input.mjs front`.
+- An Escape that the page doesn't swallow hides agent-browser's tab, and closing Help with Escape is one. Run `input.mjs front` after every Escape, or later transitions freeze at their first frame and Help reads as invisible while open.
 - The status-bar and toolbar strip only shows on a real phone browser. Here, `page-tint` checks the root background and `theme-color`, which are what that strip uses.

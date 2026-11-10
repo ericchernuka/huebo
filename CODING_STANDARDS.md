@@ -15,8 +15,9 @@ How code in Huebo is written. The terms come from `GLOSSARY.md`, and the decisio
 - The React Compiler is on. Don't write `useMemo`, `useCallback` or `memo`.
 - Use `useEffectEvent` for callbacks that an effect calls but shouldn't re-run on.
 - An effect only connects to something outside React, such as a DOM listener, history or the motion store. If it sets state from other state, derive the value instead.
-- Build related parts as compound components (`HueDial.Root`, `HueDial.Ring`, …), sharing through context, not with boolean props. Use Base UI for popovers, toasts and radios.
-- Base UI popups that portal need a container inside the themed tree, as in `Header.tsx`, or they lose the hue theme's variables.
+- Build related parts as compound components (`HueDial.Root`, `HueDial.Ring`, …), sharing through context, not with boolean props.
+- Build popups and form controls from the platform: the `popover` attribute, CSS anchor positioning, and native inputs. Help in `Header.tsx`, Copy's confirmation in `ColorCardRoot.tsx`, and the radios in `Format.tsx` are the pattern. Don't add a component library for them (ADR-0007).
+- A popover stays in the themed tree, so it keeps the hue theme's variables. Don't portal it.
 
 ## Styling
 
@@ -43,6 +44,7 @@ How code in Huebo is written. The terms come from `GLOSSARY.md`, and the decisio
 - Tests live in a `__tests__` folder beside the module they test, with any helpers and fixtures they need: `src/picker/hue-dial/__tests__/motion.test.ts` tests `src/picker/hue-dial/motion.ts`. The app-wide helpers and the browser setup are in `src/__tests__/`.
 - Unit tests (`*.test.ts`) run in Node, for pure modules. Exhaustive checks (`*.verify.ts`) run in Node through `pnpm verify`. Browser tests (`*.test.tsx`) run in Chromium through the real router, using `openAt` in `src/__tests__/app.tsx`. Don't mock modules (lint bans it).
 - A new test must fail on the code before the change. If it would pass anyway, it proves nothing.
+- Tautological tests are considered harmful. A test that restates the code, such as computing the expected value the same way the module does or asserting that a constant equals itself, can't fail for a real reason. Expect a value worked out by hand, or a behaviour a person would see.
 - Assert on what a person can observe: the URL, `history.length`, roles and names, and element identity when the claim is "the same one, not a new one".
 
 ## Proof

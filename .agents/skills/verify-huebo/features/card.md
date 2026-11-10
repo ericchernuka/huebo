@@ -22,7 +22,7 @@ Preconditions:
 
 - **Values.** Run `agent-browser get text '[aria-label="Selected colour"]'`. It includes `#4998BF`, `HSB 200,62,75`, `RGB 73,152,191`, `White text 3.2:1, AA large` and `Black text 6.5:1, AA`.
 - **Copy (`card-copy`).** Run `agent-browser find role button click --name "Copy Hex"` and `agent-browser wait --text "Copied Hex #4998BF"`. Then `.agents/skills/verify-huebo/input.mjs read-clipboard` prints `#4998BF`.
-- **Dedupe (`card-copy-dedupe`).** Click `Copy Hex` three times in a row. `agent-browser snapshot -s '[aria-label="Notifications"]'` lists exactly one dialog, `Copied Hex #4998BF`.
+- **Dedupe (`card-copy-dedupe`).** Click `Copy Hex` three times in a row. `agent-browser eval "[...document.querySelector('[aria-label=\"Selected colour\"]').querySelectorAll(':popover-open')].map(e => e.textContent)"` lists exactly one confirmation, `Copied Hex #4998BF`.
 - **Format (`card-format`).** Run `agent-browser find role radio click --name "RGB"`. The copy button's name becomes `Copy RGB`. Then `agent-browser reload`, and the `RGB` radio is still checked (`snapshot -c` shows `checked=true`).
 - **Empty (`card-empty`).** Open `"$URL/200"`. The card reads `Pick a colour`.
 - **Proof.** Run `snapshot -c > $EVIDENCE/card/<step>.aria.txt` and `screenshot $EVIDENCE/card/<step>.png`. Put the clipboard output in `steps.txt`.
@@ -30,6 +30,7 @@ Preconditions:
 ## Gotchas
 
 - `agent-browser clipboard read` is denied in this browser. Use `input.mjs read-clipboard`, which grants the permission for this tab's origin and reads.
-- The toast closes on its own after a few seconds. Snapshot it right after the click.
+- The toast closes on its own after 1.8 seconds. Snapshot it right after the click.
+- The toast is hidden from screen readers, which hear it through the page's live region instead, so `snapshot -c` doesn't list it. Read it with `get text` or the `:popover-open` query above.
 - A failed write shows `Couldn't copy <format>` and no tick. agent-browser can't make the clipboard fail on demand, so that path is `not driven`. `src/picker/color-card/__tests__/ColorCard.test.tsx` covers it.
 - The format persists in `localStorage`, so clear it before a recipe that expects Hex.

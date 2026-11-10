@@ -32,3 +32,9 @@ button {
   -webkit-user-select: none;
   user-select: none;
 }
+
+:where([target='_blank'])::after {
+  content: '\2197' / ' Link to external site';
+  display: inline-block;
+  margin-inline-start: 0.3em;
+}

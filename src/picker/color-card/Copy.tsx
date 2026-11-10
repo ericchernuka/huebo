@@ -1,5 +1,4 @@
 import * as stylex from '@stylexjs/stylex'
-import { Toast } from '@base-ui/react/toast'
 import { shared } from '../../shared/styles'
 import { colors, motion, radii } from '../../shared/tokens.stylex'
 import { useCard } from './ColorCardRoot'
@@ -10,33 +9,20 @@ const draw = stylex.keyframes({
 })
 
 export function Copy() {
-  const { format, values } = useCard()
-  const toasts = Toast.useToastManager()
+  const { confirm, confirmation, format, values } = useCard()
   const value = values?.text[format]
+  const copied = confirmation?.shown === true && confirmation.copied
 
-  const copied = toasts.toasts.some(
-    toast => toast.type === 'copied' && toast.transitionStatus !== 'ending',
-  )
-
-  const copy = async (text: string, button: HTMLButtonElement) => {
+  const copy = async (text: string) => {
     const ok = await writeToClipboard(text)
 
-    // One confirmation at a time: copying again while it's up updates it and
-    // restarts its timer rather than stacking another.
-    toasts.add({
-      id: 'copy',
-      positionerProps: { anchor: button, side: 'top', sideOffset: 10 },
-      title: ok ? `Copied ${format} ${text}` : `Couldn't copy ${format}`,
-      type: ok ? 'copied' : 'failed',
-    })
+    confirm(ok ? `Copied ${format} ${text}` : `Couldn't copy ${format}`, ok)
   }
 
   return (
     <button
       disabled={value === undefined}
-      onClick={event =>
-        value !== undefined && void copy(value, event.currentTarget)
-      }
+      onClick={() => value !== undefined && void copy(value)}
       type="button"
       {...stylex.props(shared.focusRing, styles.copy, copied && styles.copied)}
     >
@@ -74,6 +60,7 @@ const styles = stylex.create({
   copied: { backgroundColor: colors.ink, color: '#fff' },
   copy: {
     alignItems: 'center',
+    anchorName: '--copy',
     backgroundColor: 'transparent',
     borderColor: colors.ink,
     borderRadius: radii.pill,
