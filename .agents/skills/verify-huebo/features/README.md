@@ -4,9 +4,9 @@ One recipe per feature a person can see and touch. Driving conventions and proof
 
 ## Baseline preconditions
 
-- A server from `.claude/skills/verify-huebo/huebo.sh launch <run-id>`, with `huebo.sh doctor <run-id>` passing.
+- A server from `.agents/skills/verify-huebo/huebo.sh launch <run-id>`, with `huebo.sh doctor <run-id>` passing.
 - `URL`, `EVIDENCE` and `AGENT_BROWSER_SESSION` exported from `huebo.sh env <run-id>`.
-- A fresh page: `agent-browser open "$URL/200"`, then `.claude/skills/verify-huebo/input.mjs front` once per session, so CSS transitions run. The session's `localStorage` may hold a format from an earlier recipe. Clear it with `agent-browser eval "localStorage.clear()"` before a recipe that starts from the default format, Hex.
+- A fresh page: `agent-browser open "$URL/200"`, then `.agents/skills/verify-huebo/input.mjs front` once per session, so CSS transitions run. The session's `localStorage` may hold a format from an earlier recipe. Clear it with `agent-browser eval "localStorage.clear()"` before a recipe that starts from the default format, Hex.
 
 ## Feature entry contract
 

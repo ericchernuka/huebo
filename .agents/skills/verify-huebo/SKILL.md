@@ -19,8 +19,8 @@ Run every command from the repo root.
 ## Launch
 
 ```sh
-.claude/skills/verify-huebo/huebo.sh launch <run-id>
-eval "$(.claude/skills/verify-huebo/huebo.sh env <run-id>)"
+.agents/skills/verify-huebo/huebo.sh launch <run-id>
+eval "$(.agents/skills/verify-huebo/huebo.sh env <run-id>)"
 export AGENT_BROWSER_SESSION="$SESSION" URL
 ```
 
@@ -31,7 +31,7 @@ Each run id gets its own port, browser session and evidence folder, so two runs 
 ## Doctor
 
 ```sh
-.claude/skills/verify-huebo/huebo.sh doctor <run-id>
+.agents/skills/verify-huebo/huebo.sh doctor <run-id>
 ```
 
 This is read-only. Run it first, and again whenever anything looks off. It checks four things:
@@ -51,7 +51,7 @@ Start from a known page and size:
 agent-browser set viewport 1280 900      # roomy layout: ring, grid and card side by side
 agent-browser set viewport 390 844       # phone: compact layout with the wheel at the bottom
 agent-browser open "$URL/200"
-.claude/skills/verify-huebo/input.mjs front   # make the tab visible
+.agents/skills/verify-huebo/input.mjs front   # make the tab visible
 agent-browser wait --text "Huebo"
 ```
 
@@ -83,7 +83,7 @@ agent-browser get box '[role="slider"]'        # x, y, width, height
 At 1280×900 the ring's box is 520 px square, at x 104, y 155. Its centre is the grid, so point at the ring band, about 235 px out from the centre. At 390×844 the wheel band fills the bottom 158 px, at y 686–844.
 
 - **Ring click or drag.** Use `agent-browser mouse move <x> <y>`, `mouse down`, `mouse move …`, `mouse up`. Angle 0° is at the top, and the angle grows clockwise.
-- **Mouse wheel over the ring.** Run `.claude/skills/verify-huebo/input.mjs wheel <x> <y> 100 <notches>`. Each notch is +5°, and the commit comes 250 ms after the last notch. Don't use `agent-browser mouse wheel`, because it always fires at (0, 0) and never reaches the ring.
+- **Mouse wheel over the ring.** Run `.agents/skills/verify-huebo/input.mjs wheel <x> <y> 100 <notches>`. Each notch is +5°, and the commit comes 250 ms after the last notch. Don't use `agent-browser mouse wheel`, because it always fires at (0, 0) and never reaches the ring.
 - **Phone wheel.** Run `input.mjs tap <x> <y>` or `input.mjs swipe <x1> <y> <x2> <ms> [steps]`, which send real touch events with real timing. A flick is about 180 px in 60 ms. A slow drag is the same distance over 600 ms or more.
 - **Keys.** Run `agent-browser focus '[role="slider"]'`, then `agent-browser press ArrowRight` (or `PageUp`, `Home`, `End`, `Shift+ArrowRight`). Each `press` is a keydown and a keyup, so each one is a finished choice.
 - **Back and Forward.** Run `agent-browser back` and `agent-browser forward`.
@@ -108,7 +108,7 @@ Proof standards:
 
 ```sh
 agent-browser close
-.claude/skills/verify-huebo/huebo.sh stop <run-id>
+.agents/skills/verify-huebo/huebo.sh stop <run-id>
 ```
 
 `close` closes only this run's browser session, which `AGENT_BROWSER_SESSION` names. `stop` kills only the pid this run started, and removes `.verify/runs/<run-id>/`. It never touches `.verify/evidence/`. Never kill Vite or Chrome by name, because other worktrees and agents run them too. When the evidence is no longer needed, delete `.verify/evidence/<run-id>/` yourself.
