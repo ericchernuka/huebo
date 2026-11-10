@@ -1,4 +1,4 @@
-# Colour card
+# Card
 
 The card shows the chosen colour in HSB, RGB and Hex, lets a person pick which format to copy, copies it, and confirms with one toast. It also shows how readable white and black text are on the colour. The chosen format is remembered on this device.
 
@@ -25,7 +25,7 @@ Preconditions:
 - **Dedupe (`card-copy-dedupe`).** Click `Copy Hex` three times in a row. `agent-browser snapshot -s '[aria-label="Notifications"]'` lists exactly one dialog, `Copied Hex #4998BF`.
 - **Format (`card-format`).** Run `agent-browser find role radio click --name "RGB"`. The copy button's name becomes `Copy RGB`. Then `agent-browser reload`, and the `RGB` radio is still checked (`snapshot -c` shows `checked=true`).
 - **Empty (`card-empty`).** Open `"$URL/200"`. The card reads `Pick a colour`.
-- **Proof.** Run `snapshot -c > $EVIDENCE/colour-card/<step>.aria.txt` and `screenshot $EVIDENCE/colour-card/<step>.png`. Put the clipboard output in `steps.txt`.
+- **Proof.** Run `snapshot -c > $EVIDENCE/card/<step>.aria.txt` and `screenshot $EVIDENCE/card/<step>.png`. Put the clipboard output in `steps.txt`.
 
 ## Gotchas
 

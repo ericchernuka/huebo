@@ -1,18 +1,18 @@
 ---
 name: verify-huebo
-description: Drive the real Huebo web app (the HSB colour picker, its hue dial, swatch grid and colour card) in a browser with agent-browser and capture proof that a feature works the way a person uses it. Use after changing anything a user can see or touch in src/, when asked to verify, demo, screenshot or "check it in the browser", or before saying a UI change works.
+description: Drive the real Huebo app in a browser with agent-browser and capture proof that a feature works the way a person uses it. Use after changing anything a person can see or touch in src/, when asked to verify, demo or screenshot it, or before saying a UI change works.
 ---
 
 # Verify Huebo in a real browser
 
-Huebo is a single-page React app served by Vite. A person touches it through a web page: the hue dial (a ring on wide screens, a wheel along the bottom on phones), the − and + buttons, the 8×8 swatch grid, the colour card, and Help. Every choice lives in the URL (`/:hue` or `/:hue/:saturation/:brightness`), so Back and Forward are part of the product. There is no backend, no auth and no data dir. The only stored state is the colour format, in the browser's `localStorage`.
+Huebo is a single-page React app served by Vite. A person touches it through a web page: the dial (the ring in the roomy layout, the wheel along the bottom in the compact layout), the stepper (− and +), the 8×8 grid of squares, the card, and Help. Every choice lives in the URL (`/:hue` or `/:hue/:saturation/:brightness`), so Back and Forward are part of the product. There is no backend, no auth and no data dir. The only stored state is the colour format, in the browser's `localStorage`.
 
 The harness is the `agent-browser` CLI (0.37 or newer), plus two helpers that ship with this skill:
 
 - `huebo.sh` starts, checks and stops a dev server.
 - `input.mjs` sends the input agent-browser can't: wheel notches and touch swipes at coordinates, and a clipboard read.
 
-The feature map in [features/README.md](features/README.md) is the recipe book. Read it before you drive anything.
+The feature map in [features/README.md](features/README.md) is the recipe book: its baseline, then one recipe per feature. Read it before you drive anything.
 
 Run every command from the repo root.
 
@@ -65,8 +65,8 @@ These are the stable handles. Use them, not CSS classes or the order of elements
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------- |
 | Hue dial (ring or wheel) | `[role="slider"][aria-label="Hue"]`, with `aria-valuenow` as the hue on show                                                    |
 | − and +                  | `find role button click --name "Decrease hue by 5 degrees"` and `"Increase hue by 5 degrees"`                                   |
-| A swatch                 | `find role button click --name "Saturation 62, brightness 75, #4998BF"`. The name starts with `Saturation <s>, brightness <b>,` |
-| The picked swatch        | `td[aria-selected="true"]`, whose `button` carries the name                                                                     |
+| A square                 | `find role button click --name "Saturation 62, brightness 75, #4998BF"`. The name starts with `Saturation <s>, brightness <b>,` |
+| The picked square        | `td[aria-selected="true"]`, whose `button` carries the name                                                                     |
 | Format                   | `find role radio click --name "RGB"` (or `HSB`, `Hex`)                                                                          |
 | Copy                     | `find role button click --name "Copy Hex"`. The name follows the format                                                         |
 | Copy confirmation        | the dialog `Copied Hex #4998BF` inside the region `Notifications`                                                               |
@@ -90,9 +90,9 @@ At 1280×900 the ring's box is 520 px square, at x 104, y 155. Its centre is the
 
 ## Evidence
 
-Put every artifact in `$EVIDENCE/<feature-id>/`, which is `.verify/evidence/<run-id>/<feature-id>/`. This folder is gitignored and survives cleanup. For each claim, capture three things:
+Put every artifact in `$EVIDENCE/<feature-id>/`, which is `.verify/evidence/<run-id>/<feature-id>/`, with the feature file's name as the id (`hue-dial`, `grid`). This folder is gitignored and survives cleanup. For each claim, capture three things:
 
-- **The action:** the exact commands, in a `steps.txt` next to the artifacts.
+- **The action:** the exact commands, in a `steps.txt` next to the artifacts, under the sub-feature ids they prove.
 - **The resulting state:** `agent-browser snapshot -c > $EVIDENCE/<id>/<step>.aria.txt` and `agent-browser screenshot $EVIDENCE/<id>/<step>.png`.
 - **The side effects:** the URL, `history.length`, and where it matters `document.title`, the `theme-color` meta, `localStorage`, or the clipboard (`input.mjs read-clipboard`).
 
@@ -101,8 +101,8 @@ Proof standards:
 - Drive the real path a person uses. Use clicks, keys, wheel and touch, never `eval` that calls app code, sets state or dispatches synthetic events. Use `eval` only to read.
 - Record the state before and after. "One history entry per choice" needs `history.length` both before and after.
 - For anything that moves over time (a coast, a scroll pause, a toast), wait for the end state with `agent-browser wait --url` or `wait --text`. A fixed sleep is OK only when nothing observable marks the end, and then say so in `steps.txt`.
-- Don't mock anything. There are no external systems. Analytics is off unless `VITE_GOOGLE_ANALYTICS_ID` is set, and `launch` doesn't set it.
-- When a recipe step can't be driven, such as holding a key down, say so. Name the browser test that covers it instead. Never report it as verified through another path.
+- Drive the app as it ships. It has no external systems to mock, and analytics stays off because `launch` leaves `VITE_GOOGLE_ANALYTICS_ID` unset.
+- When a recipe step can't be driven, such as holding a key down, write `not driven: <why>` in `steps.txt` and name the browser test that covers it. Report it as not driven.
 
 ## Cleanup
 
