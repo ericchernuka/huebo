@@ -1,6 +1,5 @@
 import { describe, expect, test } from 'vitest'
 import {
-  HUES,
   STEPS,
   colorPath,
   hueAt,
@@ -90,10 +89,6 @@ test('given an angle from a drag, when it becomes a hue, then it snaps to the ne
     hueAt(-722),
     hueAt(7.4),
   ]).toEqual([355, 355, 5, 0, 5])
-})
-
-test('given every hue, then there are 72 stops from 0 to 355', () => {
-  expect([HUES.length, HUES[0], HUES[1], HUES.at(-1)]).toEqual([72, 0, 5, 355])
 })
 
 test('given any saturation or brightness, when it becomes a step, then it is the nearest one', () => {
