@@ -27,7 +27,7 @@ Preconditions:
 - Baseline from the [README](./README.md), and `agent-browser open "$URL/200"` at the layout the step names.
 - `agent-browser eval "history.length"` recorded before each step as `before`.
 
-- **Stepper (`dial-stepper`).** At `1280 900`, run `agent-browser find role button click --name "Increase hue by 5 degrees"`, then `agent-browser wait --url "**/205"`. `history.length` is `before + 1`, and `document.title` is `Hue: 205 | Huebo`.
+- **Stepper (`dial-stepper`).** At `1280 900`, run `agent-browser find role button click --name "Increase hue by 5 degrees"`, then `agent-browser wait --url "**/205"`. `history.length` is `before + 1`, and `document.title` is `Hue 205 and its 64 shades | Huebo`.
 - **Keys (`dial-keys`).** Run `agent-browser focus '[role="slider"][aria-label="Hue"]'`, then `agent-browser press ArrowRight` twice and `agent-browser wait --url "**/210"`. `history.length` is `before + 2`, because each press is a keydown and a keyup. `press Shift+ArrowRight` moves 45°. `press Home` goes to `/0`.
 - **Ring drag (`dial-ring-point`).** From the ring box (x 104, y 155, 520 square at 1280×900), run `agent-browser mouse move 364 180`, `mouse down`, `mouse move 534 245`, `mouse move 600 415`, `mouse up`. The URL ends at `/90`, and `history.length` is `before + 1`.
 - **Mouse wheel (`dial-scroll`).** Run `.claude/skills/verify-huebo/input.mjs wheel 364 180 100 3`. Right after, `get attr '[role="slider"]' aria-valuenow` reads 15° past the start. After `agent-browser wait --url "**/<start+15>"`, `history.length` is `before + 1`.

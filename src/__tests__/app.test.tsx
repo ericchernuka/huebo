@@ -12,7 +12,7 @@ describe('shared links', () => {
     await expect
       .element(picked())
       .toHaveAccessibleName(/Saturation 62, brightness 75, #4998BF/)
-    expect(document.title).toBe('HSB(200,62,75) | Huebo')
+    expect(document.title).toBe('#4998BF · HSB 200 62 75 | Huebo')
   })
 
   test('given a link to a hue, when it opens, then nothing is picked yet', async () => {
@@ -20,7 +20,7 @@ describe('shared links', () => {
 
     await expect.element(page.getByText('Pick a colour')).toBeVisible()
     await expect.element(picked()).not.toBeInTheDocument()
-    expect(document.title).toBe('Hue: 200 | Huebo')
+    expect(document.title).toBe('Hue 200 and its 64 shades | Huebo')
   })
 
   test.each([

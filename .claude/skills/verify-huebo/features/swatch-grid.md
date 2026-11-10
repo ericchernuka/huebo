@@ -19,7 +19,7 @@ Preconditions:
 
 - Baseline from the [README](./README.md), with `agent-browser open "$URL/200"`.
 
-- **Pick (`grid-pick`).** Run `agent-browser find role button click --name "Saturation 62, brightness 75, #4998BF"`, then `agent-browser wait --url "**/200/62/75"`. `agent-browser get attr 'td[aria-selected="true"] button' aria-label` starts with `Saturation 62, brightness 75`, and the title is `HSB(200,62,75) | Huebo`. `history.length` goes up by 1.
+- **Pick (`grid-pick`).** Run `agent-browser find role button click --name "Saturation 62, brightness 75, #4998BF"`, then `agent-browser wait --url "**/200/62/75"`. `agent-browser get attr 'td[aria-selected="true"] button' aria-label` starts with `Saturation 62, brightness 75`, and the title is `#4998BF · HSB 200 62 75 | Huebo`. `history.length` goes up by 1.
 - **Keys (`grid-keys`).** Run `agent-browser focus 'td[aria-selected="true"] button'`, then `press ArrowRight` and `press Enter`. The URL is `/200/75/75`. Then press `Escape`, and the URL is `/200` and `agent-browser eval "document.querySelector('td[aria-selected=true]')"` is `null`.
 - **Follows hue (`grid-follows-hue`).** From `/200/62/75`, click `Increase hue by 5 degrees`. The URL is `/205/62/75`, and the selected cell's label starts with `Saturation 62, brightness 75`.
 - **Proof.** Run `snapshot -c > $EVIDENCE/swatch-grid/<step>.aria.txt` and `screenshot $EVIDENCE/swatch-grid/<step>.png`, and record the URL and title in `steps.txt`.
