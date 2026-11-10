@@ -40,7 +40,7 @@ How code in Huebo is written. The terms come from `GLOSSARY.md`, and the decisio
 ## Tests
 
 - Name tests `given …, when …, then …`, in the glossary's words.
-- Unit tests (`*.test.ts`) run in Node, for pure modules. Browser tests (`*.test.tsx`) run in Chromium through the real router, using `openAt` in `src/test/app.tsx`. Don't mock modules (lint bans it).
+- Unit tests (`*.test.ts`) run in Node, for pure modules. Exhaustive checks are named `*.verify.ts`. A test or check that needs helper files goes in a `__tests__` folder beside its module, together with those helpers, as `src/picker/hue-dial/__tests__/` does. Browser tests (`*.test.tsx`) run in Chromium through the real router, using `openAt` in `src/test/app.tsx`. Don't mock modules (lint bans it).
 - A new test must fail on the code before the change. If it would pass anyway, it proves nothing.
 - Assert on what a person can observe: the URL, `history.length`, roles and names, and element identity when the claim is "the same one, not a new one".
 

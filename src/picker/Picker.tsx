@@ -2,6 +2,7 @@ import * as stylex from '@stylexjs/stylex'
 import { useNavigate, useParams, useRouter } from '@tanstack/react-router'
 import { useEffect, useEffectEvent } from 'react'
 import { useAnnounce } from '../shared/announcer'
+import { useColourTools } from './agent/tools'
 import { hsbToHex } from '../shared/color'
 import { colors, hue as hueVar, hueTheme } from '../shared/tokens.stylex'
 import type { Color, Pick } from './color'
@@ -30,13 +31,14 @@ export function Picker() {
 
   useCommits(dial, color)
 
+  useColourTools(color, chosen => {
+    dial.send({ ...chosen, type: 'jump' }, hue)
+    announce(describeChoice(chosen))
+  })
+
   const pick = (next: Pick | null) => {
     dial.send({ pick: next, type: 'choose' }, hue)
-    announce(
-      next
-        ? `Picked ${hsbToHex(hue, next.saturation, next.brightness)}`
-        : 'Selection cleared',
-    )
+    announce(next ? describeChoice({ hue, pick: next }) : 'Selection cleared')
   }
 
   const layout = { color: { hue, pick: color.pick }, onPick: pick }
@@ -94,6 +96,12 @@ function useCommits(dial: DialMotion, color: Color) {
       unlisten()
     }
   }, [dial, router])
+}
+
+function describeChoice({ hue, pick }: Color): string {
+  return pick
+    ? `Picked ${hsbToHex(hue, pick.saturation, pick.brightness)}`
+    : `Hue ${describeHue(hue)}`
 }
 
 function documentTitle({ hue, pick }: Color): string {

@@ -108,6 +108,11 @@ describe('choices made while the wheel coasts', () => {
       { pick: { brightness: 75, saturation: 62 }, type: 'choose' },
       { announce: false, hue: 230, pick: { brightness: 75, saturation: 62 } },
     ],
+    [
+      "an agent's colour",
+      { hue: hueAt(40), pick: null, type: 'jump' },
+      { announce: false, hue: 40, pick: null },
+    ],
   ])(
     'given a coast, when %s lands, then it commits from where the coast was and the coast is over',
     (_, event, commit) => {

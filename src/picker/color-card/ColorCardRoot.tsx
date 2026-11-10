@@ -3,6 +3,7 @@ import { Toast } from '@base-ui/react/toast'
 import { createContext, use, useState, type ReactNode } from 'react'
 import { colors, easing, motion, radii } from '../../shared/tokens.stylex'
 import { transitionClass } from '../../shared/transition'
+import { useFormatTool } from '../agent/tools'
 import type { Color } from '../color'
 import {
   readFormat,
@@ -33,6 +34,8 @@ export function Root({ children, color }: RootProps) {
     setFormat(next)
     saveFormat(next)
   }
+
+  useFormatTool(choose, values?.text ?? null)
 
   return (
     <CardContext value={{ format, setFormat: choose, values }}>

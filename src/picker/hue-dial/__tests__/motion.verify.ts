@@ -11,6 +11,7 @@ const FINISHING = new Set<MotionEvent['type']>([
   'cancel',
   'choose',
   'frame',
+  'jump',
   'letGo',
   'pause',
   'release',

@@ -1,17 +1,13 @@
 import { hueAt, type Hue, type Pick } from '../color'
-import { coast, flickVelocity, recordSample, type Sample } from './inertia'
-
-const TAP_SLOP_PX = 6
-
-export type Gesture = {
-  readonly fromEdge: boolean
-  readonly dragging: boolean
-  readonly pointerId: number
-  readonly radius: number
-  readonly samples: ReadonlyArray<Sample>
-  readonly startAt: number
-  readonly startX: number
-}
+import {
+  dragTurn,
+  moveGesture,
+  startGesture,
+  type Gesture,
+  type Landing,
+  type Pointer,
+} from './gesture'
+import { coast, flickVelocity } from './inertia'
 
 /**
  * The hue in motion, in one place. Every input previews through these states
@@ -36,12 +32,6 @@ export type Motion =
   /** Committed, and holding the hue on screen until the URL catches up. */
   | { readonly hue: Hue; readonly kind: 'landing' }
 
-export type Pointer = {
-  readonly pointerId: number
-  readonly time: number
-  readonly x: number
-}
-
 export type MotionEvent =
   /** The ring pointed at a hue, or Home or End. */
   | { readonly hue: Hue; readonly type: 'aim' }
@@ -55,12 +45,9 @@ export type MotionEvent =
   | { readonly by: number; readonly type: 'step' }
   /** A square picked in the grid, or the pick cleared. */
   | { readonly pick: Pick | null; readonly type: 'choose' }
-  | (Pointer & {
-      readonly fromEdge: boolean
-      readonly radius: number
-      readonly turn: number
-      readonly type: 'press'
-    })
+  /** A whole colour at once, from an agent, committed straight away. */
+  | { readonly hue: Hue; readonly pick: Pick | null; readonly type: 'jump' }
+  | (Landing & { readonly turn: number; readonly type: 'press' })
   | (Pointer & { readonly type: 'move' })
   | (Pointer & {
       readonly reduced: boolean
@@ -136,10 +123,24 @@ export function transition(
       return motion.kind === 'held' ? land(motion.hue) : { motion }
     case 'pause':
       return motion.kind === 'scrolling' ? land(motion.hue) : { motion }
+    default:
+      return choiceTransition(motion, event, from)
+  }
+}
+
+/** The inputs that are a choice the moment they arrive. */
+function choiceTransition(
+  motion: Motion,
+  event: MotionEvent,
+  from: Hue,
+): Transition {
+  switch (event.type) {
     case 'step':
       return land(hueAt(from + event.by), { announce: true })
     case 'choose':
       return land(from, { pick: event.pick })
+    case 'jump':
+      return land(event.hue, { pick: event.pick })
     default:
       return wheelTransition(motion, event)
   }
@@ -204,15 +205,7 @@ function press(
 
   return {
     at: startAt,
-    gesture: {
-      fromEdge: event.fromEdge,
-      dragging: caught,
-      pointerId: event.pointerId,
-      radius: event.radius,
-      samples: [{ time: event.time, x: event.x }],
-      startAt,
-      startX: event.x,
-    },
+    gesture: startGesture(event, startAt, caught),
     kind: 'turning',
   }
 }
@@ -225,22 +218,12 @@ function move(
     return motion
   }
 
-  const { gesture } = motion
-
-  const dragging =
-    gesture.dragging || Math.abs(event.x - gesture.startX) > TAP_SLOP_PX
-
-  const next = {
-    ...gesture,
-    dragging,
-    samples: recordSample(gesture.samples, { time: event.time, x: event.x }),
-  }
-
-  const turns = dragging && !gesture.fromEdge
+  const gesture = moveGesture(motion.gesture, event)
+  const turns = gesture.dragging && !gesture.fromEdge
 
   return {
-    at: turns ? dragTurn(next, event.x) : motion.at,
-    gesture: next,
+    at: turns ? dragTurn(gesture, event.x) : motion.at,
+    gesture,
     kind: 'turning',
   }
 }
@@ -284,10 +267,4 @@ function coastFrame(motion: Motion, elapsed: number): Transition {
   return next === null
     ? land(hueAt(motion.at), { announce: true })
     : { motion: { at: next.turn, kind: 'coasting', velocity: next.velocity } }
-}
-
-function dragTurn(gesture: Gesture, x: number): number {
-  return (
-    gesture.startAt - ((x - gesture.startX) / gesture.radius) * (180 / Math.PI)
-  )
 }

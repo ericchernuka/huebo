@@ -29,6 +29,18 @@ export function hueAt(degrees: number): Hue {
   return v.parse(HueNumber, ((stop % 360) + 360) % 360)
 }
 
+/** Every hue, from 0 to 355. */
+export const HUES: ReadonlyArray<Hue> = Array.from({ length: 72 }, (_, stop) =>
+  hueAt(stop * 5),
+)
+
+/** The step nearest any saturation or brightness from 0 to 100. */
+export function stepAt(level: number): Step {
+  return STEPS.reduce((best, next) =>
+    Math.abs(next - level) < Math.abs(best - level) ? next : best,
+  )
+}
+
 const HueParam = v.pipe(
   v.string(),
   v.regex(/^\d{1,3}$/),

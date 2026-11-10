@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { STEPS, colorPath, hueAt, parseColorPath } from './color'
+import { HUES, STEPS, colorPath, hueAt, parseColorPath, stepAt } from './color'
 
 const hues = Array.from({ length: 72 }, (_, index) => String(index * 5))
 
@@ -75,4 +75,14 @@ test('given an angle from a drag, when it becomes a hue, then it snaps to the ne
     hueAt(-722),
     hueAt(7.4),
   ]).toEqual([355, 355, 5, 0, 5])
+})
+
+test('given every hue, then there are 72 stops from 0 to 355', () => {
+  expect([HUES.length, HUES[0], HUES[1], HUES.at(-1)]).toEqual([72, 0, 5, 355])
+})
+
+test('given any saturation or brightness, when it becomes a step, then it is the nearest one', () => {
+  expect([stepAt(0), stepAt(55), stepAt(57), stepAt(90), stepAt(100)]).toEqual([
+    12, 50, 62, 88, 100,
+  ])
 })

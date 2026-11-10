@@ -1,13 +1,7 @@
 import * as stylex from '@stylexjs/stylex'
-import { contrastRatio, type Rgb } from '../../shared/color'
 import { colors, radii } from '../../shared/tokens.stylex'
 import { useCard } from './ColorCardRoot'
-import { FORMATS } from './formats'
-
-const TEXT_COLOURS = [
-  { name: 'White', rgb: [255, 255, 255], swatch: '#fff' },
-  { name: 'Black', rgb: [0, 0, 0], swatch: '#000' },
-] as const satisfies ReadonlyArray<{ name: string; rgb: Rgb; swatch: string }>
+import { FORMATS, textContrast } from './formats'
 
 export function Details() {
   const { format, values } = useCard()
@@ -26,38 +20,20 @@ export function Details() {
         ))}
       </p>
       <ul aria-label="Text contrast" {...stylex.props(styles.chips)}>
-        {TEXT_COLOURS.map(text => {
-          const ratio = contrastRatio(text.rgb, values.rgb)
-
-          return (
-            <li key={text.name} {...stylex.props(styles.chip)}>
-              <span
-                aria-hidden="true"
-                {...stylex.props(styles.sample(values.text.Hex, text.swatch))}
-              >
-                Aa
-              </span>
-              {text.name} text {(Math.floor(ratio * 10) / 10).toFixed(1)}:1,{' '}
-              {grade(ratio)}
-            </li>
-          )
-        })}
+        {textContrast(values.rgb).map(text => (
+          <li key={text.name} {...stylex.props(styles.chip)}>
+            <span
+              aria-hidden="true"
+              {...stylex.props(styles.sample(values.text.Hex, text.swatch))}
+            >
+              Aa
+            </span>
+            {text.name} text {text.ratio.toFixed(1)}:1, {text.grade}
+          </li>
+        ))}
       </ul>
     </div>
   )
-}
-
-/** The WCAG 2 level a contrast ratio reaches for normal or large text. */
-function grade(ratio: number): string {
-  if (ratio >= 7) {
-    return 'AAA'
-  }
-
-  if (ratio >= 4.5) {
-    return 'AA'
-  }
-
-  return ratio >= 3 ? 'AA large' : 'fails'
 }
 
 const styles = stylex.create({

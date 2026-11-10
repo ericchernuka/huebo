@@ -72,6 +72,12 @@ _Avoid_: momentum, inertia, spin
 The moment between a choice and the link catching up, while the screen holds the chosen hue.
 _Avoid_: settling, pending
 
+## Agents
+
+**Agent tool**:
+One of the WebMCP tools the page gives an AI agent: `read_colour`, `choose_colour`, `list_squares` and `choose_format`. An agent's choice is a choice like any other: one history entry.
+_Avoid_: action, command, MCP endpoint
+
 ## Pages
 
 **Link**:

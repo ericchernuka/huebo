@@ -45,11 +45,33 @@ export function hsbToHex(
   saturation: number,
   brightness: number,
 ): string {
-  const hex = hsbToRgb(hue, saturation, brightness)
-    .map(channel => channel.toString(16).padStart(2, '0'))
-    .join('')
+  return rgbToHex(hsbToRgb(hue, saturation, brightness))
+}
+
+/** Writes RGB as upper-case Hex, such as `#4998BF`. */
+export function rgbToHex(rgb: Rgb): string {
+  const hex = rgb.map(channel => channel.toString(16).padStart(2, '0')).join('')
 
   return `#${hex.toUpperCase()}`
+}
+
+/** Reads Hex such as `#4998BF`, `4998bf` or `#fff`. The caller checks its shape. */
+export function hexToRgb(hex: string): Rgb {
+  const digits = hex.replace('#', '')
+  const full = digits.length === 3 ? digits.replaceAll(/./g, '$&$&') : digits
+  const channel = (at: number) => Number.parseInt(full.slice(at, at + 2), 16)
+
+  return [channel(0), channel(2), channel(4)]
+}
+
+/** How different two colours look, by the "redmean" approximation. Only its order means anything. */
+export function colorDistance([r1, g1, b1]: Rgb, [r2, g2, b2]: Rgb): number {
+  const red = (r1 + r2) / 2
+  const [dr, dg, db] = [r1 - r2, g1 - g2, b1 - b2]
+
+  return (
+    (2 + red / 256) * dr ** 2 + 4 * dg ** 2 + (2 + (255 - red) / 256) * db ** 2
+  )
 }
 
 /** The WCAG 2 contrast ratio between two colours, from 1 to 21. */

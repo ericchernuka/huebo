@@ -25,6 +25,8 @@ export default defineConfig({
         test: {
           name: 'verify',
           environment: 'node',
+          // The exhaustive search keeps every state it has seen, about 4 million.
+          execArgv: ['--max-old-space-size=6144'],
           include: ['src/**/*.verify.ts'],
         },
       },

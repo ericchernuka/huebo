@@ -1,5 +1,5 @@
 import { hsbToHex } from '../../shared/color'
-import { hueAt, type Hue } from '../color'
+import { HUES, type Hue } from '../color'
 
 const NAMES = [
   'red',
@@ -21,11 +21,7 @@ export function describeHue(hue: Hue): string {
   return `${hue} degrees, ${NAMES[Math.round(hue / 30) % NAMES.length] ?? 'red'}`
 }
 
-export const STOPS = Array.from({ length: 72 }, (_, index) => {
-  const hue = hueAt(index * 5)
-
-  return { color: hsbToHex(hue, 85, 92), hue }
-})
+export const STOPS = HUES.map(hue => ({ color: hsbToHex(hue, 85, 92), hue }))
 
 /** A point at `angle` degrees clockwise from the top, `radius` from the centre. */
 export function polar(angle: number, radius: number) {

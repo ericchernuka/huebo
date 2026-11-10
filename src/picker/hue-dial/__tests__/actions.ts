@@ -30,6 +30,11 @@ const KEYS: ReadonlyArray<Action> = [
     type: 'choose',
   })),
   person('the pick is cleared', () => ({ pick: null, type: 'choose' })),
+  person('an agent chooses a colour', () => ({
+    hue: hueAt(40),
+    pick: { brightness: 50, saturation: 88 },
+    type: 'jump',
+  })),
 ]
 
 /** Wheel sends the dial's rotation, which points at the hue on show. */
