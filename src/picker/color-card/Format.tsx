@@ -1,19 +1,18 @@
 import * as stylex from '@stylexjs/stylex'
-import { Radio } from '@base-ui/react/radio'
-import { RadioGroup } from '@base-ui/react/radio-group'
+import { useId } from 'react'
 import { shared } from '../../shared/styles'
 import { colors, easing, motion, radii } from '../../shared/tokens.stylex'
 import { useCard } from './ColorCardRoot'
-import { FORMATS, type Format as FormatName } from '../formats'
+import { FORMATS } from '../formats'
 
 export function Format() {
   const { format, setFormat } = useCard()
+  const name = useId()
 
   return (
-    <RadioGroup<FormatName>
+    <div
       aria-label="Colour format"
-      onValueChange={setFormat}
-      value={format}
+      role="radiogroup"
       {...stylex.props(styles.group)}
     >
       <span
@@ -24,21 +23,22 @@ export function Format() {
         )}
       />
       {FORMATS.map(option => (
-        <Radio.Root
-          className={state =>
-            stylex.props(
-              shared.focusRing,
-              styles.option,
-              state.checked && styles.checked,
-            ).className
-          }
+        <label
           key={option}
-          value={option}
+          {...stylex.props(styles.option, option === format && styles.checked)}
         >
+          <input
+            checked={option === format}
+            name={name}
+            onChange={() => setFormat(option)}
+            type="radio"
+            value={option}
+            {...stylex.props(shared.focusRing, styles.input)}
+          />
           {option}
-        </Radio.Root>
+        </label>
       ))}
-    </RadioGroup>
+    </div>
   )
 }
 
@@ -57,6 +57,14 @@ const styles = stylex.create({
     gridAutoFlow: 'column',
     padding: 4,
     position: 'relative',
+  },
+  input: {
+    appearance: 'none',
+    borderRadius: radii.pill,
+    cursor: 'pointer',
+    inset: 0,
+    margin: 0,
+    position: 'absolute',
   },
   option: {
     alignItems: 'center',

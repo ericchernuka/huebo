@@ -15,8 +15,9 @@ How code in Huebo is written. The terms come from `GLOSSARY.md`, and the decisio
 - The React Compiler is on. Don't write `useMemo`, `useCallback` or `memo`.
 - Use `useEffectEvent` for callbacks that an effect calls but shouldn't re-run on.
 - An effect only connects to something outside React, such as a DOM listener, history or the motion store. If it sets state from other state, derive the value instead.
-- Build related parts as compound components (`HueDial.Root`, `HueDial.Ring`, …), sharing through context, not with boolean props. Use Base UI for popovers, toasts and radios.
-- Base UI popups that portal need a container inside the themed tree, as in `Header.tsx`, or they lose the hue theme's variables.
+- Build related parts as compound components (`HueDial.Root`, `HueDial.Ring`, …), sharing through context, not with boolean props.
+- Build popups and form controls from the platform: the `popover` attribute, CSS anchor positioning, and native inputs. Help in `Header.tsx`, Copy's confirmation in `ColorCardRoot.tsx`, and the radios in `Format.tsx` are the pattern. Don't add a component library for them (ADR-0007).
+- A popover stays in the themed tree, so it keeps the hue theme's variables. Don't portal it.
 
 ## Styling
 
