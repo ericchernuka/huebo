@@ -1,5 +1,5 @@
 import { hsbToHex, hsbToRgb } from '../shared/color'
-import { HUES, STEPS, type Color } from './color'
+import { HUES, linkPath, STEPS, type Color } from './color'
 
 const SITE_ORIGIN = 'https://huebo.ericchernuka.com'
 
@@ -20,14 +20,16 @@ export const HOME_HEAD: PageHead = {
   title: 'Huebo: Dial in your colour (HSB/HSV picker)',
 }
 
-export function pageHead({ hue, pick }: Color): PageHead {
+export function pageHead(color: Color): PageHead {
+  const { hue, pick } = color
+
   if (pick === null) {
     const headline = `Hue ${hue} and its 64 shades`
 
     return {
       description: `Every saturation and brightness step of hue ${hue}, from nearly white to nearly black. Pick one to copy it.`,
       headline,
-      path: `/${hue}`,
+      path: linkPath(color),
       title: `${headline} | Huebo`,
     }
   }
@@ -40,7 +42,7 @@ export function pageHead({ hue, pick }: Color): PageHead {
   return {
     description: `${hex} is HSB ${hue}° ${saturation}% ${brightness}% and RGB ${rgb}. Open it to try a nearby shade or copy it in another format.`,
     headline,
-    path: `/${hue}/${saturation}/${brightness}`,
+    path: linkPath(color),
     title: `${headline} | Huebo`,
   }
 }

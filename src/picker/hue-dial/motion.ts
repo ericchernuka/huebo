@@ -1,4 +1,4 @@
-import { hueAt, type Hue, type Pick } from '../color'
+import { hueAt, type Color, type Hue, type Pick } from '../color'
 import {
   dragTurn,
   moveGesture,
@@ -69,6 +69,14 @@ export type Commit = {
 
 export type Transition = { readonly commit?: Commit; readonly motion: Motion }
 
+export function nextLink(commit: Commit, link: Color): Color | null {
+  if (commit.pick === undefined) {
+    return commit.hue === link.hue ? null : { hue: commit.hue, pick: link.pick }
+  }
+
+  return { hue: commit.hue, pick: commit.pick }
+}
+
 export const IDLE: Motion = { kind: 'idle' }
 
 const AUTONOMOUS = new Set<Motion['kind']>(['coasting', 'landing', 'scrolling'])
@@ -138,9 +146,9 @@ function choiceTransition(
     case 'step':
       return land(hueAt(from + event.by), { announce: true })
     case 'choose':
-      return land(from, { pick: event.pick })
+      return land(from, { announce: true, pick: event.pick })
     case 'jump':
-      return land(event.hue, { pick: event.pick })
+      return land(event.hue, { announce: true, pick: event.pick })
     default:
       return wheelTransition(motion, event)
   }

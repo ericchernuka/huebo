@@ -1,5 +1,6 @@
 import { hueAt, type Hue, type Pick } from '../../color'
 import {
+  nextLink,
   shownHue,
   transition,
   type Commit,
@@ -12,7 +13,8 @@ import {
  * exhaustive check in motion.verify.ts. `transition` is the real one;
  * the rest stands in for code that a reviewer can open:
  *
- * - `send` and `deliver` follow createDialMotion's send and Picker's useCommits.
+ * - `send` and `deliver` follow createDialMotion's send and its landing in the
+ *   link. Where a commit goes is the real `nextLink`.
  * - `deliver` pushes `entries` at once, as TanStack's commitLocation does.
  * - `frame` and `pause` are only offered when createClocks would fire them.
  * - `load` is the router finishing its latest load: useParams catches up to
@@ -84,14 +86,12 @@ export function send(world: World, event: MotionEvent, sent: Array<Sent>) {
 }
 
 function deliver(world: World, commit: Commit, sent: Array<Sent>): World {
-  const alreadyInUrl = commit.pick === undefined && commit.hue === world.url.hue
+  const next = nextLink(commit, world.url)
 
-  if (alreadyInUrl) {
+  if (next === null) {
     return send(world, { hue: commit.hue, type: 'landed' }, sent)
   }
 
-  const pick = commit.pick === undefined ? world.url.pick : commit.pick
-  const next = { hue: commit.hue, pick }
   const latest = world.entries.at(-1)
   const same = JSON.stringify(latest) === JSON.stringify(next)
 

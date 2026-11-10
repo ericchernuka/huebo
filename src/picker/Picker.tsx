@@ -3,17 +3,9 @@ import { useNavigate, useParams, useRouter } from '@tanstack/react-router'
 import { useEffect, useEffectEvent } from 'react'
 import { useAnnounce } from '../shared/announcer'
 import { useColourTools } from './agent/tools'
-import { hsbToHex } from '../shared/color'
 import { colors, hue as hueVar, hueTheme } from '../shared/tokens.stylex'
 import { pageBackground, type Color, type Pick } from './color'
-import {
-  describeHue,
-  HueDial,
-  shownHue,
-  useDialMotion,
-  type Commit,
-  type DialMotion,
-} from './hue-dial'
+import { HueDial, shownHue, useDialMotion, type DialMotion } from './hue-dial'
 import { CompactLayout } from './CompactLayout'
 import { COMPACT_QUERY } from './layout'
 import { pageHead } from './page-head'
@@ -24,23 +16,17 @@ const ROUTE = '/$hue/{-$saturation}/{-$brightness}'
 
 export function Picker() {
   const color = useParams({ from: ROUTE })
-  const announce = useAnnounce()
   const compact = useMediaQuery(COMPACT_QUERY)
   const [motion, dial] = useDialMotion()
   const hue = shownHue(motion, color.hue)
   const background = pageBackground(hue)
 
-  useCommits(dial, color)
+  useLinkedDial(dial, color)
 
-  useColourTools(color, chosen => {
-    dial.send({ ...chosen, type: 'jump' }, hue)
-    announce(describeChoice(chosen))
-  })
+  useColourTools(color, chosen => dial.send({ ...chosen, type: 'jump' }, hue))
 
-  const pick = (next: Pick | null) => {
+  const pick = (next: Pick | null) =>
     dial.send({ pick: next, type: 'choose' }, hue)
-    announce(next ? describeChoice({ hue, pick: next }) : 'Selection cleared')
-  }
 
   const layout = { color: { hue, pick: color.pick }, onPick: pick }
 
@@ -58,51 +44,32 @@ export function Picker() {
   )
 }
 
-function useCommits(dial: DialMotion, color: Color) {
+function useLinkedDial(dial: DialMotion, color: Color) {
   const navigate = useNavigate()
   const router = useRouter()
   const announce = useAnnounce()
+  const link = useEffectEvent(() => color)
+  const speak = useEffectEvent((text: string) => announce(text))
 
-  const commit = useEffectEvent(({ announce: speak, hue, pick }: Commit) => {
-    const landed = () => dial.send({ hue, type: 'landed' })
+  const pushLink = useEffectEvent((params: Color) =>
+    navigate({ params, to: ROUTE }),
+  )
 
-    const alreadyInUrl = pick === undefined && hue === color.hue
-
-    if (alreadyInUrl) {
-      landed()
-
-      return
-    }
-
-    if (speak) {
-      announce(`Hue ${describeHue(hue)}`)
-    }
-
-    const params = { hue, pick: pick === undefined ? color.pick : pick }
-
-    void navigate({ params, to: ROUTE }).then(landed)
-  })
-
-  useEffect(() => {
-    const disconnect = dial.connect(next => commit(next))
-
-    const unlisten = router.history.subscribe(({ action }) => {
-      if (action.type !== 'PUSH' && action.type !== 'REPLACE') {
-        dial.send({ type: 'traverse' })
-      }
-    })
-
-    return () => {
-      disconnect()
-      unlisten()
-    }
-  }, [dial, router])
-}
-
-function describeChoice({ hue, pick }: Color): string {
-  return pick
-    ? `Picked ${hsbToHex(hue, pick.saturation, pick.brightness)}`
-    : `Hue ${describeHue(hue)}`
+  useEffect(
+    () =>
+      dial.connect({
+        announce: text => speak(text),
+        navigate: params => pushLink(params),
+        link: () => link(),
+        onTraverse: traversed =>
+          router.history.subscribe(({ action }) => {
+            if (action.type !== 'PUSH' && action.type !== 'REPLACE') {
+              traversed()
+            }
+          }),
+      }),
+    [dial, router],
+  )
 }
 
 const styles = stylex.create({

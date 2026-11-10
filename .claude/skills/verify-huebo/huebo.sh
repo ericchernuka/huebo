@@ -26,7 +26,7 @@ free_port() {
 usable() {
   local url="$1"
 
-  curl -fsS "$url/" 2>/dev/null | grep -q '<title>Huebo</title>' &&
+  curl -fsS "$url/" 2>/dev/null | grep -q '<title>Huebo' &&
     curl -fsS -o /dev/null "$url/src/main.tsx" 2>/dev/null
 }
 

@@ -1,5 +1,13 @@
 import { describe, expect, test } from 'vitest'
-import { HUES, STEPS, colorPath, hueAt, parseColorPath, stepAt } from '../color'
+import {
+  HUES,
+  STEPS,
+  colorPath,
+  hueAt,
+  linkPath,
+  parseColorPath,
+  stepAt,
+} from '../color'
 
 const hues = Array.from({ length: 72 }, (_, index) => String(index * 5))
 
@@ -65,6 +73,13 @@ test('given any colour, when it is written to a path and read back, then it is u
   })
   expect(parseColorPath(colorPath(picked))).toEqual(picked)
   expect(parseColorPath(colorPath(unpicked))).toEqual(unpicked)
+})
+
+test('given a colour, when its link is written, then the path has the hue and any pick', () => {
+  expect(linkPath({ hue: hueAt(0), pick: null })).toBe('/0')
+  expect(
+    linkPath({ hue: hueAt(200), pick: { brightness: 75, saturation: 62 } }),
+  ).toBe('/200/62/75')
 })
 
 test('given an angle from a drag, when it becomes a hue, then it snaps to the nearest stop and wraps', () => {

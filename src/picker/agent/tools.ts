@@ -1,7 +1,6 @@
-import { useRouter } from '@tanstack/react-router'
 import { useWebMCP } from 'use-webmcp-tool'
-import { hueAt, HUES, STEPS, type Color } from '../color'
-import { FORMATS, type Format } from '../color-card/formats'
+import { hueAt, HUES, linkPath, STEPS, type Color } from '../color'
+import { FORMATS, type Format } from '../formats'
 import {
   ChoiceInput,
   FormatInput,
@@ -67,6 +66,10 @@ const LIST_SQUARES = {
   name: 'list_squares',
 }
 
+function linkTo(color: Color): string {
+  return new URL(linkPath(color), globalThis.location.origin).href
+}
+
 /**
  * The page's colour tools for agents. `link` is the colour in the link, and
  * `choose` makes an agent's choice the way a person's is made.
@@ -75,17 +78,6 @@ export function useColourTools(
   link: Color,
   choose: (color: Color) => void,
 ): void {
-  const router = useRouter()
-
-  const linkTo = (color: Color) =>
-    new URL(
-      router.buildLocation({
-        params: color,
-        to: '/$hue/{-$saturation}/{-$brightness}',
-      }).href,
-      globalThis.location.origin,
-    ).href
-
   useWebMCP({ ...READ_COLOUR, execute: () => report(link, linkTo(link)) })
 
   useWebMCP<ChoiceInput>({

@@ -4,7 +4,7 @@ import { RadioGroup } from '@base-ui/react/radio-group'
 import { shared } from '../../shared/styles'
 import { colors, easing, motion, radii } from '../../shared/tokens.stylex'
 import { useCard } from './ColorCardRoot'
-import { FORMATS, type Format as FormatName } from './formats'
+import { FORMATS, type Format as FormatName } from '../formats'
 
 export function Format() {
   const { format, setFormat } = useCard()
