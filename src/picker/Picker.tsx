@@ -5,7 +5,7 @@ import { useAnnounce } from '../shared/announcer'
 import { useColourTools } from './agent/tools'
 import { hsbToHex } from '../shared/color'
 import { colors, hue as hueVar, hueTheme } from '../shared/tokens.stylex'
-import type { Color, Pick } from './color'
+import { pageBackground, type Color, type Pick } from './color'
 import {
   describeHue,
   HueDial,
@@ -27,7 +27,7 @@ export function Picker() {
   const compact = useMediaQuery(COMPACT_QUERY)
   const [motion, dial] = useDialMotion()
   const hue = shownHue(motion, color.hue)
-  const background = hsbToHex(hue, 12, 90)
+  const background = pageBackground(hue)
 
   useCommits(dial, color)
 
