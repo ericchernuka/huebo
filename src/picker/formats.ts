@@ -1,6 +1,5 @@
-import * as v from 'valibot'
-import { contrastRatio, hsbToHex, hsbToRgb, type Rgb } from '../../shared/color'
-import type { Color } from '../color'
+import { contrastRatio, hsbToRgb, rgbToHex, type Rgb } from '../shared/color'
+import type { Color } from './color'
 
 export const FORMATS = ['HSB', 'RGB', 'Hex'] as const
 
@@ -23,7 +22,7 @@ export function valuesOf({ hue, pick }: Color): Values | null {
     rgb,
     text: {
       HSB: `${hue},${saturation},${brightness}`,
-      Hex: hsbToHex(hue, saturation, brightness),
+      Hex: rgbToHex(rgb),
       RGB: rgb.join(','),
     },
   }
@@ -70,26 +69,4 @@ function grade(ratio: number): TextContrast['grade'] {
   }
 
   return ratio >= 3 ? 'AA large' : 'fails'
-}
-
-const STORAGE_KEY = 'huebo-format'
-const StoredFormat = v.picklist(FORMATS)
-
-/** The viewer's last format, defaulting to Hex. Storage can be missing or blocked. */
-export function readFormat(): Format {
-  try {
-    const stored = v.safeParse(StoredFormat, localStorage.getItem(STORAGE_KEY))
-
-    return stored.success ? stored.output : 'Hex'
-  } catch {
-    return 'Hex'
-  }
-}
-
-export function saveFormat(format: Format): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, format)
-  } catch {
-    // Private windows and blocked storage just don't remember the choice.
-  }
 }

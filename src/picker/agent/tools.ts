@@ -1,7 +1,7 @@
 import { useRouter } from '@tanstack/react-router'
 import { useWebMCP } from 'use-webmcp-tool'
 import { hueAt, HUES, STEPS, type Color } from '../color'
-import { FORMATS, type Format } from '../color-card/formats'
+import { FORMATS, type Format } from '../formats'
 import {
   ChoiceInput,
   FormatInput,

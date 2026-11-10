@@ -6,7 +6,7 @@ import {
   hsbToRgb,
   rgbToHex,
 } from '../../shared/color'
-import { FORMATS, textContrast, valuesOf } from '../color-card/formats'
+import { FORMATS, textContrast, valuesOf } from '../formats'
 import {
   hueAt,
   HUES,

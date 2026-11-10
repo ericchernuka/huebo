@@ -5,13 +5,8 @@ import { colors, easing, motion, radii } from '../../shared/tokens.stylex'
 import { transitionClass } from '../../shared/transition'
 import { useFormatTool } from '../agent/tools'
 import type { Color } from '../color'
-import {
-  readFormat,
-  saveFormat,
-  valuesOf,
-  type Format,
-  type Values,
-} from './formats'
+import { valuesOf, type Format, type Values } from '../formats'
+import { readFormat, saveFormat } from './stored-format'
 
 export type CardState = {
   readonly format: Format

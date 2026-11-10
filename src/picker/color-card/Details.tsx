@@ -1,7 +1,7 @@
 import * as stylex from '@stylexjs/stylex'
 import { colors, radii } from '../../shared/tokens.stylex'
 import { useCard } from './ColorCardRoot'
-import { FORMATS, textContrast } from './formats'
+import { FORMATS, textContrast } from '../formats'
 
 export function Details() {
   const { format, values } = useCard()
