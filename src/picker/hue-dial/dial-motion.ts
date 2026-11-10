@@ -1,6 +1,9 @@
 import { useState, useSyncExternalStore } from 'react'
-import { hueAt, type Hue } from '../color'
+import { hsbToHex } from '../../shared/color'
+import { hueAt, type Color, type Hue } from '../color'
+import { describeHue } from './geometry'
 import {
+  destination,
   IDLE,
   transition,
   type Commit,
@@ -14,6 +17,17 @@ const SCROLL_PAUSE_MS = 250
 const MAX_FRAME_MS = 40
 
 export type DialMotion = ReturnType<typeof createDialMotion>
+
+/** The page around the dial: the link that choices land in, and a voice. */
+type DialPage = {
+  /** The colour in the link, as the page last rendered it. */
+  readonly link: () => Color
+  /** Puts `color` in the link. Resolves once the page shows it. */
+  readonly go: (color: Color) => Promise<void>
+  /** Calls `traversed` on Back, Forward or a jump through history. */
+  readonly onTraverse: (traversed: () => void) => () => void
+  readonly announce: (text: string) => void
+}
 
 function createDialMotion() {
   let motion: Motion = IDLE
@@ -40,13 +54,33 @@ function createDialMotion() {
 
   const clocks = createClocks(send)
 
+  const landIn = (page: DialPage) => (commit: Commit) => {
+    const link = page.link()
+    const next = destination(commit, link)
+    const landed = () => send({ hue: commit.hue, type: 'landed' })
+
+    if (next === null) {
+      landed()
+
+      return
+    }
+
+    if (commit.announce) {
+      page.announce(describeLanding(commit, link))
+    }
+
+    void page.go(next).then(landed)
+  }
+
   return {
-    /** Sends commits to `commit` until the returned function disconnects it. */
-    connect: (commit: (commit: Commit) => void) => {
-      onCommit = commit
+    /** Lands every choice in `page`'s link until the returned function disconnects it. */
+    connect: (page: DialPage) => {
+      onCommit = landIn(page)
+      const unlisten = page.onTraverse(() => send({ type: 'traverse' }))
 
       return () => {
         onCommit = null
+        unlisten()
         clocks.stop()
       }
     },
@@ -60,6 +94,16 @@ function createDialMotion() {
       }
     },
   }
+}
+
+function describeLanding({ hue, pick }: Commit, link: Color): string {
+  if (pick) {
+    return `Picked ${hsbToHex(hue, pick.saturation, pick.brightness)}`
+  }
+
+  return pick === null && hue === link.hue
+    ? 'Selection cleared'
+    : `Hue ${describeHue(hue)}`
 }
 
 function createClocks(send: (event: MotionEvent) => void) {

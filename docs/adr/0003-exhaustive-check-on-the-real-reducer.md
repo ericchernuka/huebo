@@ -1,6 +1,6 @@
 # Check the real reducer exhaustively, in TypeScript
 
-`pnpm verify` runs every order of up to 7 steps through the real `transition` and checks five promises about history and the shown hue. Only the code around it is modelled by hand: the commit wiring in `Picker.tsx`, the clocks, and TanStack's `commitLocation`.
+`pnpm verify` runs every order of up to 7 steps through the real `transition` and checks five promises about history and the shown hue. Where a commit takes the link is the real `destination` too. Only the code around them is modelled by hand: the store's landing loop in `dial-motion.ts`, the clocks, and TanStack's `commitLocation`.
 
 ## Considered options
 

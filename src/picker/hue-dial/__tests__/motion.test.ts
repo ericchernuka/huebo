@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { hueAt } from '../../color'
 import {
+  destination,
   freeTurn,
   IDLE,
   shownHue,
@@ -106,12 +107,12 @@ describe('choices made while the wheel coasts', () => {
     [
       'a pick',
       { pick: { brightness: 75, saturation: 62 }, type: 'choose' },
-      { announce: false, hue: 230, pick: { brightness: 75, saturation: 62 } },
+      { announce: true, hue: 230, pick: { brightness: 75, saturation: 62 } },
     ],
     [
       "an agent's colour",
       { hue: hueAt(40), pick: null, type: 'jump' },
-      { announce: false, hue: 40, pick: null },
+      { announce: true, hue: 40, pick: null },
     ],
   ])(
     'given a coast, when %s lands, then it commits from where the coast was and the coast is over',
@@ -230,5 +231,30 @@ describe('the phone wheel', () => {
 
     expect(motion.kind).toBe('turning')
     expect(freeTurn(motion)).toBe(230)
+  })
+})
+
+describe('where a choice takes the link', () => {
+  const PICK = { brightness: 75, saturation: 62 } as const
+  const link = { hue: AT_200, pick: PICK }
+
+  test('given a hue-only choice of the hue in the link, then the link already holds it', () => {
+    expect(destination({ announce: true, hue: AT_200 }, link)).toBeNull()
+  })
+
+  test('given a hue-only choice of a new hue, then the link keeps its pick', () => {
+    expect(destination({ announce: true, hue: hueAt(210) }, link)).toEqual({
+      hue: 210,
+      pick: PICK,
+    })
+  })
+
+  test('given a cleared pick, then the link drops its pick even at the same hue', () => {
+    expect(
+      destination({ announce: true, hue: AT_200, pick: null }, link),
+    ).toEqual({
+      hue: 200,
+      pick: null,
+    })
   })
 })
