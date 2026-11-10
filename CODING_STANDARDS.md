@@ -44,6 +44,7 @@ How code in Huebo is written. The terms come from `GLOSSARY.md`, and the decisio
 - Tests live in a `__tests__` folder beside the module they test, with any helpers and fixtures they need: `src/picker/hue-dial/__tests__/motion.test.ts` tests `src/picker/hue-dial/motion.ts`. The app-wide helpers and the browser setup are in `src/__tests__/`.
 - Unit tests (`*.test.ts`) run in Node, for pure modules. Exhaustive checks (`*.verify.ts`) run in Node through `pnpm verify`. Browser tests (`*.test.tsx`) run in Chromium through the real router, using `openAt` in `src/__tests__/app.tsx`. Don't mock modules (lint bans it).
 - A new test must fail on the code before the change. If it would pass anyway, it proves nothing.
+- Tautological tests are considered harmful. A test that restates the code, such as computing the expected value the same way the module does or asserting that a constant equals itself, can't fail for a real reason. Expect a value worked out by hand, or a behaviour a person would see.
 - Assert on what a person can observe: the URL, `history.length`, roles and names, and element identity when the claim is "the same one, not a new one".
 
 ## Proof
