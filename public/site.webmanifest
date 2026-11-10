@@ -1,7 +1,7 @@
 {
   "name": "Huebo",
   "short_name": "Huebo",
-  "description": "Pick a colour by hue, then one of 64 saturation and brightness steps.",
+  "description": "Turn the dial to find a hue, then pick one of its 64 shades.",
   "start_url": "/",
   "display": "browser",
   "background_color": "#E6CAD3",

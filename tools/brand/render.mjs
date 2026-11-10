@@ -117,7 +117,7 @@ async function card() {
     body { width: 1200px; height: 630px; overflow: hidden; background: ${tint}; color: ${ink}; font-family: Bricolage, sans-serif; position: relative; }
     .copy { position: absolute; left: 84px; top: 0; bottom: 0; display: flex; flex-direction: column; justify-content: center; gap: 28px; width: 520px; }
     h1 { font-size: 148px; font-weight: 800; letter-spacing: -0.035em; line-height: 0.9; }
-    p { font-size: 40px; font-weight: 600; line-height: 1.15; letter-spacing: -0.01em; }
+    p { font-size: 56px; font-weight: 600; line-height: 1.15; letter-spacing: -0.01em; }
     .chip { display: inline-flex; align-items: center; gap: 14px; align-self: flex-start; padding: 12px 22px 12px 12px; border-radius: 999px; background: rgb(255 255 255 / 0.74); font-size: 26px; font-weight: 700; font-variant-numeric: tabular-nums; }
     .chip i { width: 40px; height: 40px; border-radius: 999px; background: ${picked}; }
     .chip span { opacity: 0.6; font-weight: 600; }
@@ -125,7 +125,7 @@ async function card() {
   </style></head><body>
     <div class="copy">
       <h1>Huebo</h1>
-      <p>Turn the dial.<br>Pick the colour.</p>
+      <p>Dial it in.</p>
       <div class="chip"><i></i>${picked}<span>HSB · RGB · Hex</span></div>
     </div>
     <svg viewBox="-110 -110 220 220">${ring({ hue: BRAND_HUE, inner: 76, outer: 100, notches: true })}${grid({ hue: BRAND_HUE, size: 104 })}</svg>

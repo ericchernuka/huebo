@@ -16,6 +16,7 @@ import {
 } from './hue-dial'
 import { CompactLayout } from './CompactLayout'
 import { COMPACT_QUERY } from './layout'
+import { pageHead } from './page-head'
 import { RoomyLayout } from './RoomyLayout'
 import { useMediaQuery } from './use-media-query'
 
@@ -45,7 +46,7 @@ export function Picker() {
 
   return (
     <main {...stylex.props(hueTheme, styles.hue(String(hue)), styles.page)}>
-      <title>{documentTitle(color)}</title>
+      <title>{pageHead(color).title}</title>
       <meta content={background} name="theme-color" />
       {/* On the root, so the colour also fills the status bar and the strip
           behind a floating browser toolbar, outside <main>. */}
@@ -102,12 +103,6 @@ function describeChoice({ hue, pick }: Color): string {
   return pick
     ? `Picked ${hsbToHex(hue, pick.saturation, pick.brightness)}`
     : `Hue ${describeHue(hue)}`
-}
-
-function documentTitle({ hue, pick }: Color): string {
-  return pick
-    ? `HSB(${hue},${pick.saturation},${pick.brightness}) | Huebo`
-    : `Hue: ${hue} | Huebo`
 }
 
 const styles = stylex.create({

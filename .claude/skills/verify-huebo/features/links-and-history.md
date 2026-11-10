@@ -9,7 +9,7 @@ Every colour has a link. `/:hue` opens a hue with nothing picked, and `/:hue/:sa
 - `link-invalid` redirects a path that doesn't parse (`/361`, `/abc`, `/200/13/75`) to `/60`.
 - `history-back` restores the earlier colour on Back, and the dial shows it. Forward returns.
 - `history-one-entry` adds one entry per finished choice. See [Hue dial](./hue-dial.md) for the per-input checks.
-- `title` reads `Hue: <h> | Huebo`, or `HSB(<h>,<s>,<b>) | Huebo` with a pick.
+- `title` reads `Hue <h> and its 64 shades | Huebo`, or `<hex> · HSB <h> <s> <b> | Huebo` with a pick.
 
 ## How to get to it (user POV)
 
@@ -21,7 +21,7 @@ Preconditions:
 
 - Baseline from the [README](./README.md).
 
-- **Hue link (`link-hue`).** Run `agent-browser open "$URL/200"`. `aria-valuenow` is `200`, no `td[aria-selected="true"]` exists, and the title is `Hue: 200 | Huebo`.
+- **Hue link (`link-hue`).** Run `agent-browser open "$URL/200"`. `aria-valuenow` is `200`, no `td[aria-selected="true"]` exists, and the title is `Hue 200 and its 64 shades | Huebo`.
 - **Colour link (`link-colour`).** Run `agent-browser open "$URL/020/62/75"`. The dial reads `20`, and the selected cell's label starts with `Saturation 62, brightness 75`.
 - **Invalid (`link-invalid`).** For each of `/361`, `/abc` and `/200/13/75`, run `agent-browser open "$URL<path>"`, then `agent-browser wait --url "**/60"`.
 - **Back and Forward (`history-back`).** Open `/200`, then click `Increase hue by 5 degrees` twice (`/210`). Run `agent-browser back`, and the URL and `aria-valuenow` are `205`. Run `agent-browser forward`, and both are `210`.
