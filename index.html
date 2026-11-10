@@ -1,15 +1,47 @@
 <!doctype html>
+<!-- fallow-ignore-file coverage-gaps -- The page shell. The build and Lighthouse exercise it. -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content"
+    />
+    <meta
+      name="description"
+      content="Pick a colour by hue, then one of 64 saturation and brightness steps. Copy it as HSB, RGB or Hex."
+    />
     <title>Huebo</title>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="/src/index.css" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Huebo" />
+    <meta property="og:title" content="Huebo: turn the dial, pick the colour" />
+    <meta
+      property="og:description"
+      content="Pick a colour by hue, then one of 64 saturation and brightness steps. Copy it as HSB, RGB or Hex."
+    />
+    <meta property="og:url" content="https://huebo.ericchernuka.com/" />
+    <meta property="og:image" content="https://huebo.ericchernuka.com/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="The Huebo wordmark beside a rainbow hue dial wrapped around a grid of rose shades, one of them picked."
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link
+      rel="preload"
+      href="/node_modules/@fontsource-variable/bricolage-grotesque/files/bricolage-grotesque-latin-wght-normal.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
   </head>
 
   <body>
     <div id="root"></div>
-    <script type="module" src="/src/index.jsx"></script>
+    <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

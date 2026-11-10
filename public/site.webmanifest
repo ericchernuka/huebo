@@ -1,0 +1,13 @@
+{
+  "name": "Huebo",
+  "short_name": "Huebo",
+  "description": "Pick a colour by hue, then one of 64 saturation and brightness steps.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#E6CAD3",
+  "theme_color": "#E6CAD3",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

@@ -1,0 +1,24 @@
+diff --git a/lib/es/vite.mjs b/lib/es/vite.mjs
+index 12cea8cda04db57ce92759979e2c072e6c261a9b..a38c5086e121b4103fb43d375b82258af3e0b1f4 100644
+--- a/lib/es/vite.mjs
++++ b/lib/es/vite.mjs
+@@ -68,6 +68,7 @@ function attachViteHooks(plugin) {
+             } catch {}
+           }
+         }, 150);
++        interval.unref?.();
+         server.httpServer?.once('close', () => clearInterval(interval));
+       }
+     },
+diff --git a/lib/vite.js b/lib/vite.js
+index 1c81eb81c9cc4648d3b623454b912adf5592af9c..35da2878af0da2265b602533e0533cfdb4d22913 100644
+--- a/lib/vite.js
++++ b/lib/vite.js
+@@ -75,6 +75,7 @@ function attachViteHooks(plugin) {
+             } catch {}
+           }
+         }, 150);
++        interval.unref?.();
+         server.httpServer?.once('close', () => clearInterval(interval));
+       }
+     },

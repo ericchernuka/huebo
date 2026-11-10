@@ -1,2 +1,4 @@
 minimumReleaseAge: 4320
 minimumReleaseAgeStrict: true
+patchedDependencies:
+  '@stylexjs/unplugin@0.19.1': patches/@stylexjs__unplugin@0.19.1.patch

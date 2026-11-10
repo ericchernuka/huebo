@@ -1,0 +1,34 @@
+@import '@fontsource-variable/bricolage-grotesque/wght.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  overscroll-behavior: none;
+}
+
+html {
+  transition: background-color 500ms;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    transition: none;
+  }
+}
+
+button,
+output {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  -webkit-user-select: none;
+  user-select: none;
+}

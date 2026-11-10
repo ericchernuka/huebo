@@ -30,4 +30,7 @@ jobs:
 
       - run: pnpm install --frozen-lockfile
 
+      # The browser tests run in Chromium through Playwright.
+      - run: pnpm exec playwright install --with-deps --only-shell chromium
+
       - run: pnpm check

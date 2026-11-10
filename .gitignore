@@ -29,3 +29,10 @@ dist-ssr
 *.sln
 *.sw?
 *.code-workspace
+
+# Vitest browser failure screenshots
+.vitest
+.fallow/
+
+# Verification runs (state and evidence)
+.verify/
