@@ -96,7 +96,6 @@ export function parseColorPath(raw: ColorPath): Color | null {
   return result.success ? result.output : null
 }
 
-/** The path of a colour's link: `/200`, or `/200/62/75` with a pick. */
 export function linkPath({ hue, pick }: Color): string {
   return pick === null
     ? `/${hue}`

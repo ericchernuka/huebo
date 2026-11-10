@@ -69,11 +69,7 @@ export type Commit = {
 
 export type Transition = { readonly commit?: Commit; readonly motion: Motion }
 
-/**
- * The colour `commit` takes the link to, or null when the link already holds
- * it. A hue-only commit keeps the link's pick.
- */
-export function destination(commit: Commit, link: Color): Color | null {
+export function nextLink(commit: Commit, link: Color): Color | null {
   if (commit.pick === undefined) {
     return commit.hue === link.hue ? null : { hue: commit.hue, pick: link.pick }
   }

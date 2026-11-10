@@ -3,7 +3,7 @@ import { hsbToHex } from '../../shared/color'
 import { hueAt, type Color, type Hue } from '../color'
 import { describeHue } from './geometry'
 import {
-  destination,
+  nextLink,
   IDLE,
   transition,
   type Commit,
@@ -18,13 +18,9 @@ const MAX_FRAME_MS = 40
 
 export type DialMotion = ReturnType<typeof createDialMotion>
 
-/** The page around the dial: the link that choices land in, and a voice. */
 type DialPage = {
-  /** The colour in the link, as the page last rendered it. */
   readonly link: () => Color
-  /** Puts `color` in the link. Resolves once the page shows it. */
-  readonly go: (color: Color) => Promise<void>
-  /** Calls `traversed` on Back, Forward or a jump through history. */
+  readonly navigate: (color: Color) => Promise<void>
   readonly onTraverse: (traversed: () => void) => () => void
   readonly announce: (text: string) => void
 }
@@ -56,7 +52,7 @@ function createDialMotion() {
 
   const landIn = (page: DialPage) => (commit: Commit) => {
     const link = page.link()
-    const next = destination(commit, link)
+    const next = nextLink(commit, link)
     const landed = () => send({ hue: commit.hue, type: 'landed' })
 
     if (next === null) {
@@ -69,11 +65,10 @@ function createDialMotion() {
       page.announce(describeLanding(commit, link))
     }
 
-    void page.go(next).then(landed)
+    void page.navigate(next).then(landed)
   }
 
   return {
-    /** Lands every choice in `page`'s link until the returned function disconnects it. */
     connect: (page: DialPage) => {
       onCommit = landIn(page)
       const unlisten = page.onTraverse(() => send({ type: 'traverse' }))

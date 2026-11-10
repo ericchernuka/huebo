@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { hueAt } from '../../color'
 import {
-  destination,
+  nextLink,
   freeTurn,
   IDLE,
   shownHue,
@@ -239,22 +239,22 @@ describe('where a choice takes the link', () => {
   const link = { hue: AT_200, pick: PICK }
 
   test('given a hue-only choice of the hue in the link, then the link already holds it', () => {
-    expect(destination({ announce: true, hue: AT_200 }, link)).toBeNull()
+    expect(nextLink({ announce: true, hue: AT_200 }, link)).toBeNull()
   })
 
   test('given a hue-only choice of a new hue, then the link keeps its pick', () => {
-    expect(destination({ announce: true, hue: hueAt(210) }, link)).toEqual({
+    expect(nextLink({ announce: true, hue: hueAt(210) }, link)).toEqual({
       hue: 210,
       pick: PICK,
     })
   })
 
   test('given a cleared pick, then the link drops its pick even at the same hue', () => {
-    expect(
-      destination({ announce: true, hue: AT_200, pick: null }, link),
-    ).toEqual({
-      hue: 200,
-      pick: null,
-    })
+    expect(nextLink({ announce: true, hue: AT_200, pick: null }, link)).toEqual(
+      {
+        hue: 200,
+        pick: null,
+      },
+    )
   })
 })

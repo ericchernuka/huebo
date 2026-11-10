@@ -44,20 +44,22 @@ export function Picker() {
   )
 }
 
-/** Lands the dial's choices in the router's link while the picker is mounted. */
 function useLinkedDial(dial: DialMotion, color: Color) {
   const navigate = useNavigate()
   const router = useRouter()
   const announce = useAnnounce()
   const link = useEffectEvent(() => color)
   const speak = useEffectEvent((text: string) => announce(text))
-  const go = useEffectEvent((params: Color) => navigate({ params, to: ROUTE }))
+
+  const pushLink = useEffectEvent((params: Color) =>
+    navigate({ params, to: ROUTE }),
+  )
 
   useEffect(
     () =>
       dial.connect({
         announce: text => speak(text),
-        go: params => go(params),
+        navigate: params => pushLink(params),
         link: () => link(),
         onTraverse: traversed =>
           router.history.subscribe(({ action }) => {
