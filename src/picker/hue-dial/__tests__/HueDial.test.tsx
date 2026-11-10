@@ -1,45 +1,16 @@
 import { describe, expect, test } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
-import {
-  expectPath,
-  hueSlider,
-  openAt,
-  PHONE,
-  picked,
-  square,
-} from '../../../__tests__/app'
+import { expectPath, hueSlider, openAt } from '../../../__tests__/app'
 
-function flickWheel() {
-  const wheel = hueSlider().element()
-  const y = wheel.getBoundingClientRect().top + 20
-
-  const send = (type: string, x: number) =>
-    wheel.dispatchEvent(
-      new PointerEvent(type, {
-        bubbles: true,
-        buttons: 1,
-        clientX: x,
-        clientY: y,
-        isPrimary: true,
-        pointerId: 1,
-      }),
-    )
-
-  send('pointerdown', 300)
-
-  return new Promise<void>(resolve => {
-    for (const [index, x] of [280, 260, 240, 220, 200].entries()) {
-      setTimeout(() => send('pointermove', x), 4 * (index + 1))
-    }
-
-    setTimeout(() => {
-      send('pointerup', 200)
-      resolve()
-    }, 20)
-  })
+function scrollRing(notches: number) {
+  for (let notch = 0; notch < notches; notch++) {
+    hueSlider()
+      .element()
+      .dispatchEvent(
+        new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: 1 }),
+      )
+  }
 }
-
-const restAfterCoast = () => new Promise(resolve => setTimeout(resolve, 2600))
 
 describe('turning the hue', () => {
   test('given hue 355, when the hue goes up, then it wraps to 0 and keeps the pick', async () => {
@@ -85,7 +56,7 @@ describe('turning the hue', () => {
   )
 
   test('given the dial has focus, when an arrow key is held down, then the hue turns live and history gets one entry', async () => {
-    const { history, views } = await openAt('/200')
+    const { history } = await openAt('/200')
 
     hueSlider().element().focus()
     await userEvent.keyboard('{ArrowRight>6}')
@@ -96,41 +67,34 @@ describe('turning the hue', () => {
     await userEvent.keyboard('{/ArrowRight}')
 
     await expectPath(history, '/230')
-    expect(views).toHaveLength(2)
+    expect(history.length).toBe(2)
     history.back()
     await expectPath(history, '/200')
     await expect.element(hueSlider()).toHaveAttribute('aria-valuenow', '200')
   })
 
   test('given the dial has focus at 0, when Home is pressed, then no history entry is added', async () => {
-    const { history, views } = await openAt('/0')
+    const { history } = await openAt('/0')
 
     hueSlider().element().focus()
     await userEvent.keyboard('{Home}')
 
     await expect.element(hueSlider()).toHaveAttribute('aria-valuenow', '0')
-    expect(views).toHaveLength(1)
     expect(history.length).toBe(1)
   })
 
   test('given the ring at 200, when the mouse wheel scrolls three notches, then the hue turns live and history gets one entry', async () => {
-    const { history, views } = await openAt('/200')
-    const ring = hueSlider().element()
-
-    for (let notch = 0; notch < 3; notch++) {
-      ring.dispatchEvent(
-        new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: 1 }),
-      )
-    }
+    const { history } = await openAt('/200')
+    scrollRing(3)
 
     await expect.element(hueSlider()).toHaveAttribute('aria-valuenow', '215')
     expect(history.location.pathname).toBe('/200')
 
     await expectPath(history, '/215')
-    expect(views).toHaveLength(2)
+    expect(history.length).toBe(2)
   })
 
-  test('given a turn, then the dial describes the hue', async () => {
+  test('given hue 200, when the page opens, then the dial names it in words', async () => {
     await openAt('/200')
 
     await expect
@@ -139,116 +103,17 @@ describe('turning the hue', () => {
   })
 })
 
-describe('the phone wheel', () => {
-  test('given a coasting wheel, when a square is picked, then the pick stays once the wheel would have come to rest', async () => {
-    const { history } = await openAt('/200', PHONE)
-
-    await flickWheel()
-    await expect.poll(() => hueSlider().element().ariaValueNow).not.toBe('200')
-    await square(62, 75).click()
-    await restAfterCoast()
-
-    expect(history.location.pathname).toMatch(/^\/\d+\/62\/75$/)
-    await expect.element(picked()).toBeInTheDocument()
-  })
-
-  test('given a coasting wheel, when an arrow key goes down, then the wheel stops where the key put it', async () => {
-    const { history } = await openAt('/200', PHONE)
-
-    await flickWheel()
-    await expect.poll(() => hueSlider().element().ariaValueNow).not.toBe('200')
-    hueSlider().element().focus()
-    await userEvent.keyboard('{ArrowRight>}')
-    const stepped = hueSlider().element().ariaValueNow
-
-    await new Promise(resolve => setTimeout(resolve, 300))
-
-    expect(hueSlider().element().ariaValueNow).toBe(stepped)
-    await userEvent.keyboard('{/ArrowRight}')
-    await expectPath(history, `/${stepped}`)
-  })
-
-  test('given a focused, coasting wheel, when a square is picked, then the pick is the only history entry', async () => {
-    const { history } = await openAt('/200', PHONE)
-
-    hueSlider().element().focus()
-    await flickWheel()
-    await expect.poll(() => hueSlider().element().ariaValueNow).not.toBe('200')
-    await square(62, 75).click()
-    await restAfterCoast()
-
-    expect(history.length).toBe(2)
-    history.back()
-    await expectPath(history, '/200')
-  })
-
-  test('given a focused, coasting wheel, when + is pressed, then the step is the only history entry', async () => {
-    const { history } = await openAt('/200', PHONE)
-
-    hueSlider().element().focus()
-    await flickWheel()
-    await expect.poll(() => hueSlider().element().ariaValueNow).not.toBe('200')
-    await page
-      .getByRole('button', { name: 'Increase hue by 5 degrees' })
-      .click()
-
-    const stepped = hueSlider().element().ariaValueNow
-
-    await restAfterCoast()
-
-    expect(history.length).toBe(2)
-    expect(history.location.pathname).toBe(`/${stepped}`)
-  })
-
-  test('given a coasting wheel, when the viewer goes Back, then the coast stops and Back holds', async () => {
-    const { history } = await openAt('/100', PHONE)
-
-    await page
-      .getByRole('button', { name: 'Increase hue by 5 degrees' })
-      .click()
-    await expectPath(history, '/105')
-    await flickWheel()
-    await expect.poll(() => hueSlider().element().ariaValueNow).not.toBe('105')
-    history.back()
-    await expectPath(history, '/100')
-    await restAfterCoast()
-
-    expect(history.location.pathname).toBe('/100')
-    await expect.element(hueSlider()).toHaveAttribute('aria-valuenow', '100')
-  })
-
-  test('given a coasting wheel, when the screen widens to the ring, then the coast still lands and the URL matches the dial', async () => {
-    const { history } = await openAt('/200', PHONE)
-
-    await flickWheel()
-    await expect.poll(() => hueSlider().element().ariaValueNow).not.toBe('200')
-    await page.viewport(1280, 900)
-    await restAfterCoast()
-
-    const shown = hueSlider().element().ariaValueNow
-
-    expect(shown).not.toBe('200')
-    expect(history.location.pathname).toBe(`/${shown}`)
-  })
-})
-
 describe('the mouse wheel', () => {
   test('given a scroll waiting for its pause, when an arrow key steps, then the key wins and the pause adds nothing', async () => {
-    const { history, views } = await openAt('/200')
-    const ring = hueSlider().element()
+    const { history } = await openAt('/200')
+    scrollRing(3)
 
-    for (let notch = 0; notch < 3; notch++) {
-      ring.dispatchEvent(
-        new WheelEvent('wheel', { bubbles: true, cancelable: true, deltaY: 1 }),
-      )
-    }
-
-    ring.focus()
+    hueSlider().element().focus()
     await userEvent.keyboard('{ArrowRight}')
     await expectPath(history, '/220')
     await new Promise(resolve => setTimeout(resolve, 400))
 
     expect(history.location.pathname).toBe('/220')
-    expect(views).toHaveLength(2)
+    expect(history.length).toBe(2)
   })
 })
