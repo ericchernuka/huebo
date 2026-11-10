@@ -47,6 +47,7 @@ export function installAgent() {
 
       return { error: result.isError ?? false, text: result.content[0].text }
     },
+    inputs: (name: string) => tools.get(name)?.inputSchema,
     names: () => [...tools.keys()].toSorted(),
     uninstall: () => Reflect.deleteProperty(document, 'modelContext'),
   }

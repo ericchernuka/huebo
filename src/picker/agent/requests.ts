@@ -21,7 +21,7 @@ import { describeHue } from '../hue-dial/geometry'
 
 const StepInput = v.pipe(v.number(), v.minValue(0), v.maxValue(100))
 
-const HEX = /^#?(?:[\da-f]{3}|[\da-f]{6})$/i
+const HEX = /^#?(?:[\dA-Fa-f]{3}|[\dA-Fa-f]{6})$/
 
 /** What `choose_colour` accepts. Unknown keys fail, so a typo can't pass silently. */
 export const ChoiceInput = v.strictObject({

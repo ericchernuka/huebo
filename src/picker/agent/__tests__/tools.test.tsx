@@ -1,8 +1,10 @@
 import { afterEach, describe, expect, test } from 'vitest'
+import { toJsonSchema } from '@valibot/to-json-schema'
 import * as v from 'valibot'
 import { page } from 'vitest/browser'
 import { installAgent } from '../../../__tests__/agent'
 import { expectPath, openAt, picked } from '../../../__tests__/app'
+import { ChoiceInput, FormatInput, SquaresInput } from '../requests'
 
 let agent = installAgent()
 
@@ -54,6 +56,43 @@ describe('an agent on the page', () => {
       'read_colour',
     ])
   })
+})
+
+/**
+ * The rules in a tool's input schema. `v.object` drops the keys it doesn't
+ * name, so prose and the converter's `$schema` fall away on both sides.
+ */
+const Rules = v.object({
+  additionalProperties: v.boolean(),
+  properties: v.record(
+    v.string(),
+    v.object({
+      enum: v.optional(v.array(v.string())),
+      maximum: v.optional(v.number()),
+      minimum: v.optional(v.number()),
+      pattern: v.optional(v.string()),
+      type: v.string(),
+    }),
+  ),
+  required: v.optional(v.array(v.string()), []),
+  type: v.literal('object'),
+})
+
+describe('what an agent is told about inputs', () => {
+  test.each([
+    ['choose_colour', ChoiceInput],
+    ['choose_format', FormatInput],
+    ['list_squares', SquaresInput],
+  ])(
+    'given the page, when an agent reads %s, then its inputs match what the tool checks',
+    async (name, schema) => {
+      await openForAgent('/200')
+
+      expect(v.parse(Rules, agent.inputs(name))).toEqual(
+        v.parse(Rules, toJsonSchema(schema, { errorMode: 'ignore' })),
+      )
+    },
+  )
 })
 
 describe('reading the colour', () => {

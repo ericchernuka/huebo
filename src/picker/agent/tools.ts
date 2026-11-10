@@ -40,7 +40,7 @@ const CHOOSE_COLOUR = {
       hex: {
         description:
           "A colour such as #3366CC, matched to Huebo's nearest. Give it alone.",
-        pattern: '^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$',
+        pattern: String.raw`^#?(?:[\dA-Fa-f]{3}|[\dA-Fa-f]{6})$`,
         type: 'string',
       },
       hue: {
