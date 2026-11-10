@@ -19,19 +19,19 @@ import {
 } from '../color'
 import { describeHue } from '../hue-dial/geometry'
 
-const Level = v.pipe(v.number(), v.minValue(0), v.maxValue(100))
+const StepInput = v.pipe(v.number(), v.minValue(0), v.maxValue(100))
 
 const HEX = /^#?(?:[\da-f]{3}|[\da-f]{6})$/i
 
 /** What `choose_colour` accepts. Unknown keys fail, so a typo can't pass silently. */
 export const ChoiceInput = v.strictObject({
-  brightness: v.optional(Level),
+  brightness: v.optional(StepInput),
   clearPick: v.optional(v.boolean()),
   hex: v.optional(
     v.pipe(v.string(), v.regex(HEX, 'hex must look like #3366CC')),
   ),
   hue: v.optional(v.pipe(v.number(), v.finite())),
-  saturation: v.optional(Level),
+  saturation: v.optional(StepInput),
 })
 
 export type ChoiceInput = v.InferInput<typeof ChoiceInput>
@@ -141,11 +141,11 @@ function clearedPick({ brightness, saturation }: ChoiceInput): null {
   return null
 }
 
-function snapStep(name: string, level: number, notes: Array<string>): Step {
-  const step = stepAt(level)
+function snapStep(name: string, value: number, notes: Array<string>): Step {
+  const step = stepAt(value)
 
-  if (step !== level) {
-    notes.push(`${name} ${level} isn't a step, so it's ${step}.`)
+  if (step !== value) {
+    notes.push(`${name} ${value} isn't a step, so it's ${step}.`)
   }
 
   return step
