@@ -4,11 +4,13 @@ import { useRef } from 'react'
 import { shared } from '../shared/styles'
 import { colors, motion, radii } from '../shared/tokens.stylex'
 import { transitionClass } from '../shared/transition'
+import type { Color } from './color'
+import { Wordmark } from './Wordmark'
 
-export function Header() {
+export function Header({ color }: { readonly color: Color }) {
   return (
     <>
-      <h1 {...stylex.props(styles.title)}>Huebo</h1>
+      <Wordmark color={color} />
       <Help />
     </>
   )
@@ -46,6 +48,18 @@ function Help() {
                 On the dial, the arrow keys step 5° and Shift steps 45°. In the
                 grid, the arrow keys move, Enter picks and Escape clears.
               </p>
+              <p {...stylex.props(styles.text, styles.credit)}>
+                Based on a design by{' '}
+                <a
+                  href="https://lmnt.me"
+                  rel="noreferrer"
+                  target="_blank"
+                  {...stylex.props(shared.focusRing, styles.link)}
+                >
+                  Louie Mantia
+                </a>
+                .
+              </p>
             </Popover.Description>
           </Popover.Popup>
         </Popover.Positioner>
@@ -56,6 +70,15 @@ function Help() {
 
 const styles = stylex.create({
   content: { display: 'grid', fontSize: 15, gap: 8, lineHeight: 1.45 },
+  credit: {
+    borderTopColor: 'rgb(0 0 0 / 0.08)',
+    borderTopStyle: 'solid',
+    borderTopWidth: 1,
+    color: colors.inkMuted,
+    fontSize: 13,
+    marginTop: 4,
+    paddingTop: 10,
+  },
   heading: { fontSize: 17, fontWeight: 800, margin: '0 0 6px' },
   hidden: { opacity: 0, transform: 'scale(0.96)' },
   popup: {
@@ -71,14 +94,16 @@ const styles = stylex.create({
     transitionDuration: motion.quick,
     transitionProperty: 'opacity, transform',
   },
+  link: {
+    borderRadius: 4,
+    color: colors.ink,
+    fontWeight: 700,
+    textDecorationColor: colors.accent,
+    textDecorationThickness: 2,
+    textUnderlineOffset: 3,
+  },
   positioner: { zIndex: 10 },
   text: { margin: 0 },
-  title: {
-    fontSize: 22,
-    fontWeight: 800,
-    letterSpacing: '-0.01em',
-    margin: 0,
-  },
   trigger: {
     alignItems: 'center',
     backgroundColor: { default: colors.panel, ':hover': '#fff' },

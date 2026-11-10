@@ -11,7 +11,7 @@ export function CompactLayout({ color, onPick }: LayoutProps) {
   return (
     <div {...stylex.props(styles.layout)}>
       <header {...stylex.props(styles.head)}>
-        <Header />
+        <Header color={color} />
       </header>
       <ColorCard.Root color={color}>
         <ColorCard.Swatch style={styles.swatch} />

@@ -1,4 +1,5 @@
 import * as v from 'valibot'
+import { hsbToHex } from '../shared/color'
 
 export const STEPS = [12, 25, 38, 50, 62, 75, 88, 100] as const
 
@@ -21,6 +22,13 @@ export type Pick = { readonly brightness: Step; readonly saturation: Step }
 export type Color = { readonly hue: Hue; readonly pick: Pick | null }
 
 export const DEFAULT_HUE = hueAt(60)
+
+const PAGE_SATURATION = 12
+const PAGE_BRIGHTNESS = 90
+
+export function pageBackground(hue: number): string {
+  return hsbToHex(hue, PAGE_SATURATION, PAGE_BRIGHTNESS)
+}
 
 /** Rounds any angle to the nearest stop and wraps it into 0–355. */
 export function hueAt(degrees: number): Hue {

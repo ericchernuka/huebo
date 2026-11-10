@@ -9,7 +9,7 @@ export function RoomyLayout({ color, onPick }: LayoutProps) {
   return (
     <div {...stylex.props(styles.layout)}>
       <header {...stylex.props(styles.head)}>
-        <Header />
+        <Header color={color} />
       </header>
       <div {...stylex.props(styles.dial)}>
         <div {...stylex.props(styles.ring)}>
