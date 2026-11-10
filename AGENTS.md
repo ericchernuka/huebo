@@ -6,14 +6,6 @@ Before changing code, read `GLOSSARY.md` for the product's vocabulary and `CODIN
 
 ## Agent skills
 
-### Issue tracker
-
-Issues live in GitHub Issues for `ericchernuka/huebo`, through the `gh` CLI. See `docs/agents/issue-tracker.md`.
-
-### Triage labels
-
-The default five: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
-
-### Domain docs
-
-Single-context: one `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+- **Issues** (filing, reading, labelling, wayfinding): GitHub Issues for `ericchernuka/huebo` through `gh`. See `docs/agents/issue-tracker.md`.
+- **Triage labels**: see `docs/agents/triage-labels.md`.
+- **Domain docs** (glossary terms, ADR conflicts): see `docs/agents/domain.md`.

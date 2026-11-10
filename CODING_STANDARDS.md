@@ -48,8 +48,8 @@ How code in Huebo is written. The terms come from `GLOSSARY.md`, and the decisio
 ## Proof
 
 - `pnpm check` runs format, types, lint, tests, build and Fallow. It must pass before a push.
-- `pnpm verify` checks the dial's motion against every order of inputs. Run it after touching motion, the dial's events or the commit wiring. See `.claude/skills/verify-dial-motion/`.
-- Before saying a UI change works, drive it in a real browser with `.claude/skills/verify-huebo/`.
+- `pnpm verify` checks the dial's motion against every order of inputs. Run it after touching motion, the dial's events or the commit wiring. See `.agents/skills/verify-dial-motion/`.
+- Before saying a UI change works, drive it in a real browser with `.agents/skills/verify-huebo/`.
 
 ## Git
 

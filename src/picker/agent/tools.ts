@@ -11,29 +11,35 @@ import {
   SquaresInput,
 } from './requests'
 
-const MODEL = `Huebo is an HSB colour picker. A colour is a hue, one of ${HUES.length} stops: ${HUES[0]}, ${HUES[1]} … ${HUES.at(-1)}. Then a pick: a saturation and brightness, each one of the steps ${STEPS.join(', ')}. The link is the only place a colour is kept, so it can be shared.`
+const MODEL = `A colour in Huebo, an HSB colour picker, is a hue, one of ${HUES.length} stops (${HUES[0]}, ${HUES[1]} … ${HUES.at(-1)}), plus a pick when one is made: a saturation and brightness, each one of the steps ${STEPS.join(', ')}.`
 
 const READ_COLOUR = {
   annotations: { readOnlyHint: true },
-  description: `${MODEL} Reads the colour on the page: its hue, its pick if one is made, the colour in each format (HSB, RGB and Hex), how white and black text contrast with it, and its link.`,
+  description: `Reads the colour on the page: its hue, its pick if one is made, the colour in each format (HSB, RGB and Hex), how white and black text contrast with it, and its link. The link is the only place a colour is kept, so share that.`,
   inputSchema: { properties: {}, type: 'object' },
   name: 'read_colour',
 }
 
-const LEVEL = { maximum: 100, minimum: 0, type: 'number' } as const
+const STEP_INPUT = { maximum: 100, minimum: 0, type: 'number' } as const
 
 const CHOOSE_COLOUR = {
-  description: `${MODEL} Chooses a colour as a person would with the dial and grid. Each call is one entry in the browser's history, so Back undoes it. Give a hex on its own to jump to Huebo's nearest colour, or any of hue, saturation and brightness to change just those and keep the rest. Values between stops or steps snap to the nearest, and the notes say when they did. clearPick leaves only the hue. Returns the colour now chosen, as read_colour does.`,
+  description: `Chooses a colour as a person would with the dial and grid. ${MODEL} Each call is one entry in the browser's history, so Back undoes it. Give a hex alone, or any of hue, saturation and brightness to change just those and keep the rest. Values between stops or steps snap to the nearest, and the notes say when they did. Returns the colour now chosen, as read_colour does.`,
   inputSchema: {
     additionalProperties: false,
     properties: {
-      brightness: { ...LEVEL, description: 'Snapped to the nearest step.' },
+      brightness: {
+        ...STEP_INPUT,
+        description:
+          'Snapped to the nearest step. With nothing picked yet, give saturation too.',
+      },
       clearPick: {
-        description: 'Clear the pick, leaving only the hue.',
+        description:
+          'Clear the pick, leaving only the hue. Give it alone or with a hue.',
         type: 'boolean',
       },
       hex: {
-        description: "A colour such as #3366CC, matched to Huebo's nearest.",
+        description:
+          "A colour such as #3366CC, matched to Huebo's nearest. Give it alone.",
         pattern: '^#?([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$',
         type: 'string',
       },
@@ -42,7 +48,11 @@ const CHOOSE_COLOUR = {
           'Degrees around the colour circle, snapped to the nearest stop and wrapped into 0–355.',
         type: 'number',
       },
-      saturation: { ...LEVEL, description: 'Snapped to the nearest step.' },
+      saturation: {
+        ...STEP_INPUT,
+        description:
+          'Snapped to the nearest step. With nothing picked yet, give brightness too.',
+      },
     },
     type: 'object',
   },
@@ -51,7 +61,7 @@ const CHOOSE_COLOUR = {
 
 const LIST_SQUARES = {
   annotations: { readOnlyHint: true },
-  description: `${MODEL} Lists the 64 squares of the grid for a hue without choosing anything, brightest row first: each pick's hex, and the text colour (white or black) that reads best on it with its WCAG contrast. Use it to compare picks before choosing one.`,
+  description: `Lists the 64 squares of the grid for a hue without choosing anything, brightest row first: each pick's saturation, brightness and hex, and the text colour (white or black) that reads best on it with its WCAG contrast. Use it to compare picks before choosing one.`,
   inputSchema: {
     additionalProperties: false,
     properties: {
@@ -105,7 +115,7 @@ export function useColourTools(
 }
 
 const CHOOSE_FORMAT = {
-  description: `Chooses the format Huebo's colour card shows first and Copy writes: ${FORMATS.join(', ')}. It's remembered on this device. Returns the colour in that format, if one is picked.`,
+  description: `Chooses the format Huebo's card shows first and Copy writes: ${FORMATS.join(', ')}. It's remembered on this device. Returns the colour in that format, if one is picked.`,
   inputSchema: {
     additionalProperties: false,
     properties: { format: { enum: FORMATS, type: 'string' } },

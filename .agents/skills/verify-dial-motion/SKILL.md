@@ -1,6 +1,6 @@
 ---
 name: verify-dial-motion
-description: Exhaustively check the hue dial's motion machine (src/picker/hue-dial/motion.ts) and the page code around it against its promises about history and what's on screen. Use after any change to motion.ts, dial-motion.ts, inertia.ts, the router adapter in Picker.tsx (useLinkedDial), or the events Wheel, Ring, Stepper or HueDialRoot send; or when asked whether the dial can write a bad history entry, land a stale hue, or get stuck moving.
+description: Exhaustively check the dial's motion machine (src/picker/hue-dial/motion.ts) against its promises about history and the shown hue. Use after any change to motion.ts, dial-motion.ts, inertia.ts, the router adapter in Picker.tsx (useLinkedDial), or the events Wheel, Ring, Stepper or HueDialRoot send; or when asked whether the dial can write a bad history entry, land a stale hue, or get stuck moving.
 ---
 
 # Verify the dial's motion machine
@@ -85,12 +85,12 @@ Broken: the screen keeps showing a choice until the next input
 
 1. Read the steps and replay them in the code: `motion.ts` for each `transition`, then the modeled row for anything around it.
 2. Decide whether it's a bug or a modeling error. It's a modeling error when a step does something the real code can't do, or sends a value the real component never sends. The first press sending `turn: 200` instead of the dial's rotation was one. Fix the model from the code, not from the result.
-3. If it's real, confirm it with a browser test in `src/**/*.test.tsx` that drives the same steps, using the helpers in `src/__tests__/app.tsx`. Report it with the steps. Don't weaken a property or narrow the model to make it pass, and don't change product code unless asked.
+3. If it's real, confirm it with a browser test in `src/**/*.test.tsx` that drives the same steps, using the helpers in `src/__tests__/app.tsx`. Report it with the steps, and leave the properties, the model and product code as they are: the person decides the fix.
 
 ## When the code changes on purpose
 
 - **A new input or event:** add it to `KEYS` or the finger steps in `actions.ts`. If it finishes a choice, also add its event type to `FINISHING` in `motion.verify.ts`.
-- **A new motion state:** decide whether it runs on its own. If it does, add it to `AUTONOMOUS` in `motion.verify.ts`. If it can commit on its own, add it to `RUNS` in `take.ts` and to the frame/pause rule in property 2. If the page drives it with a timer, add an action that's enabled exactly when the clock would fire.
+- **A new motion state:** decide whether it runs on its own. If it does, add it to `AUTONOMOUS` in both `motion.ts` (what Back stops) and `motion.verify.ts` (the property's own copy). If it can commit on its own, add it to `RUNS` in `take.ts` and to the frame/pause rule in property 2. If the page drives it with a timer, add an action that's enabled exactly when the clock would fire.
 - **A change to the store's landing loop, `useLinkedDial`, the clocks, or a TanStack upgrade:** update `deliver`, `load`, `back` or `actions()`, and the coverage table row. Re-read `commitLocation` in `@tanstack/router-core` after any router upgrade.
 - **A promise that changes on purpose:** edit the property's wording and check. Cite the commit, test or doc that says it changed, and record the old and new wording here.
 
@@ -105,4 +105,4 @@ After any update, check that the check can still fail. Break the guarded code in
 | `AUTONOMOUS` drops `'landing'`                      | 4                   |
 | `release` from the edge returns `{ motion }`        | 5                   |
 
-For drift that piled up across commits that skipped this skill, use `/maintain-formal-verification-skill`.
+For drift that piled up across commits that skipped this skill, use `/pstack:maintain-formal-verification-skill`.

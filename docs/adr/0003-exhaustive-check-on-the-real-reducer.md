@@ -9,4 +9,4 @@
 
 ## Consequences
 
-The search depth is bounded, so a bug that needs more than 7 steps, or values outside the fixed alphabet, can pass. The parts that are modelled by hand still need re-reading when Picker or TanStack Router changes. `.claude/skills/verify-dial-motion/SKILL.md` records what's covered and the commit it was last checked against.
+The search depth is bounded, so a bug that needs more than 7 steps, or values outside the fixed alphabet, can pass. The parts that are modelled by hand still need re-reading when Picker or TanStack Router changes. `.agents/skills/verify-dial-motion/SKILL.md` records what's covered and the commit it was last checked against.

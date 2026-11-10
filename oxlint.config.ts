@@ -24,6 +24,7 @@ export default defineConfig({
   ignorePatterns: [
     '**/node_modules/**',
     '**/dist/**',
+    '.claude/**', // a symlink to .agents, linted there
     'coverage/**',
     'tools/oxlint/anti-slop/**',
   ],
@@ -134,7 +135,7 @@ export default defineConfig({
   },
   overrides: [
     {
-      files: ['.claude/skills/**/*.mjs', 'tools/brand/*.mjs'],
+      files: ['.agents/skills/**/*.mjs', 'tools/brand/*.mjs'],
       rules: {
         // Command-line helpers: they print results, and input timing is sequential on purpose.
         'no-await-in-loop': 'off',
