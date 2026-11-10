@@ -151,14 +151,17 @@ function snapStep(name: string, level: number, notes: Array<string>): Step {
   return step
 }
 
-const EVERY_COLOR = HUES.flatMap(hue =>
-  STEPS.flatMap(saturation =>
-    STEPS.map(brightness => ({
-      color: { hue, pick: { brightness, saturation } },
-      rgb: hsbToRgb(hue, saturation, brightness),
-    })),
-  ),
-)
+/** Every colour Huebo offers. Built per call, so a page with no agent never pays for it. */
+function everyColor() {
+  return HUES.flatMap(hue =>
+    STEPS.flatMap(saturation =>
+      STEPS.map(brightness => ({
+        color: { hue, pick: { brightness, saturation } },
+        rgb: hsbToRgb(hue, saturation, brightness),
+      })),
+    ),
+  )
+}
 
 function fromHex(hex: string, keys: number): Resolved {
   if (keys > 1) {
@@ -167,7 +170,7 @@ function fromHex(hex: string, keys: number): Resolved {
 
   const target = hexToRgb(hex)
 
-  const nearest = EVERY_COLOR.reduce((best, next) =>
+  const nearest = everyColor().reduce((best, next) =>
     colorDistance(next.rgb, target) < colorDistance(best.rgb, target)
       ? next
       : best,
