@@ -40,7 +40,7 @@ Preconditions:
 ## Gotchas
 
 - `agent-browser mouse wheel` fires at (0, 0) and never reaches the ring. Use `input.mjs wheel`.
-- agent-browser can't hold a key down, so "a held arrow previews live and adds one entry" is `not driven`. `src/picker/hue-dial/HueDial.test.tsx` covers it: "given the dial has focus, when an arrow key is held down…".
+- agent-browser can't hold a key down, so "a held arrow previews live and adds one entry" is `not driven`. `src/picker/hue-dial/__tests__/HueDial.test.tsx` covers it: "given the dial has focus, when an arrow key is held down…".
 - The centre of the ring is the swatch grid, so aim pointer input at the band, about 235 px from the centre at 1280×900.
 - A flick needs speed. Separate agent-browser `mouse` calls are too slow to flick, and they read as a placement.
 - Interrupting a coast (with a pick, + or Back) is timing-sensitive by hand. The browser tests "given a coasting wheel, …" in `HueDial.test.tsx` and `/verify-dial-motion` cover those orders.

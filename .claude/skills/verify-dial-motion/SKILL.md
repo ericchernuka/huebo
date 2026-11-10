@@ -85,7 +85,7 @@ Broken: the screen keeps showing a choice until the next input
 
 1. Read the steps and replay them in the code: `motion.ts` for each `transition`, then the modeled row for anything around it.
 2. Decide whether it's a bug or a modeling error. It's a modeling error when a step does something the real code can't do, or sends a value the real component never sends. The first press sending `turn: 200` instead of the dial's rotation was one. Fix the model from the code, not from the result.
-3. If it's real, confirm it with a browser test in `src/**/*.test.tsx` that drives the same steps, using the helpers in `src/test/app.tsx`. Report it with the steps. Don't weaken a property or narrow the model to make it pass, and don't change product code unless asked.
+3. If it's real, confirm it with a browser test in `src/**/*.test.tsx` that drives the same steps, using the helpers in `src/__tests__/app.tsx`. Report it with the steps. Don't weaken a property or narrow the model to make it pass, and don't change product code unless asked.
 
 ## When the code changes on purpose
 

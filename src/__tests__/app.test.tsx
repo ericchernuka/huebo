@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { page } from 'vitest/browser'
-import { expectPath, hueSlider, openAt, picked, square } from './test/app'
+import { expectPath, hueSlider, openAt, picked, square } from './app'
 
 describe('shared links', () => {
   test('given a link to a colour, when it opens, then that colour is picked', async () => {

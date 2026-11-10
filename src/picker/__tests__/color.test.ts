@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { HUES, STEPS, colorPath, hueAt, parseColorPath, stepAt } from './color'
+import { HUES, STEPS, colorPath, hueAt, parseColorPath, stepAt } from '../color'
 
 const hues = Array.from({ length: 72 }, (_, index) => String(index * 5))
 

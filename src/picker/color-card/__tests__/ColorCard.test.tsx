@@ -1,6 +1,6 @@
 import { describe, expect, test, vi } from 'vitest'
 import { page } from 'vitest/browser'
-import { openAt } from '../../test/app'
+import { openAt } from '../../../__tests__/app'
 
 describe('the colour card', () => {
   test('given a pick, when Copy is pressed, then the value is copied and confirmed', async () => {

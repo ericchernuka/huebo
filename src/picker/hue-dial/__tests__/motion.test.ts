@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { hueAt } from '../color'
+import { hueAt } from '../../color'
 import {
   freeTurn,
   IDLE,
@@ -8,7 +8,7 @@ import {
   type Commit,
   type Motion,
   type MotionEvent,
-} from './motion'
+} from '../motion'
 
 const AT_200 = hueAt(200)
 

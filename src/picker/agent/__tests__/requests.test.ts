@@ -1,12 +1,12 @@
 import { describe, expect, test } from 'vitest'
-import { hueAt, type Color } from '../color'
+import { hueAt, type Color } from '../../color'
 import {
   ChoiceInput,
   parseInput,
   report,
   resolveChoice,
   squaresOf,
-} from './requests'
+} from '../requests'
 
 const PICKED: Color = {
   hue: hueAt(200),

@@ -4,7 +4,7 @@ export type Rgb = readonly [red: number, green: number, blue: number]
 /**
  * Converts HSB (hue in degrees, saturation and brightness in percent) to RGB.
  * The output matches the original Huebo byte for byte, so shared links keep
- * their colour. `hsb-golden.txt` pins it.
+ * their colour. `__tests__/hsb-golden.txt` pins it.
  */
 export function hsbToRgb(
   hue: number,

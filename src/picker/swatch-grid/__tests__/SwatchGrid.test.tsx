@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { page, userEvent } from 'vitest/browser'
-import { expectPath, openAt, picked, square } from '../../test/app'
+import { expectPath, openAt, picked, square } from '../../../__tests__/app'
 
 describe('picking', () => {
   test('given a hue, when a square is clicked, then it is picked and the URL holds it', async () => {

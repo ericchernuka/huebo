@@ -7,7 +7,7 @@ import {
   PHONE,
   picked,
   square,
-} from '../../test/app'
+} from '../../../__tests__/app'
 
 function flickWheel() {
   const wheel = hueSlider().element()

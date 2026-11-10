@@ -31,5 +31,5 @@ Preconditions:
 
 - `agent-browser clipboard read` is denied in this browser. Use `input.mjs read-clipboard`, which grants the permission for this tab's origin and reads.
 - The toast closes on its own after a few seconds. Snapshot it right after the click.
-- A failed write shows `Couldn't copy <format>` and no tick. agent-browser can't make the clipboard fail on demand, so that path is `not driven`. `src/picker/color-card/ColorCard.test.tsx` covers it.
+- A failed write shows `Couldn't copy <format>` and no tick. agent-browser can't make the clipboard fail on demand, so that path is `not driven`. `src/picker/color-card/__tests__/ColorCard.test.tsx` covers it.
 - The format persists in `localStorage`, so clear it before a recipe that expects Hex.

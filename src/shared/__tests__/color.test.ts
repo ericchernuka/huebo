@@ -6,7 +6,7 @@ import {
   hsbToHex,
   hsbToRgb,
   rgbToHex,
-} from './color'
+} from '../color'
 import goldenFile from './hsb-golden.txt?raw'
 
 const STEPS = [12, 25, 38, 50, 62, 75, 88, 100]

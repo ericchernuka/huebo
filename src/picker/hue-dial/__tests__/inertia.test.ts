@@ -5,7 +5,7 @@ import {
   recordSample,
   type Coast,
   type Sample,
-} from './inertia'
+} from '../inertia'
 
 const RADIUS = 520
 

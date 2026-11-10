@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, test } from 'vitest'
 import { page } from 'vitest/browser'
-import { installAgent } from '../../test/agent'
-import { expectPath, openAt, picked } from '../../test/app'
+import { installAgent } from '../../../__tests__/agent'
+import { expectPath, openAt, picked } from '../../../__tests__/app'
 
 let agent = installAgent()
 
