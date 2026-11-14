@@ -5,8 +5,6 @@ import { wordmarkColours } from './wordmark-colours'
 
 const LETTERS = Array.from('Huebo')
 
-const LETTER_STAGGER_MS = 45
-
 export function Wordmark({ color }: { readonly color: Color }) {
   return (
     <h1
@@ -17,7 +15,7 @@ export function Wordmark({ color }: { readonly color: Color }) {
         <span
           aria-hidden="true"
           key={letter}
-          {...stylex.props(styles.letter(hex, index * LETTER_STAGGER_MS))}
+          {...stylex.props(styles.letter(hex, String(index)))}
         >
           {letter}
         </span>
@@ -27,7 +25,7 @@ export function Wordmark({ color }: { readonly color: Color }) {
 }
 
 const styles = stylex.create({
-  letter: (hoverColour: string, delayMs: number) => ({
+  letter: (hoverColour: string, place: string) => ({
     color: {
       default: colors.ink,
       [stylex.when.ancestor(':hover')]: hoverColour,
@@ -37,7 +35,7 @@ const styles = stylex.create({
       default: 'none',
       [stylex.when.ancestor(':hover')]: 'translateY(-2px)',
     },
-    transitionDelay: `${delayMs}ms`,
+    transitionDelay: `calc(${motion.stagger} * ${place})`,
     transitionDuration: motion.pop,
     transitionProperty: 'color, transform',
     transitionTimingFunction: easing.pop,

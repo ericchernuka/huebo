@@ -3,9 +3,20 @@ import { useNavigate, useParams, useRouter } from '@tanstack/react-router'
 import { useEffect, useEffectEvent } from 'react'
 import { useAnnounce } from '../shared/announcer'
 import { useColourTools } from './agent/tools'
-import { colors, hue as hueVar, hueTheme } from '../shared/tokens.stylex'
+import {
+  colors,
+  hue as hueVar,
+  hueTheme,
+  instantMotion,
+} from '../shared/tokens.stylex'
 import { pageBackground, type Color, type Pick } from './color'
-import { HueDial, shownHue, useDialMotion, type DialMotion } from './hue-dial'
+import {
+  followsPointer,
+  HueDial,
+  shownHue,
+  useDialMotion,
+  type DialMotion,
+} from './hue-dial'
 import { CompactLayout } from './CompactLayout'
 import { COMPACT_QUERY } from './layout'
 import { pageHead } from './page-head'
@@ -20,6 +31,7 @@ export function Picker() {
   const [motion, dial] = useDialMotion()
   const hue = shownHue(motion, color.hue)
   const background = pageBackground(hue)
+  const instant = followsPointer(motion)
 
   useLinkedDial(dial, color)
 
@@ -31,12 +43,19 @@ export function Picker() {
   const layout = { color: { hue, pick: color.pick }, onPick: pick }
 
   return (
-    <main {...stylex.props(hueTheme, styles.hue(String(hue)), styles.page)}>
+    <main
+      {...stylex.props(
+        hueTheme,
+        instant && instantMotion,
+        styles.hue(String(hue)),
+        styles.page,
+      )}
+    >
       <title>{pageHead(color).title}</title>
       <meta content={background} name="theme-color" />
       {/* On the root, so the colour also fills the status bar and the strip
           behind a floating browser toolbar, outside <main>. */}
-      <style>{`html { background-color: ${background}; }`}</style>
+      <style>{`html { background-color: ${background};${instant ? ' transition: none;' : ''} }`}</style>
       <HueDial.Root dial={dial} hue={hue} motion={motion}>
         {compact ? <CompactLayout {...layout} /> : <RoomyLayout {...layout} />}
       </HueDial.Root>

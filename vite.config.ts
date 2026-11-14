@@ -3,6 +3,7 @@ import react from '@vitejs/plugin-react'
 import { playwright } from '@vitest/browser-playwright'
 import { runnerImport, type Plugin } from 'vite'
 import { defineConfig } from 'vitest/config'
+import { commands } from './src/__tests__/commands'
 
 /**
  * Writes an `index.html` for every colour link, carrying that colour's title
@@ -80,6 +81,7 @@ export default defineConfig({
           include: ['src/**/*.test.tsx'],
           setupFiles: ['src/__tests__/setup.ts'],
           browser: {
+            commands,
             enabled: true,
             headless: true,
             provider: playwright({

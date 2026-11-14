@@ -18,7 +18,7 @@ import { coast, flickVelocity } from './inertia'
 export type Motion =
   | { readonly kind: 'idle' }
   /** A key held down, or the ring being dragged. */
-  | { readonly kind: 'held'; readonly hue: Hue }
+  | { readonly by: HeldBy; readonly kind: 'held'; readonly hue: Hue }
   /** Mouse-wheel notches, waiting for a pause. */
   | { readonly kind: 'scrolling'; readonly hue: Hue }
   /** A finger on the phone wheel. `at` is the wheel's free rotation in degrees. */
@@ -32,9 +32,11 @@ export type Motion =
   /** Committed, and holding the hue on screen until the URL catches up. */
   | { readonly hue: Hue; readonly kind: 'landing' }
 
+export type HeldBy = 'key' | 'pointer'
+
 export type MotionEvent =
   /** The ring pointed at a hue, or Home or End. */
-  | { readonly hue: Hue; readonly type: 'aim' }
+  | { readonly by: HeldBy; readonly hue: Hue; readonly type: 'aim' }
   /** An arrow or page key, stepping from the hue on show. */
   | { readonly by: number; readonly type: 'nudge' }
   /** A key came up, focus left, or the ring lost its pointer. */
@@ -110,6 +112,17 @@ export function freeTurn(motion: Motion): number | null {
 }
 
 /**
+ * True while a pointer drags the dial, or a flick coasts it. The screen then
+ * follows the pointer at once, without easing in between.
+ */
+export function followsPointer(motion: Motion): boolean {
+  return (
+    (motion.kind === 'held' && motion.by === 'pointer') ||
+    freeTurn(motion) !== null
+  )
+}
+
+/**
  * The next state after `event`, and the choice to commit, if any. `shown` is
  * the hue on screen, which inputs step from when nothing is moving.
  */
@@ -122,9 +135,9 @@ export function transition(
 
   switch (event.type) {
     case 'aim':
-      return { motion: { hue: event.hue, kind: 'held' } }
+      return { motion: hold(motion, event.hue, event.by) }
     case 'nudge':
-      return { motion: { hue: hueAt(from + event.by), kind: 'held' } }
+      return { motion: hold(motion, hueAt(from + event.by), 'key') }
     case 'scroll':
       return { motion: { hue: hueAt(from + event.by), kind: 'scrolling' } }
     case 'letGo':
@@ -171,6 +184,13 @@ function wheelTransition(motion: Motion, event: MotionEvent): Transition {
     default:
       return { motion: settleHistory(motion, event) }
   }
+}
+
+/** Holding the same hue in the same way keeps the same state, so nothing re-renders. */
+function hold(motion: Motion, hue: Hue, by: HeldBy): Motion {
+  const same = motion.kind === 'held' && motion.hue === hue && motion.by === by
+
+  return same ? motion : { by, hue, kind: 'held' }
 }
 
 function land(hue: Hue, commit: Partial<Commit> = {}): Transition {

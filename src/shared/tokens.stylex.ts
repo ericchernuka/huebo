@@ -29,6 +29,15 @@ export const motion = stylex.defineVars({
   fade: { default: '500ms', [REDUCED_MOTION]: '0s' },
   pop: { default: '320ms', [REDUCED_MOTION]: '0s' },
   quick: { default: '180ms', [REDUCED_MOTION]: '0s' },
+  stagger: { default: '45ms', [REDUCED_MOTION]: '0s' },
+})
+
+/** While a pointer drags the dial, colours follow it at once instead of easing behind it. */
+export const instantMotion = stylex.createTheme(motion, {
+  fade: '0s',
+  pop: '0s',
+  quick: '0s',
+  stagger: '0s',
 })
 
 export const radii = stylex.defineVars({
