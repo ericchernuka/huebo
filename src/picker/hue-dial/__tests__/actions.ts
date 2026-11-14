@@ -17,6 +17,7 @@ function person(label: string, event: (world: World) => MotionEvent): Action {
 
 const KEYS: ReadonlyArray<Action> = [
   person('the ring is pressed at 100°', () => ({
+    by: 'pointer',
     hue: hueAt(100),
     type: 'aim',
   })),

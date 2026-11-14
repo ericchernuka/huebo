@@ -9,10 +9,11 @@ import {
 import { colors, motion } from '../../shared/tokens.stylex'
 import { hueAt, type Hue } from '../color'
 import { useDial, useHueSlider } from './HueDialRoot'
+import { followsPointer } from './motion'
 import { Segments } from './Segments'
 
 export function Ring({ children }: { readonly children: ReactNode }) {
-  const { send, turn } = useDial()
+  const { motion: state, send, turn } = useDial()
   const slider = useHueSlider()
   const svgRef = useScrollToTurn()
 
@@ -24,12 +25,12 @@ export function Ring({ children }: { readonly children: ReactNode }) {
 
     event.currentTarget.setPointerCapture(event.pointerId)
     event.currentTarget.focus()
-    send({ hue: angleOf(event), type: 'aim' })
+    send({ by: 'pointer', hue: angleOf(event), type: 'aim' })
   }
 
   const onPointerMove = (event: PointerEvent<SVGSVGElement>) => {
     if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      send({ hue: angleOf(event), type: 'aim' })
+      send({ by: 'pointer', hue: angleOf(event), type: 'aim' })
     }
   }
 
@@ -46,7 +47,7 @@ export function Ring({ children }: { readonly children: ReactNode }) {
         {...stylex.props(stylex.defaultMarker(), styles.ring)}
       >
         <Segments inner={72} outer={100} tick={15} />
-        <Thumb turn={turn} />
+        <Thumb moving={followsPointer(state)} turn={turn} />
       </svg>
       <div {...stylex.props(styles.core)}>{children}</div>
     </div>
@@ -76,11 +77,13 @@ function useScrollToTurn() {
   return svgRef
 }
 
-function Thumb({ turn }: { readonly turn: number }) {
+type ThumbProps = { readonly moving: boolean; readonly turn: number }
+
+function Thumb({ moving, turn }: ThumbProps) {
   return (
     <g
       style={{ transform: `rotate(${turn}deg)` }}
-      {...stylex.props(styles.thumb)}
+      {...stylex.props(styles.thumb, moving && styles.moving)}
     >
       <circle
         cx={0}
@@ -126,6 +129,7 @@ const styles = stylex.create({
     transitionProperty: 'transform',
     transitionTimingFunction: 'ease-out',
   },
+  moving: { transitionDuration: '0s' },
   focusInk: { stroke: colors.ink },
   focusRing: {
     fill: 'none',

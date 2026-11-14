@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { page, userEvent } from 'vitest/browser'
+import { commands, page, userEvent } from 'vitest/browser'
 import { expectPath, hueSlider, openAt } from '../../../__tests__/app'
 
 function scrollRing(notches: number) {
@@ -100,6 +100,43 @@ describe('turning the hue', () => {
     await expect
       .element(hueSlider())
       .toHaveAttribute('aria-valuetext', '200 degrees, azure')
+  })
+})
+
+const easing = () => ({
+  page: getComputedStyle(document.documentElement).transitionDuration,
+  thumb: getComputedStyle(
+    hueSlider().element().querySelector('g[style]') ?? document.body,
+  ).transitionDuration,
+})
+
+describe('dragging the ring', () => {
+  test('given the ring at 200, when a pointer drags it, then the page and thumb follow without easing and history gets one entry', async () => {
+    const { history } = await openAt('/200')
+    await commands.ringPointer('down', 90)
+    await commands.ringPointer('move', 120)
+
+    await expect.element(hueSlider()).toHaveAttribute('aria-valuenow', '120')
+    expect(easing()).toEqual({ page: '0s', thumb: '0s' })
+    expect(history.location.pathname).toBe('/200')
+
+    await commands.ringPointer('up', 120)
+
+    await expectPath(history, '/120')
+    expect(history.length).toBe(2)
+    expect(easing()).toEqual({ page: '0.5s', thumb: '0.18s' })
+  })
+
+  test('given the dial has focus, when an arrow key is held, then the thumb still eases', async () => {
+    await openAt('/200')
+
+    hueSlider().element().focus()
+    await userEvent.keyboard('{ArrowRight>3}')
+
+    await expect.element(hueSlider()).toHaveAttribute('aria-valuenow', '215')
+    expect(easing()).toEqual({ page: '0.5s', thumb: '0.18s' })
+
+    await userEvent.keyboard('{/ArrowRight}')
   })
 })
 

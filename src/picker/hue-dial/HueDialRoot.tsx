@@ -103,7 +103,11 @@ export function useHueSlider() {
 
 function keyInput(event: KeyboardEvent): MotionEvent | null {
   if (event.key === 'Home' || event.key === 'End') {
-    return { hue: hueAt(event.key === 'Home' ? 0 : 355), type: 'aim' }
+    return {
+      by: 'key',
+      hue: hueAt(event.key === 'Home' ? 0 : 355),
+      type: 'aim',
+    }
   }
 
   const step = KEY_STEPS.get(event.key)

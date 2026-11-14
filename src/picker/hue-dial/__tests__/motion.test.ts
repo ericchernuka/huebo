@@ -41,6 +41,13 @@ describe('keys and the ring', () => {
     expect(shown(motion)).toBe(210)
   })
 
+  test('given the ring dragged to 100, when the pointer moves within the same hue, then the state is the same one and nothing re-renders', () => {
+    const aim = { by: 'pointer', hue: hueAt(100), type: 'aim' } as const
+    const dragged = run(IDLE, [aim]).motion
+
+    expect(run(dragged, [aim]).motion).toBe(dragged)
+  })
+
   test('given nothing held, when focus leaves, then nothing commits', () => {
     expect(run(IDLE, [{ type: 'letGo' }]).commits).toEqual([])
   })
