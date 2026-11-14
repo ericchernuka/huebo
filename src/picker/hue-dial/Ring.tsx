@@ -24,7 +24,6 @@ export function Ring({ children }: { readonly children: ReactNode }) {
     }
 
     event.currentTarget.setPointerCapture(event.pointerId)
-    event.currentTarget.focus()
     send({ by: 'pointer', hue: angleOf(event), type: 'aim' })
   }
 
