@@ -127,6 +127,15 @@ describe('dragging the ring', () => {
     expect(easing()).toEqual({ page: '0.5s', thumb: '0.18s' })
   })
 
+  test('given the ring at 200, when a pointer drags it, then the dial takes focus without showing the focus ring', async () => {
+    await openAt('/200')
+    await commands.ringPointer('down', 90)
+    await commands.ringPointer('up', 90)
+
+    await expect.element(hueSlider()).toHaveFocus()
+    expect(hueSlider().element().matches(':focus-visible')).toBe(false)
+  })
+
   test('given the dial has focus, when an arrow key is held, then the thumb still eases', async () => {
     await openAt('/200')
 
