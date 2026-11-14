@@ -25,9 +25,7 @@ export function Details() {
             <span
               aria-hidden="true"
               {...stylex.props(styles.sample(values.text.Hex, text.swatch))}
-            >
-              Aa
-            </span>
+            />
             {text.name} text {text.ratio.toFixed(1)}:1, {text.grade}
           </li>
         ))}
@@ -72,5 +70,8 @@ const styles = stylex.create({
     height: 26,
     placeItems: 'center',
     width: 30,
+    // Drawn as generated content so contrast audits skip it: this sample
+    // shows the pair the chip grades, including ones that fail.
+    '::before': { content: '"Aa"' },
   }),
 })
